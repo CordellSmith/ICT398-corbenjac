@@ -1,0 +1,17 @@
+# CMake generation dependency list for this directory.
+C:/Users/Cordell Smith/Desktop/assimp-4.1.0/contrib/zlib/CMakeLists.txt
+C:/Users/Cordell Smith/Desktop/cmake-3.11.0-win32-x86/share/cmake-3.11/Modules/CheckTypeSize.cmake
+C:/Users/Cordell Smith/Desktop/cmake-3.11.0-win32-x86/share/cmake-3.11/Modules/CheckIncludeFile.cmake
+C:/Users/Cordell Smith/Desktop/cmake-3.11.0-win32-x86/share/cmake-3.11/Modules/CheckIncludeFileCXX.cmake
+C:/Users/Cordell Smith/Desktop/cmake-3.11.0-win32-x86/share/cmake-3.11/Modules/CheckFunctionExists.cmake
+C:/Users/Cordell Smith/Desktop/cmake-3.11.0-win32-x86/share/cmake-3.11/Modules/CheckIncludeFile.cmake
+C:/Users/Cordell Smith/Desktop/cmake-3.11.0-win32-x86/share/cmake-3.11/Modules/CheckCSourceCompiles.cmake
+C:/Users/Cordell Smith/Desktop/cmake-3.11.0-win32-x86/share/cmake-3.11/Modules/CheckIncludeFile.c.in
+C:/Users/Cordell Smith/Desktop/cmake-3.11.0-win32-x86/share/cmake-3.11/Modules/CheckIncludeFile.c.in
+C:/Users/Cordell Smith/Desktop/cmake-3.11.0-win32-x86/share/cmake-3.11/Modules/CheckIncludeFile.c.in
+C:/Users/Cordell Smith/Desktop/cmake-3.11.0-win32-x86/share/cmake-3.11/Modules/CheckTypeSize.c.in
+C:/Users/Cordell Smith/Desktop/assimp-4.1/CMakeFiles/CheckTypeSize/OFF64_T.c
+C:/Users/Cordell Smith/Desktop/cmake-3.11.0-win32-x86/share/cmake-3.11/Modules/CheckFunctionExists.c
+C:/Users/Cordell Smith/Desktop/cmake-3.11.0-win32-x86/share/cmake-3.11/Modules/CheckIncludeFile.c.in
+C:/Users/Cordell Smith/Desktop/assimp-4.1.0/contrib/zlib/zlib.pc.cmakein
+C:/Users/Cordell Smith/Desktop/assimp-4.1.0/contrib/zlib/zconf.h.cmakein

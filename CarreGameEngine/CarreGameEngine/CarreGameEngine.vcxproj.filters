@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="AssetFactory\Bruteforce.cpp" />
+    <ClCompile Include="AssetFactory\Entity.cpp" />
+    <ClCompile Include="AssetFactory\GameAssetFactory.cpp" />
+    <ClCompile Include="AssetFactory\Mesh.cpp" />
+    <ClCompile Include="AssetFactory\Model.cpp" />
+    <ClCompile Include="AssetFactory\Player.cpp" />
+    <ClCompile Include="AssetFactory\Terrain.cpp" />
+    <ClCompile Include="AssetFactory\NPC.cpp" />
+    <ClCompile Include="AssetFactory\Object.cpp" />
+    <ClCompile Include="Renderer\OpenGl.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\GameControlEngine.cpp" />
+    <ClCompile Include="src\GameWorld.cpp" />
+    <ClCompile Include="src\GLFWManager.cpp" />
+    <ClCompile Include="src\InputManager.cpp" />
+    <ClCompile Include="src\PhysicsEngine.cpp" />
+    <ClCompile Include="src\ScriptManager.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\TextureManager.cpp" />
+    <ClCompile Include="src\TimeManager.cpp" />
+    <ClCompile Include="src\AllStatesFSM.cpp" />
+    <ClCompile Include="src\ComputerAI.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AssetFactory\Bruteforce.h" />
+    <ClInclude Include="AssetFactory\GameAssetFactory.h" />
+    <ClInclude Include="AssetFactory\Mesh.h" />
+    <ClInclude Include="AssetFactory\Model.h" />
+    <ClInclude Include="AssetFactory\Player.h" />
+    <ClInclude Include="AssetFactory\Terrain.h" />
+    <ClInclude Include="AssetFactory\NPC.h" />
+    <ClInclude Include="AssetFactory\IGameAsset.h" />
+    <ClInclude Include="AssetFactory\Object.h" />
+    <ClInclude Include="Common\MyMath.h" />
+    <ClInclude Include="Common\Vertex3.h" />
+    <ClInclude Include="headers\Camera.h" />
+    <ClInclude Include="headers\GameControlEngine.h" />
+    <ClInclude Include="headers\GameWorld.h" />
+    <ClInclude Include="headers\GLFWManager.h" />
+    <ClInclude Include="headers\InputManager.h" />
+    <ClInclude Include="headers\PhysicsEngine.h" />
+    <ClInclude Include="headers\ScriptManager.h" />
+    <ClInclude Include="headers\Shader.h" />
+    <ClInclude Include="headers\Singleton.h" />
+    <ClInclude Include="headers\Structs.h" />
+    <ClInclude Include="headers\TextureManager.h" />
+    <ClInclude Include="headers\TimeManager.h" />
+    <ClInclude Include="headers\WindowManager.h" />
+    <ClInclude Include="Renderer\OpenGl.h" />
+    <ClInclude Include="headers\StateMachine.h" />
+    <ClInclude Include="headers\State.h" />
+    <ClInclude Include="headers\AllStatesFSM.h" />
+    <ClInclude Include="headers\ComputerAI.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\scripts\CameraInit.lua" />
+    <None Include="res\scripts\ModelInit.lua" />
+    <None Include="res\scripts\TexturesInit.lua" />
+    <None Include="res\scripts\WindowInit.lua" />
+    <None Include="res\shaders\Terrain.shader" />
+    <None Include="res\scripts\ModelsInit.lua" />
+    <None Include="res\shaders\Default.shader" />
+    <None Include="res\scripts\TerrainsInit.lua" />
+  </ItemGroup>
+</Project>

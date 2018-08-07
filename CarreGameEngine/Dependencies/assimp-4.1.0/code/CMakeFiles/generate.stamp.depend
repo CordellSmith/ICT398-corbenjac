@@ -1,0 +1,5 @@
+# CMake generation dependency list for this directory.
+C:/Users/Cordell Smith/Desktop/assimp-4.1.0/code/CMakeLists.txt
+C:/Users/Cordell Smith/Desktop/assimp-4.1.0/cmake-modules/FindRT.cmake
+C:/Users/Cordell Smith/Desktop/cmake-3.11.0-win32-x86/share/cmake-3.11/Modules/FindPackageHandleStandardArgs.cmake
+C:/Users/Cordell Smith/Desktop/cmake-3.11.0-win32-x86/share/cmake-3.11/Modules/FindPackageMessage.cmake

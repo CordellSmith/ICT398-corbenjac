@@ -1,0 +1,394 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|Win32">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|Win32">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F49DE16E-2B45-3690-96BA-A2A85F7585D7}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>Win32</Platform>
+    <ProjectName>assimp_cmd</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Cordell Smith\Desktop\assimp-4.1\tools\assimp_cmd\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">assimp_cmd.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">assimp</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\Cordell Smith\Desktop\assimp-4.1\tools\assimp_cmd\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">assimp_cmd.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">assimp</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\Users\Cordell Smith\Desktop\assimp-4.1\tools\assimp_cmd\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">assimp_cmd.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">assimp</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\Users\Cordell Smith\Desktop\assimp-4.1\tools\assimp_cmd\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">assimp_cmd.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">assimp</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Cordell Smith\Desktop\assimp-4.1.0\.;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\include;C:\Users\Cordell Smith\Desktop\assimp-4.1;C:\Users\Cordell Smith\Desktop\assimp-4.1\include;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;WIN32_LEAN_AND_MEAN;OPENDDL_NO_USE_CPP11;ASSIMP_BUILD_NO_C4D_IMPORTER;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;WIN32_LEAN_AND_MEAN;OPENDDL_NO_USE_CPP11;ASSIMP_BUILD_NO_C4D_IMPORTER;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Cordell Smith\Desktop\assimp-4.1.0\.;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\include;C:\Users\Cordell Smith\Desktop\assimp-4.1;C:\Users\Cordell Smith\Desktop\assimp-4.1\include;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\Cordell Smith\Desktop\assimp-4.1.0\.;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\include;C:\Users\Cordell Smith\Desktop\assimp-4.1;C:\Users\Cordell Smith\Desktop\assimp-4.1\include;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PreBuildEvent>
+      <Message></Message>
+      <Command>setlocal
+"C:\Users\Cordell Smith\Desktop\cmake-3.11.0-win32-x86\bin\cmake.exe" -E copy_if_different "C:/Users/Cordell Smith/Desktop/assimp-4.1/code/Debug/assimp-vc140-mt.dll" "C:/Users/Cordell Smith/Desktop/assimp-4.1/tools/assimp_cmd/Debug"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
+    <Link>
+      <AdditionalDependencies>..\..\code\Debug\assimp-vc140-mt.lib;..\..\contrib\zlib\Debug\zlibstaticd.lib;..\..\contrib\irrXML\Debug\IrrXML.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Users/Cordell Smith/Desktop/assimp-4.1;C:/Users/Cordell Smith/Desktop/assimp-4.1/$(Configuration);C:/Users/Cordell Smith/Desktop/assimp-4.1/lib;C:/Users/Cordell Smith/Desktop/assimp-4.1/lib/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/Cordell Smith/Desktop/assimp-4.1/tools/assimp_cmd/Debug/assimp.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/Cordell Smith/Desktop/assimp-4.1/tools/assimp_cmd/Debug/assimp.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Cordell Smith\Desktop\assimp-4.1.0\.;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\include;C:\Users\Cordell Smith\Desktop\assimp-4.1;C:\Users\Cordell Smith\Desktop\assimp-4.1\include;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;OPENDDL_NO_USE_CPP11;ASSIMP_BUILD_NO_C4D_IMPORTER;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;OPENDDL_NO_USE_CPP11;ASSIMP_BUILD_NO_C4D_IMPORTER;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Cordell Smith\Desktop\assimp-4.1.0\.;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\include;C:\Users\Cordell Smith\Desktop\assimp-4.1;C:\Users\Cordell Smith\Desktop\assimp-4.1\include;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\Cordell Smith\Desktop\assimp-4.1.0\.;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\include;C:\Users\Cordell Smith\Desktop\assimp-4.1;C:\Users\Cordell Smith\Desktop\assimp-4.1\include;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PreBuildEvent>
+      <Message></Message>
+      <Command>setlocal
+"C:\Users\Cordell Smith\Desktop\cmake-3.11.0-win32-x86\bin\cmake.exe" -E copy_if_different "C:/Users/Cordell Smith/Desktop/assimp-4.1/code/Release/assimp-vc140-mt.dll" "C:/Users/Cordell Smith/Desktop/assimp-4.1/tools/assimp_cmd/Release"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
+    <Link>
+      <AdditionalDependencies>..\..\code\Release\assimp-vc140-mt.lib;..\..\contrib\zlib\Release\zlibstatic.lib;..\..\contrib\irrXML\Release\IrrXML.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Users/Cordell Smith/Desktop/assimp-4.1;C:/Users/Cordell Smith/Desktop/assimp-4.1/$(Configuration);C:/Users/Cordell Smith/Desktop/assimp-4.1/lib;C:/Users/Cordell Smith/Desktop/assimp-4.1/lib/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/Cordell Smith/Desktop/assimp-4.1/tools/assimp_cmd/Release/assimp.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/Cordell Smith/Desktop/assimp-4.1/tools/assimp_cmd/Release/assimp.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Cordell Smith\Desktop\assimp-4.1.0\.;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\include;C:\Users\Cordell Smith\Desktop\assimp-4.1;C:\Users\Cordell Smith\Desktop\assimp-4.1\include;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;OPENDDL_NO_USE_CPP11;ASSIMP_BUILD_NO_C4D_IMPORTER;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;OPENDDL_NO_USE_CPP11;ASSIMP_BUILD_NO_C4D_IMPORTER;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Cordell Smith\Desktop\assimp-4.1.0\.;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\include;C:\Users\Cordell Smith\Desktop\assimp-4.1;C:\Users\Cordell Smith\Desktop\assimp-4.1\include;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\Cordell Smith\Desktop\assimp-4.1.0\.;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\include;C:\Users\Cordell Smith\Desktop\assimp-4.1;C:\Users\Cordell Smith\Desktop\assimp-4.1\include;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PreBuildEvent>
+      <Message></Message>
+      <Command>setlocal
+"C:\Users\Cordell Smith\Desktop\cmake-3.11.0-win32-x86\bin\cmake.exe" -E copy_if_different "C:/Users/Cordell Smith/Desktop/assimp-4.1/code/MinSizeRel/assimp-vc140-mt.dll" "C:/Users/Cordell Smith/Desktop/assimp-4.1/tools/assimp_cmd/MinSizeRel"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
+    <Link>
+      <AdditionalDependencies>..\..\code\MinSizeRel\assimp-vc140-mt.lib;..\..\contrib\zlib\MinSizeRel\zlibstatic.lib;..\..\contrib\irrXML\MinSizeRel\IrrXML.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Users/Cordell Smith/Desktop/assimp-4.1;C:/Users/Cordell Smith/Desktop/assimp-4.1/$(Configuration);C:/Users/Cordell Smith/Desktop/assimp-4.1/lib;C:/Users/Cordell Smith/Desktop/assimp-4.1/lib/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/Cordell Smith/Desktop/assimp-4.1/tools/assimp_cmd/MinSizeRel/assimp.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/Cordell Smith/Desktop/assimp-4.1/tools/assimp_cmd/MinSizeRel/assimp.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Cordell Smith\Desktop\assimp-4.1.0\.;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\include;C:\Users\Cordell Smith\Desktop\assimp-4.1;C:\Users\Cordell Smith\Desktop\assimp-4.1\include;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;OPENDDL_NO_USE_CPP11;ASSIMP_BUILD_NO_C4D_IMPORTER;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;WIN32_LEAN_AND_MEAN;OPENDDL_NO_USE_CPP11;ASSIMP_BUILD_NO_C4D_IMPORTER;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Cordell Smith\Desktop\assimp-4.1.0\.;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\include;C:\Users\Cordell Smith\Desktop\assimp-4.1;C:\Users\Cordell Smith\Desktop\assimp-4.1\include;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\Cordell Smith\Desktop\assimp-4.1.0\.;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\include;C:\Users\Cordell Smith\Desktop\assimp-4.1;C:\Users\Cordell Smith\Desktop\assimp-4.1\include;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1\contrib\zlib;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PreBuildEvent>
+      <Message></Message>
+      <Command>setlocal
+"C:\Users\Cordell Smith\Desktop\cmake-3.11.0-win32-x86\bin\cmake.exe" -E copy_if_different "C:/Users/Cordell Smith/Desktop/assimp-4.1/code/RelWithDebInfo/assimp-vc140-mt.dll" "C:/Users/Cordell Smith/Desktop/assimp-4.1/tools/assimp_cmd/RelWithDebInfo"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
+    <Link>
+      <AdditionalDependencies>..\..\code\RelWithDebInfo\assimp-vc140-mt.lib;..\..\contrib\zlib\RelWithDebInfo\zlibstatic.lib;..\..\contrib\irrXML\RelWithDebInfo\IrrXML.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Users/Cordell Smith/Desktop/assimp-4.1;C:/Users/Cordell Smith/Desktop/assimp-4.1/$(Configuration);C:/Users/Cordell Smith/Desktop/assimp-4.1/lib;C:/Users/Cordell Smith/Desktop/assimp-4.1/lib/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/Cordell Smith/Desktop/assimp-4.1/tools/assimp_cmd/RelWithDebInfo/assimp.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/Cordell Smith/Desktop/assimp-4.1/tools/assimp_cmd/RelWithDebInfo/assimp.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule C:/Users/Cordell Smith/Desktop/assimp-4.1.0/tools/assimp_cmd/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
+"C:\Users\Cordell Smith\Desktop\cmake-3.11.0-win32-x86\bin\cmake.exe" "-HC:/Users/Cordell Smith/Desktop/assimp-4.1.0" "-BC:/Users/Cordell Smith/Desktop/assimp-4.1" --check-stamp-file "C:/Users/Cordell Smith/Desktop/assimp-4.1/tools/assimp_cmd/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:/Users/Cordell Smith/Desktop/assimp-4.1.0/tools/assimp_cmd/CMakeLists.txt;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\CMakeLists.txt;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Cordell Smith\Desktop\assimp-4.1\tools\assimp_cmd\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule C:/Users/Cordell Smith/Desktop/assimp-4.1.0/tools/assimp_cmd/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
+"C:\Users\Cordell Smith\Desktop\cmake-3.11.0-win32-x86\bin\cmake.exe" "-HC:/Users/Cordell Smith/Desktop/assimp-4.1.0" "-BC:/Users/Cordell Smith/Desktop/assimp-4.1" --check-stamp-file "C:/Users/Cordell Smith/Desktop/assimp-4.1/tools/assimp_cmd/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:/Users/Cordell Smith/Desktop/assimp-4.1.0/tools/assimp_cmd/CMakeLists.txt;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\CMakeLists.txt;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\Cordell Smith\Desktop\assimp-4.1\tools\assimp_cmd\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule C:/Users/Cordell Smith/Desktop/assimp-4.1.0/tools/assimp_cmd/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">setlocal
+"C:\Users\Cordell Smith\Desktop\cmake-3.11.0-win32-x86\bin\cmake.exe" "-HC:/Users/Cordell Smith/Desktop/assimp-4.1.0" "-BC:/Users/Cordell Smith/Desktop/assimp-4.1" --check-stamp-file "C:/Users/Cordell Smith/Desktop/assimp-4.1/tools/assimp_cmd/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:/Users/Cordell Smith/Desktop/assimp-4.1.0/tools/assimp_cmd/CMakeLists.txt;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\CMakeLists.txt;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\Users\Cordell Smith\Desktop\assimp-4.1\tools\assimp_cmd\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule C:/Users/Cordell Smith/Desktop/assimp-4.1.0/tools/assimp_cmd/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">setlocal
+"C:\Users\Cordell Smith\Desktop\cmake-3.11.0-win32-x86\bin\cmake.exe" "-HC:/Users/Cordell Smith/Desktop/assimp-4.1.0" "-BC:/Users/Cordell Smith/Desktop/assimp-4.1" --check-stamp-file "C:/Users/Cordell Smith/Desktop/assimp-4.1/tools/assimp_cmd/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:/Users/Cordell Smith/Desktop/assimp-4.1.0/tools/assimp_cmd/CMakeLists.txt;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\CMakeLists.txt;C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\Users\Cordell Smith\Desktop\assimp-4.1\tools\assimp_cmd\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\assimp_cmd.rc" />
+    <ClCompile Include="C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\CompareDump.cpp" />
+    <ClCompile Include="C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\ImageExtractor.cpp" />
+    <ClCompile Include="C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\Main.cpp" />
+    <ClInclude Include="C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\Main.h" />
+    <ClInclude Include="C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\resource.h" />
+    <ClCompile Include="C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\WriteDumb.cpp" />
+    <ClCompile Include="C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\Info.cpp" />
+    <ClCompile Include="C:\Users\Cordell Smith\Desktop\assimp-4.1.0\tools\assimp_cmd\Export.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\Cordell Smith\Desktop\assimp-4.1\ZERO_CHECK.vcxproj">
+      <Project>{594EC5A3-BAE2-31C7-A4D7-7E7691977813}</Project>
+      <Name>ZERO_CHECK</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\Cordell Smith\Desktop\assimp-4.1\contrib\irrXML\IrrXML.vcxproj">
+      <Project>{904BA903-B26B-30A8-A752-4E91E0348A5B}</Project>
+      <Name>IrrXML</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\Cordell Smith\Desktop\assimp-4.1\code\assimp.vcxproj">
+      <Project>{D4803232-C764-3DA1-B43A-3F763A4595BE}</Project>
+      <Name>assimp</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\Cordell Smith\Desktop\assimp-4.1\contrib\zlib\zlibstatic.vcxproj">
+      <Project>{1E978347-5B98-38EC-816F-1283B884C005}</Project>
+      <Name>zlibstatic</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

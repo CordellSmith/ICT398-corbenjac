@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4B716BE8-6C34-4D1C-83C8-E9BA3CDD8F44}</ProjectGuid>
+    <RootNamespace>CarreGameEngine</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\lua\include;$(SolutionDir)Dependencies\glut\include;$(SolutionDir)Dependencies\BulletPhysicsEngine\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW 2.1.0\include;$(SolutionDir)Dependencies\GLM\include;$(SolutionDir)Dependencies\assimp-4.1.0\include;$(SolutionDir)Dependencies\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\assimp-4.1.0\lib;$(SolutionDir)Dependencies\lua\lib;$(SolutionDir)Dependencies\glut\lib;$(SolutionDir)Dependencies\BulletPhysicsEngine\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW 2.1.0\lib\Release\Win32;$(SolutionDir)Dependencies\assimp-4.1.0\code\Debug;$(SolutionDir)Dependencies\SOIL2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;glfw3.lib;opengl32.lib;glew32s.lib;assimp-vc140-mt.lib;soil2.lib;lua5.1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <Xdcmake>
+      <AdditionalDocumentFile>%(AdditionalDocumentFile)</AdditionalDocumentFile>
+    </Xdcmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\lua\include;$(SolutionDir)Dependencies\glut\include;$(SolutionDir)Dependencies\BulletPhysicsEngine\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW 2.1.0\include;$(SolutionDir)Dependencies\GLM\include;$(SolutionDir)Dependencies\assimp-4.1.0\include;$(SolutionDir)Dependencies\SOIL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;glfw3.lib;opengl32.lib;glew32s.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\assimp-4.1.0\lib;$(SolutionDir)Dependencies\lua\lib;$(SolutionDir)Dependencies\glut\lib;$(SolutionDir)Dependencies\BulletPhysicsEngine\lib;$(SolutionDir)Dependencies\GLFW\lib-vc2015;$(SolutionDir)Dependencies\GLEW 2.1.0\lib\Release\Win32;$(SolutionDir)Dependencies\assimp-4.1.0\code\Debug;$(SolutionDir)Dependencies\SOIL2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;glfw3.lib;opengl32.lib;glew32s.lib;assimp-vc140-mt.lib;soil2.lib;lua5.1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="res\scripts\CameraInit.lua" />
+    <None Include="res\scripts\ModelInit.lua" />
+    <None Include="res\scripts\ModelsInit.lua" />
+    <None Include="res\scripts\TerrainsInit.lua" />
+    <None Include="res\scripts\TexturesInit.lua" />
+    <None Include="res\scripts\WindowInit.lua" />
+    <None Include="res\shaders\Terrain.shader" />
+    <None Include="res\shaders\Default.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AssetFactory\Bruteforce.h" />
+    <ClInclude Include="AssetFactory\GameAssetFactory.h" />
+    <ClInclude Include="AssetFactory\Mesh.h" />
+    <ClInclude Include="AssetFactory\Model.h" />
+    <ClInclude Include="AssetFactory\Player.h" />
+    <ClInclude Include="AssetFactory\Terrain.h" />
+    <ClInclude Include="AssetFactory\NPC.h" />
+    <ClInclude Include="AssetFactory\IGameAsset.h" />
+    <ClInclude Include="AssetFactory\Object.h" />
+    <ClInclude Include="Common\MyMath.h" />
+    <ClInclude Include="Common\Vertex3.h" />
+    <ClInclude Include="headers\AllStatesFSM.h" />
+    <ClInclude Include="headers\Camera.h" />
+    <ClInclude Include="headers\ComputerAI.h" />
+    <ClInclude Include="headers\GameControlEngine.h" />
+    <ClInclude Include="headers\GameWorld.h" />
+    <ClInclude Include="headers\GLFWManager.h" />
+    <ClInclude Include="headers\InputManager.h" />
+    <ClInclude Include="headers\PhysicsEngine.h" />
+    <ClInclude Include="headers\ScriptManager.h" />
+    <ClInclude Include="headers\Shader.h" />
+    <ClInclude Include="headers\Singleton.h" />
+    <ClInclude Include="headers\State.h" />
+    <ClInclude Include="headers\StateMachine.h" />
+    <ClInclude Include="headers\Structs.h" />
+    <ClInclude Include="headers\TextureManager.h" />
+    <ClInclude Include="headers\TimeManager.h" />
+    <ClInclude Include="headers\WindowManager.h" />
+    <ClInclude Include="Renderer\OpenGl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AssetFactory\Bruteforce.cpp" />
+    <ClCompile Include="AssetFactory\Entity.cpp" />
+    <ClCompile Include="AssetFactory\GameAssetFactory.cpp" />
+    <ClCompile Include="AssetFactory\Mesh.cpp" />
+    <ClCompile Include="AssetFactory\Model.cpp" />
+    <ClCompile Include="AssetFactory\Player.cpp" />
+    <ClCompile Include="AssetFactory\Terrain.cpp" />
+    <ClCompile Include="AssetFactory\NPC.cpp" />
+    <ClCompile Include="AssetFactory\Object.cpp" />
+    <ClCompile Include="Renderer\OpenGl.cpp" />
+    <ClCompile Include="src\AllStatesFSM.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\ComputerAI.cpp" />
+    <ClCompile Include="src\GameControlEngine.cpp" />
+    <ClCompile Include="src\GameWorld.cpp" />
+    <ClCompile Include="src\GLFWManager.cpp" />
+    <ClCompile Include="src\InputManager.cpp" />
+    <ClCompile Include="src\PhysicsEngine.cpp" />
+    <ClCompile Include="src\ScriptManager.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\TextureManager.cpp" />
+    <ClCompile Include="src\TimeManager.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

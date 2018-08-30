@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "..\headers\Camera.h"
+#include "..\Controllers\Camera.h"
 #include "..\AssetFactory\Model.h"
 
 	/**

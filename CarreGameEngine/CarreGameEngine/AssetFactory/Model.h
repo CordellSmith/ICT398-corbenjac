@@ -10,10 +10,10 @@
 #include <assimp/postprocess.h>
 
 #include "Mesh.h"
-#include "..\headers\Camera.h"
-#include "..\headers\Shader.h"
-#include "..\headers\TextureManager.h"
-#include "..\headers\ComputerAI.h"
+#include "..\Controllers\Camera.h"
+#include "..\Renderer\Shader.h"
+#include "..\Texture\TextureManager.h"
+#include "..\AI\ComputerAI.h"
 
 	/**
 	* @class Model

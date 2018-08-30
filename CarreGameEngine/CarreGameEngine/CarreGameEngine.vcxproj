@@ -129,14 +129,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="res\scripts\CameraInit.lua" />
+    <None Include="Resources\scripts\CameraInit.lua" />
     <None Include="res\scripts\ModelInit.lua" />
-    <None Include="res\scripts\ModelsInit.lua" />
-    <None Include="res\scripts\TerrainsInit.lua" />
-    <None Include="res\scripts\TexturesInit.lua" />
-    <None Include="res\scripts\WindowInit.lua" />
-    <None Include="res\shaders\Terrain.shader" />
-    <None Include="res\shaders\Default.shader" />
+    <None Include="Resources\scripts\ModelsInit.lua" />
+    <None Include="Resources\scripts\TerrainsInit.lua" />
+    <None Include="Resources\scripts\TexturesInit.lua" />
+    <None Include="Resources\scripts\WindowInit.lua" />
+    <None Include="Resources\shaders\Terrain.shader" />
+    <None Include="Resources\shaders\Default.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetFactory\Bruteforce.h" />
@@ -150,23 +150,23 @@
     <ClInclude Include="AssetFactory\Object.h" />
     <ClInclude Include="Common\MyMath.h" />
     <ClInclude Include="Common\Vertex3.h" />
-    <ClInclude Include="headers\AllStatesFSM.h" />
-    <ClInclude Include="headers\Camera.h" />
-    <ClInclude Include="headers\ComputerAI.h" />
-    <ClInclude Include="headers\GameControlEngine.h" />
-    <ClInclude Include="headers\GameWorld.h" />
-    <ClInclude Include="headers\GLFWManager.h" />
-    <ClInclude Include="headers\InputManager.h" />
-    <ClInclude Include="headers\PhysicsEngine.h" />
-    <ClInclude Include="headers\ScriptManager.h" />
-    <ClInclude Include="headers\Shader.h" />
-    <ClInclude Include="headers\Singleton.h" />
-    <ClInclude Include="headers\State.h" />
-    <ClInclude Include="headers\StateMachine.h" />
-    <ClInclude Include="headers\Structs.h" />
-    <ClInclude Include="headers\TextureManager.h" />
-    <ClInclude Include="headers\TimeManager.h" />
-    <ClInclude Include="headers\WindowManager.h" />
+    <ClInclude Include="AI\AllStatesFSM.h" />
+    <ClInclude Include="Controllers\Camera.h" />
+    <ClInclude Include="AI\ComputerAI.h" />
+    <ClInclude Include="Controllers\GameControlEngine.h" />
+    <ClInclude Include="Controllers\GameWorld.h" />
+    <ClInclude Include="Controllers\GLFWManager.h" />
+    <ClInclude Include="Input\InputManager.h" />
+    <ClInclude Include="Physics\PhysicsEngine.h" />
+    <ClInclude Include="Scripting\ScriptManager.h" />
+    <ClInclude Include="Renderer\Shader.h" />
+    <ClInclude Include="Common\Singleton.h" />
+    <ClInclude Include="AI\State.h" />
+    <ClInclude Include="AI\StateMachine.h" />
+    <ClInclude Include="Common\Structs.h" />
+    <ClInclude Include="Texture\TextureManager.h" />
+    <ClInclude Include="Controllers\TimeManager.h" />
+    <ClInclude Include="Controllers\WindowManager.h" />
     <ClInclude Include="Renderer\OpenGl.h" />
   </ItemGroup>
   <ItemGroup>
@@ -180,18 +180,18 @@
     <ClCompile Include="AssetFactory\NPC.cpp" />
     <ClCompile Include="AssetFactory\Object.cpp" />
     <ClCompile Include="Renderer\OpenGl.cpp" />
-    <ClCompile Include="src\AllStatesFSM.cpp" />
-    <ClCompile Include="src\Camera.cpp" />
-    <ClCompile Include="src\ComputerAI.cpp" />
-    <ClCompile Include="src\GameControlEngine.cpp" />
-    <ClCompile Include="src\GameWorld.cpp" />
-    <ClCompile Include="src\GLFWManager.cpp" />
-    <ClCompile Include="src\InputManager.cpp" />
-    <ClCompile Include="src\PhysicsEngine.cpp" />
-    <ClCompile Include="src\ScriptManager.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
-    <ClCompile Include="src\TextureManager.cpp" />
-    <ClCompile Include="src\TimeManager.cpp" />
+    <ClCompile Include="Source\AllStatesFSM.cpp" />
+    <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\ComputerAI.cpp" />
+    <ClCompile Include="Source\GameControlEngine.cpp" />
+    <ClCompile Include="Source\GameWorld.cpp" />
+    <ClCompile Include="Source\GLFWManager.cpp" />
+    <ClCompile Include="Source\InputManager.cpp" />
+    <ClCompile Include="Source\PhysicsEngine.cpp" />
+    <ClCompile Include="Source\ScriptManager.cpp" />
+    <ClCompile Include="Source\Shader.cpp" />
+    <ClCompile Include="Source\TextureManager.cpp" />
+    <ClCompile Include="Source\TimeManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

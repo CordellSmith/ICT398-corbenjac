@@ -5,7 +5,7 @@
 #include <string>
 #include <sstream>
 
-#include "WindowManager.h"
+#include "IWindowManager.h"
 #include "TimeManager.h"
 #include "Camera.h"
 #include "GameWorld.h"
@@ -54,7 +54,7 @@ public:
 		*
 		* @return null
 		*/
-	~GameControlEngine() { Destroy(); }
+	~GameControlEngine() { }
 
 		/**
 		* @brief Runs the game engine
@@ -74,7 +74,7 @@ public:
 		*
 		* @return WindowManager*
 		*/
-	WindowManager* GetWindowManager() { return m_windowManager; }
+	IWindowManager* GetWindowManager() { return m_windowManager; }
 
 		/**
 		* @brief Gets the window manager object
@@ -85,7 +85,7 @@ public:
 		* @param WindowManager* windowManager
 		* @return void
 		*/
-	void SetWindowManager(WindowManager* windowManager) { m_windowManager = windowManager; }
+	void SetWindowManager(IWindowManager* windowManager) { m_windowManager = windowManager; }
 
 		/**
 		* @brief Gets the camera object
@@ -160,7 +160,7 @@ protected:
 	bool fullScreen;
 
 	/// Engines window object
-	WindowManager* m_windowManager;
+	IWindowManager* m_windowManager;
 	
 	/// Engines camera object
 	Camera* m_camera;

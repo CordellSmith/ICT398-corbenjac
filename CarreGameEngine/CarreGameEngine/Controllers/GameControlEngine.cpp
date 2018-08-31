@@ -1,7 +1,8 @@
-#include "..\Controllers\GameControlEngine.h"
+#include "GameControlEngine.h"
 
 #include "GL/glew.h"
 
+// This hack job needs to be replaced - cs
 int randPositions[20];
 int randRotations[20];
 
@@ -11,9 +12,7 @@ const int GameControlEngine::RunEngine()
 
 	GameLoop();
 
-	// NOTE: return 0 automatically calls ~GameControlEngine() which calls Destroy()
-	// This results in a crash on the second run through when trying to access/delete data already deleted
-	//Destroy();
+	Destroy();
 
 	return 0;
 }
@@ -190,6 +189,7 @@ void GameControlEngine::Initialize()
 	getchar();*/
 	/********************AI Testing*******************/
 
+	// This is trash and needs to be replaced - cs
 	for (int i = 0; i < 15; i++)
 	{
 		int randNum1 = rand() % (6000 - 0 + 1) + 0;

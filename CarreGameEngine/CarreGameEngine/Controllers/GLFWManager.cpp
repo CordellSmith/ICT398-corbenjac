@@ -1,6 +1,6 @@
 #include "GL\glew.h"
-#include "..\Controllers\GLFWManager.h"
-#include "..\Controllers\GameControlEngine.h"
+#include "GLFWManager.h"
+#include "GameControlEngine.h"
 
 int main()
 {

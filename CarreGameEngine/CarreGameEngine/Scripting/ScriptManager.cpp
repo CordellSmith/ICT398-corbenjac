@@ -4,7 +4,7 @@
 */
 
 // Includes
-#include "../Scripting/ScriptManager.h"
+#include "ScriptManager.h"
 #include <iostream>
 
 // Default constructor

@@ -1,5 +1,6 @@
-#include "..\Controllers\GameWorld.h"
+#include "GameWorld.h"
 
+// This needs to be changed as well as the GenRandomRotations() function - cs
 int randRot[20];
 
 void GenRandomRotations()
@@ -53,11 +54,12 @@ void GameWorld::Init(Player* player, std::multimap<std::string, IGameAsset*> gam
 
 	GenRandomRotations();
 
-	// AI testing
-	/*ComputerAI p;
-	for (int i = 0; i < 1000; i++)
-		p.Update();
-	getchar();*/
+	// AI Testing
+	//ComputerAI p;
+	//for (int i = 0; i < 1000; i++)
+	//	p.Update();
+	//getchar();
+	
 }
 
 void GameWorld::Update()
@@ -67,9 +69,6 @@ void GameWorld::Update()
 	float horizontalDistance = m_camera->CalculateHorizontalDistance();
 	float verticalDistance = m_camera->CalculateVerticalDistance();
 	m_camera->CalculateCameraPosition(horizontalDistance, verticalDistance);
-
-	//glm::vec3 test = m_player->GetPosition();
-	//std::cout << test.x << " " << test.y << " " << test.z << std::endl;
 
 	// Blue sky
 	glClearColor(0.0, 0.0, 0.5, 1.0);
@@ -177,6 +176,5 @@ void GameWorld::UpdatePhysics()
 	}
 
 	glm::vec3 tempPlayer = m_player->GetPosition();
-	//m_player->SetPosition(glm::vec3(tempPlayer.x, m_terrains[0]->GetAverageHeight(tempPlayer.x, tempPlayer.z), tempPlayer.z));
 	m_player->SetPosition(glm::vec3(temp2.getX(), m_terrains[0]->GetAverageHeight(temp2.getX(), temp2.getZ()), temp2.getZ()));
 }

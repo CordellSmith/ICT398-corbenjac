@@ -1,4 +1,4 @@
-#include "..\Controllers\Camera.h"
+#include "Camera.h"
 
 glm::mat4 Camera::SetPerspective(float fov, float aspectRatio, float near, float far)
 {

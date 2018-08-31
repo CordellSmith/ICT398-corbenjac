@@ -4,8 +4,8 @@
 */
 
 // Includes
-#include "../AI/ComputerAI.h"
-#include "../AI/AllStatesFSM.h"
+#include "ComputerAI.h"
+#include "AllStatesFSM.h"
 
 // Default constructor
 ComputerAI::ComputerAI()

@@ -5,7 +5,7 @@
 #include "..\Input\InputManager.h"
 
 	/**
-	* @class WindowManager
+	* @class IWindowManager
 	* @brief Interface class to manage the creation of the window 
 	* 
 	* This class handles input and the creation of the OpenGL context implementing GLFW.
@@ -16,7 +16,7 @@
 	* @version 02
 	* @date 31/05/2018
 	*/
-class WindowManager
+class IWindowManager
 {
 public:
 		/**
@@ -26,7 +26,7 @@ public:
 		*
 		* @return null
 		*/
-	virtual ~WindowManager() { }
+	virtual ~IWindowManager() { }
 
 		/**
 		* @brief Initializes the window

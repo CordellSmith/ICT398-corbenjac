@@ -4,7 +4,7 @@
 */
 
 //Includes
-#include "..\Texture\TextureManager.h"
+#include "TextureManager.h"
 #include <sstream>
 
 // Default constructor

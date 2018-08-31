@@ -1,4 +1,4 @@
-#include "..\Input\InputManager.h"
+#include "InputManager.h"
 #include "..\Controllers\TimeManager.h"
 
 void InputManager::KeyPressed(InputCodes code)

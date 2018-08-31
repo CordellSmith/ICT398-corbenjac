@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <fstream>															
 #include "GLFW\glfw3.h"									
-#include "WindowManager.h"								
+#include "IWindowManager.h"								
 
 	/*
 	* @class GLFWManager
@@ -20,7 +20,7 @@
 	* @version 02
 	* @date 31/05/2018
 	*/
-class GLFWManager : public WindowManager
+class GLFWManager : public IWindowManager
 {
 public:
 

@@ -5,7 +5,7 @@
 */
 
 //Includes
-#include "..\Physics\PhysicsEngine.h"
+#include "PhysicsEngine.h"
 #include <iostream>
 
 // Default constructor

@@ -11,18 +11,18 @@
     <ClCompile Include="AssetFactory\NPC.cpp" />
     <ClCompile Include="AssetFactory\Object.cpp" />
     <ClCompile Include="Renderer\OpenGl.cpp" />
-    <ClCompile Include="Source\AllStatesFSM.cpp" />
-    <ClCompile Include="Source\Camera.cpp" />
-    <ClCompile Include="Source\ComputerAI.cpp" />
-    <ClCompile Include="Source\GameControlEngine.cpp" />
-    <ClCompile Include="Source\GameWorld.cpp" />
-    <ClCompile Include="Source\GLFWManager.cpp" />
-    <ClCompile Include="Source\InputManager.cpp" />
-    <ClCompile Include="Source\PhysicsEngine.cpp" />
-    <ClCompile Include="Source\ScriptManager.cpp" />
-    <ClCompile Include="Source\Shader.cpp" />
-    <ClCompile Include="Source\TextureManager.cpp" />
-    <ClCompile Include="Source\TimeManager.cpp" />
+    <ClCompile Include="Controllers\TimeManager.cpp" />
+    <ClCompile Include="Controllers\GLFWManager.cpp" />
+    <ClCompile Include="Controllers\GameWorld.cpp" />
+    <ClCompile Include="Controllers\GameControlEngine.cpp" />
+    <ClCompile Include="Controllers\Camera.cpp" />
+    <ClCompile Include="AI\AllStatesFSM.cpp" />
+    <ClCompile Include="AI\ComputerAI.cpp" />
+    <ClCompile Include="Renderer\Shader.cpp" />
+    <ClCompile Include="Texture\TextureManager.cpp" />
+    <ClCompile Include="Scripting\ScriptManager.cpp" />
+    <ClCompile Include="Physics\PhysicsEngine.cpp" />
+    <ClCompile Include="Input\InputManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetFactory\Bruteforce.h" />
@@ -53,7 +53,7 @@
     <ClInclude Include="Controllers\GameWorld.h" />
     <ClInclude Include="Controllers\GLFWManager.h" />
     <ClInclude Include="Controllers\TimeManager.h" />
-    <ClInclude Include="Controllers\WindowManager.h" />
+    <ClInclude Include="Controllers\IWindowManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\scripts\ModelInit.lua" />

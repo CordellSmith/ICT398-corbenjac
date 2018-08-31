@@ -1,4 +1,4 @@
-#include "..\Controllers\TimeManager.h"																																	
+#include "TimeManager.h"																																	
 
 double TimeManager::CalculateFrameRate(bool writeToConsole = false)
 {

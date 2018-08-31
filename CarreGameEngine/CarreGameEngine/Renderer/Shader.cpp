@@ -1,4 +1,4 @@
-#include "..\Renderer\Shader.h"
+#include "Shader.h"
 
 std::string Shader::LoadShaderFile(std::string filePath)
 {

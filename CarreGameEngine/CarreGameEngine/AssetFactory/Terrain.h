@@ -5,7 +5,7 @@
 #include <string>
 
 #include "Model.h"
-#include "..\headers\TextureManager.h"
+#include "..\Texture\TextureManager.h"
 
 	/**
 	* @class Terrain

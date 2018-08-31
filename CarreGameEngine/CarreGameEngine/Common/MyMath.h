@@ -8,7 +8,7 @@
 #ifndef MYMATH_H
 #define MYMATH
 
-#include "..\headers\Camera.h"
+#include "..\Controllers\Camera.h"
 
 class MyMath
 {

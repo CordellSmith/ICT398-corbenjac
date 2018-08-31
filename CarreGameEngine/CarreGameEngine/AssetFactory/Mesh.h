@@ -8,9 +8,9 @@
 #include <GLM\gtx\transform2.hpp>						
 #include <GL\glew.h>
 
-#include "..\headers\TextureManager.h"
+#include "..\Texture\TextureManager.h"
 #include "..\Common\Vertex3.h"
-#include "..\headers\Shader.h"
+#include "..\Renderer\Shader.h"
 
 
 	/**

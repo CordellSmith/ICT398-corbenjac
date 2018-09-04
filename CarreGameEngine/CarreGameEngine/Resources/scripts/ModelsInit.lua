@@ -20,5 +20,9 @@ AllModels=
 	{
 		{filePath = "Resources/objects/knight.md2", texFilePath = "Resources/objects/knight.bmp", scaleX = 4.0, scaleY = 4.0, scaleZ = 4.0, posX = 7000.0, posY = 150.0, posZ = 6000.0, AI = true},
 		{filePath = "Resources/objects/knight.md2", texFilePath = "Resources/objects/knight.bmp", scaleX = 4.0, scaleY = 4.0, scaleZ = 4.0, posX = 7000.0, posY = 150.0, posZ = 5575.0, AI = false},
-	}
+	},
+	chair=
+	{
+		{filePath = "Resources/objects/office_chair/office_chair.obj", texFilePath = "Resources/objects/office_chair/office_chair_d.tga", scaleX = 150.0, scaleY = 150.0, scaleZ = 150.0, posX = 7000.0, posY = 150.0, posZ = 5200.0, AI = false},
+	},
 }

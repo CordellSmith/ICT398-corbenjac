@@ -173,6 +173,12 @@ void GameWorld::UpdatePhysics()
 				i++;
 			}
 		}
+
+		// Test chair model
+		if (itr->first == "chair")
+		{
+			m_glRenderer.Render(itr->second->GetModel());
+		}
 	}
 
 	glm::vec3 tempPlayer = m_player->GetPosition();

@@ -170,7 +170,8 @@ class PhysicsEngine
 		bool m_isDynamic;
 
 			/// Dynamic world
-		btDiscreteDynamicsWorld* m_dynamicsWorld;
+		//btDiscreteDynamicsWorld* m_collisionWorld;
+		btCollisionWorld* m_collisionWorld;
 
 			/// Array of collision shapes
 		btAlignedObjectArray<btCollisionShape*> m_collisionShapes;

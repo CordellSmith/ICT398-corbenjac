@@ -41,6 +41,9 @@
 *
 * @date 31/05/2018
 * @version 2.0	Final version for submission.
+*
+* @date 09/09/2018
+* @version 2.1	Removed Bullet's physics calculations in preparation for my own calculations. Started with determining exact collision points on physics bodies.
 */
 
 #ifndef PHYSICSENGINE_H
@@ -177,9 +180,6 @@ class PhysicsEngine
 
 			/// Holds last known player controlled object location
 		btVector3 m_playerObject;
-
-			/// Old force applied to player controlled object (don't think this is needed)
-		btVector3 m_oldForce;
 
 			/// New force applied to player controlled object (don't think this is needed)
 		btVector3 m_newForce;

@@ -7,7 +7,7 @@
 //Includes
 #include "PhysicsEngine.h"
 #include <iostream>
-
+	
 // Default constructor
 PhysicsEngine::PhysicsEngine()
 {
@@ -35,13 +35,7 @@ PhysicsEngine::PhysicsEngine()
 	// Initialize player object location
 	m_playerObject.setZero();
 
-	m_oldForce.setZero();
 	m_newForce.setZero();
-
-
-	/*btIDebugDraw tempp;
-	m_dynamicsWorld->setDebugDrawer(btIDebugDraw::DebugDrawModes::DBG_MAX_DEBUG_DRAW_MODE);
-	m_dynamicsWorld->deb*/
 }
 
 // De-constructor (not implemented)
@@ -142,7 +136,7 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos)
 	// Create box shape and add to shape array
 	btCollisionShape* boxShape = new btBoxShape(btVector3(btScalar(20), btScalar(50), btScalar(20)));
 	m_collisionShapes.push_back(boxShape);
-
+	
 	// Create a dynamic object
 	btTransform startTransform;
 	startTransform.setIdentity();
@@ -178,9 +172,19 @@ void PhysicsEngine::Simulate(std::vector<btVector3> &bodyPos, btVector3 &playerO
 {
 	m_dynamicsWorld->stepSimulation(1.f / 60.f, 10);
 
+
+	/*****************************************************************/
+	m_dynamicsWorld->performDiscreteCollisionDetection();
+
+	int numManifolds = m_dynamicsWorld->getDispatcher()->getNumManifolds();
+
+	std::cout << numManifolds << std::endl;
+	/*****************************************************************/
+
 	// Update positions of all dynamic objects
 	for (int j = m_dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
 	{
+		/**
 		// Get the next object, and activate it
 		btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[j];
 		btRigidBody* body = btRigidBody::upcast(obj);
@@ -226,10 +230,11 @@ void PhysicsEngine::Simulate(std::vector<btVector3> &bodyPos, btVector3 &playerO
 			bodyPos[j].setY(trans.getOrigin().getY());
 			bodyPos[j].setZ(trans.getOrigin().getZ());
 		}	
+		*/
 	}
 }
 
-// Testing for creating a heightfield terrain shape
+// Testing for creating a heightfield terrain shape (Can delete)
 void PhysicsEngine::CreateHeightfieldTerrainShape()
 {
 	//unsigned char *terrainData;
@@ -288,6 +293,7 @@ void PhysicsEngine::CreateHeightfieldTerrainShape()
 	m_dynamicsWorld->addRigidBody(body);
 }
 
+// Activate all dynamic objects so they continue to simulate physics
 void PhysicsEngine::ActivateAllObjects()
 {
 	// Loop through every rigid body object

@@ -108,6 +108,9 @@ void GameControlEngine::Initialize()
 	float assetScaleXYZ[3];
 	float assetPosXYZ[3];
 
+
+	Model* tempModel;
+
 	// Get iterator to start of models map
 	std::unordered_map<std::string, ModelsData>::iterator itModels = m_allModelsData.begin();
 
@@ -139,6 +142,11 @@ void GameControlEngine::Initialize()
 				modelAsset->SetScale(glm::vec3(assetScaleXYZ[0], assetScaleXYZ[1], assetScaleXYZ[2]));
 				modelAsset->SetPosition(glm::vec3(assetPosXYZ[0], assetPosXYZ[1], assetPosXYZ[2]));
 
+
+				
+
+
+
 				// If AI model, make AI for it
 				if ((*itModels).second.isAI[k])
 				{
@@ -151,6 +159,16 @@ void GameControlEngine::Initialize()
 
 				m_assetFactory->AddAsset(modelAsset);
 			}
+
+			tempModel = modelAsset->GetModel();
+			std::vector<Mesh> temp6 = tempModel->GetMeshBatch();
+			Mesh temp7 = temp6[0];
+			std::vector<Vertex3> temp8 = temp7.GetVertices();
+			int size = temp8.size();
+			std::string temp0 = (*itModels).first;
+			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
+			glm::vec3 temp4 = tempModel->GetPosition();
+
 		}
 		// Player model
 		else if ((*itModels).first == "player")
@@ -173,10 +191,26 @@ void GameControlEngine::Initialize()
 			player->LoadFromFilePath((*itModels).second.filePath);
 			player->SetPosition(glm::vec3(assetPosXYZ[0], assetPosXYZ[1], assetPosXYZ[2]));
 			player->SetScale(glm::vec3(assetScaleXYZ[0], assetScaleXYZ[1], assetScaleXYZ[2]));
+
+			tempModel = player->GetModel();
+			std::vector<Mesh> temp6 = tempModel->GetMeshBatch();
+			Mesh temp7 = temp6[0];
+			std::vector<Vertex3> temp8 = temp7.GetVertices();
+			int size = temp8.size();
+			std::string temp0 = (*itModels).first;
+			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
+			glm::vec3 temp4 = tempModel->GetPosition();
+
 		}
+		
+		
+
 		// Increment iterator
 		itModels++;
 	}
+
+	
+
 	/********************Loading of all models at once*******************/
 
 	m_windowManager->GetInputManager()->SetPlayer(player);
@@ -245,8 +279,8 @@ void GameControlEngine::InitializePhysics()
 	m_collisionBodyPos.push_back(bt_playerPos);
 
 	int i = 1;
-	int numOfRocks = 10;
-	int numOfKnights = 20;
+	int numOfRocks = 2;
+	int numOfKnights = 2;
 	// Loop through map and add all assets to the collision body list
 	std::multimap<std::string, IGameAsset*>::const_iterator itr;
 	for (itr = m_assetFactory->GetAssets().begin(); itr != m_assetFactory->GetAssets().end(); itr++)

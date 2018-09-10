@@ -161,6 +161,12 @@ class PhysicsEngine
 			*/
 		void ActivateAllObjects();
 
+
+
+		btCollisionObject* TriangleMeshTest(btVector3 &p0, btVector3 &p1, btVector3 &p2, btVector3 &pos, bool useQuantizedBvhTree, btVector3 &inertia, btScalar mass, btScalar restitution, bool collision);
+
+
+
 	private:
 
 			/// Determines if shape is dynamic or not

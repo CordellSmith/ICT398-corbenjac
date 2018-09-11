@@ -99,7 +99,7 @@ void GameControlEngine::Initialize()
 
 	/********************Loading of all models at once*******************/
 	// Create asset
-	IGameAsset* modelAsset;
+	IGameAsset* modelAsset = NULL;
 
 	//std::vector<ComputerAI*> m_allAI;
 	ComputerAI* modelAI;

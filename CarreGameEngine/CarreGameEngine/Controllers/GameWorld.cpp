@@ -174,7 +174,7 @@ void GameWorld::UpdatePhysics()
 			}
 		}
 		
-		if (itr->first == "tavern")
+		if (itr->first == "building")
 		{	
 			/*rX = m_collisionBodyPos[i].x();
 			rY = m_collisionBodyPos[i].y() - 100;

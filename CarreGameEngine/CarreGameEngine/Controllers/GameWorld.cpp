@@ -185,6 +185,10 @@ void GameWorld::UpdatePhysics()
 				m_glRenderer.Render(itr->second->GetModel());
 				i++;
 		}
+		if (itr->first == "splashScreen") {
+			m_glRenderer.Render(itr->second->GetModel());
+			i++;
+		}
 	}
 
 	glm::vec3 tempPlayer = m_player->GetPosition();

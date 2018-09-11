@@ -82,5 +82,9 @@ AllTextures=
 		{filePath = "Resources/objects/LectureTheatre/RoofInside.jpg"},
 		{filePath = "Resources/objects/LectureTheatre/Rubber_s.jpeg"},
 		{filePath = "Resources/objects/LectureTheatre/Table.png"},
+	},
+	splashScreen=
+	{
+		{filePath = "Resources/SplashScreen.jpg"},
 	}
 }

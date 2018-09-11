@@ -28,5 +28,9 @@ AllModels=
 	lecTheatre=
 	{
 		{filePath = "Resources/objects/LectureTheatre/Building.obj", texFilePath = "", scaleX = 100.0, scaleY = 100.0, scaleZ = 100.0, posX = 7000.0, posY = -1000.0, posZ = 5200.0, AI = false},
+	},
+	splashScreen=
+	{
+		{filePath = "Resources/SplashScreen.obj", texFilePath = "", scaleX = 1000.0, scaleY = 1000.0, scaleZ = 100.0, posX = 7000.0, posY = -50.0, posZ = 6100.0, AI = false},
 	}
 }

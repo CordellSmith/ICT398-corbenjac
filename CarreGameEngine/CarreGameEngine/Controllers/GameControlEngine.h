@@ -203,6 +203,9 @@ protected:
 	std::vector<unsigned int> m_rockModelIndice;
 	std::vector<Vertex3> m_rockModel;
 
-	std::vector<unsigned int> m_tavIndice;
-	std::vector<Vertex3> m_tavModel;
+	std::vector<unsigned int> m_lecTheatreIndice;
+	std::vector<Vertex3> m_lecTheatreModel;
+
+	std::vector<Mesh> m_modelMeshData;
+	std::vector<Mesh> m_modelMeshDataRock;
 };

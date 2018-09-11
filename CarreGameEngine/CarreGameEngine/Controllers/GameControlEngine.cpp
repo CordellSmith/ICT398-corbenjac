@@ -99,7 +99,7 @@ void GameControlEngine::Initialize()
 
 	/********************Loading of all models at once*******************/
 	// Create asset
-	IGameAsset* modelAsset;
+	IGameAsset* modelAsset = NULL;
 
 	//std::vector<ComputerAI*> m_allAI;
 	ComputerAI* modelAI;
@@ -138,7 +138,7 @@ void GameControlEngine::Initialize()
 				// Create name asset data and add to asset map
 				modelAsset = m_assetFactory->CreateAsset(ASS_OBJECT, (*itModels).first);
 				modelAsset->LoadFromFilePath((*itModels).second.filePath);
-				if ((*itModels).first != "tavern")
+				if ((*itModels).first != "lecTheatre")
 				{
 					modelAsset->AddTexutre(TextureManager::Instance().GetTextureID((*itModels).second.texFilePath), (*itModels).second.texFilePath);
 				}
@@ -161,8 +161,8 @@ void GameControlEngine::Initialize()
 			if ((*itModels).first == "rock")
 			{
 				tempModel = modelAsset->GetModel();
-				std::vector<Mesh> temp6 = tempModel->GetMeshBatch();
-				Mesh temp7 = temp6[0];
+				m_modelMeshDataRock = tempModel->GetMeshBatch();
+				Mesh temp7 = m_modelMeshDataRock[0];
 				m_rockModel = temp7.GetVertices();
 
 				int size = m_rockModel.size();
@@ -172,20 +172,22 @@ void GameControlEngine::Initialize()
 				m_rockModelIndice = temp7.GetIndices();
 				//std::cout << "Indices: " << m_rockModelIndice.size() << std::endl;
 			}
-			if ((*itModels).first == "tavern")
+
+			if ((*itModels).first == "lecTheatre")
 			{
 				tempModel = modelAsset->GetModel();
-				std::vector<Mesh> temp6 = tempModel->GetMeshBatch();
-				Mesh temp7 = temp6[0];
-				m_tavModel = temp7.GetVertices();
+				m_modelMeshData = tempModel->GetMeshBatch();
+				Mesh temp7 = m_modelMeshData[0];
+				m_lecTheatreModel = temp7.GetVertices();
 
-				int size = m_rockModel.size();
+				int size = m_lecTheatreModel.size();
 				std::string temp0 = (*itModels).first;
 				std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
 				glm::vec3 temp4 = tempModel->GetPosition();
-				m_tavIndice = temp7.GetIndices();
+				m_lecTheatreIndice = temp7.GetIndices();
 				//std::cout << "Indices: " << m_rockModelIndice.size() << std::endl;
 			}
+			
 
 
 		}
@@ -210,18 +212,6 @@ void GameControlEngine::Initialize()
 			player->LoadFromFilePath((*itModels).second.filePath);
 			player->SetPosition(glm::vec3(assetPosXYZ[0], assetPosXYZ[1], assetPosXYZ[2]));
 			player->SetScale(glm::vec3(assetScaleXYZ[0], assetScaleXYZ[1], assetScaleXYZ[2]));
-
-			tempModel = player->GetModel();
-			std::vector<Mesh> temp6 = tempModel->GetMeshBatch();
-			Mesh temp7 = temp6[0];
-			std::vector<Vertex3> temp8 = temp7.GetVertices();
-			int size = temp8.size();
-			std::string temp0 = (*itModels).first;
-			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
-			glm::vec3 temp4 = tempModel->GetPosition();
-			
-
-
 		}
 		
 		
@@ -295,12 +285,12 @@ void GameControlEngine::InitializePhysics()
 	m_collisionBodyPos.push_back(bt_cameraPos);
 
 	// Add player (taxi) to the rigid bodies
-	glm::vec3 playerPos(m_camera->GetPosition());
-	btVector3 bt_playerPos(playerPos.x, playerPos.y, playerPos.z);
-	m_collisionBodyPos.push_back(bt_playerPos);
+	//glm::vec3 playerPos(m_camera->GetPosition());
+	//btVector3 bt_playerPos(playerPos.x, playerPos.y, playerPos.z);
+	//m_collisionBodyPos.push_back(bt_playerPos);
 
-	int i = 1;
-	int numOfRocks = 5;
+	//int i = 1;
+	int numOfRocks = 0;
 	int numOfKnights = 0;
 	// Loop through map and add all assets to the collision body list
 	std::multimap<std::string, IGameAsset*>::const_iterator itr;
@@ -335,21 +325,22 @@ void GameControlEngine::InitializePhysics()
 				randomPos = btVector3(tempX, tempY, tempZ);
 
 				//m_physicsWorld->CreateStaticRigidBody(randomPos, "rock");
-				m_physicsWorld->TriangleMeshTest(m_rockModel, m_rockModelIndice, randomPos, true, false);
+				m_physicsWorld->TriangleMeshTest(m_modelMeshDataRock, randomPos, true, false);
 				m_collisionBodyPos.push_back(randomPos);
 			}
 		}
-		if (itr->second->GetAssetName() == "tavern")
+		if (itr->second->GetAssetName() == "lecTheatre")
 		{
 			
-				tempX = itr->second->GetPosition().x + RandomPos();
-				tempZ = itr->second->GetPosition().z + RandomPos();
-				tempY = m_terrains[0]->GetAverageHeight(tempX, tempZ);
+				tempX = itr->second->GetPosition().x;
+				tempZ = itr->second->GetPosition().z;
+				tempY = itr->second->GetPosition().y;
 
 				randomPos = btVector3(tempX, tempY, tempZ);
+				std::cout << m_lecTheatreModel.size() << " and " << m_lecTheatreIndice.size() << std::endl;
 
 				//m_physicsWorld->CreateStaticRigidBody(randomPos, "rock");
-				m_physicsWorld->TriangleMeshTest(m_tavModel, m_tavIndice, randomPos, true, false);
+				m_physicsWorld->TriangleMeshTest(m_modelMeshData, randomPos, true, false);
 				m_collisionBodyPos.push_back(randomPos);
 			
 		}

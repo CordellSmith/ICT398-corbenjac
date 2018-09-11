@@ -27,7 +27,7 @@ PhysicsEngine::PhysicsEngine()
 	m_dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
 	// Set the gravity
-	m_dynamicsWorld->setGravity(btVector3(0, 0, 0));
+	m_dynamicsWorld->setGravity(btVector3(0, -10, 0));
 
 	// Initialize all objects to static
 	m_isDynamic = false;
@@ -97,7 +97,9 @@ void PhysicsEngine::CreateStaticRigidBody(btVector3 &pos, std::string type)
 void PhysicsEngine::CreatePlayerControlledRigidBody(btVector3 &playerObj)
 {
 	// Create box shape and add to shape array
-	btCollisionShape* camShape = new btBoxShape(btVector3(btScalar(30), btScalar(20), btScalar(50)));
+	//btCollisionShape* camShape = new btBoxShape(btVector3(btScalar(30), btScalar(20), btScalar(50)));
+	btCollisionShape* camShape = new btCapsuleShape(10, 20);
+	//btCollisionShape* camShape = new btSphereShape(10);
 	m_collisionShapes.push_back(camShape);
 
 	// Create a dynamic object
@@ -126,9 +128,9 @@ void PhysicsEngine::CreatePlayerControlledRigidBody(btVector3 &playerObj)
 	// Set the index for the type of rigid body that is being created
 	body->setUserIndex(CAMERA);
 	body->setContactProcessingThreshold(BT_LARGE_FLOAT);
-	body->setCcdMotionThreshold(1e-10);
-	body->setCcdSweptSphereRadius(100);
-
+	body->setCcdMotionThreshold(1e-7);
+	body->setCcdSweptSphereRadius(15);
+	
 	// Add the body to the dynamic world
 	m_dynamicsWorld->addRigidBody(body);
 
@@ -136,7 +138,7 @@ void PhysicsEngine::CreatePlayerControlledRigidBody(btVector3 &playerObj)
 	m_playerObject = playerObj;
 
 	// Disable gravity for this object
-	//body->setGravity(btVector3(0.0, 0.0, 0.0));
+	//body->setGravity(btVector3(0.0, 10.0, 0.0));
 }
 
 // Create a dynamic rigid body
@@ -194,7 +196,7 @@ void PhysicsEngine::Simulate(std::vector<btVector3> &bodyPos, btVector3 &playerO
 		{
 			//body->clearForces();
 			btVector3 tempVel = body->getLinearVelocity();
-			//body->setLinearVelocity(btVector3(0,tempVel.getY(),0));
+			//body->setLinearVelocity(btVector3(0,-2,0));
 			body->setLinearVelocity(btVector3(0, 0, 0));
 		}
 
@@ -213,31 +215,21 @@ void PhysicsEngine::Simulate(std::vector<btVector3> &bodyPos, btVector3 &playerO
 		{
 			// TODO: Make this better (Jack)
 			// Apply force in direction camera was moved
-			m_newForce.setX((playerObj.x() - m_playerObject.x()) * 10000);
+			m_newForce.setX((playerObj.x() - m_playerObject.x()) * 20000);
 			//m_newForce.setY((playerObj.y() - m_playerObject.y()) * 10000);
-			m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 10000);
+			m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 20000);
 
 			// Update rigid body location for drawing
 			body->applyCentralForce(m_newForce);
 			m_playerObject = trans.getOrigin();
 			playerObj = m_playerObject;
 		}
-		/*else if (body->getUserIndex() == SPHERE)
-		{
-			std::cout << "Rock" << std::endl;
-		}*/
 		else
 		{
 			// Update object positions for drawing
 			bodyPos[j].setX(trans.getOrigin().getX());
 			bodyPos[j].setY(trans.getOrigin().getY());
 			bodyPos[j].setZ(trans.getOrigin().getZ());
-
-			if (body->getUserIndex() == SPHERE)
-			{
-				//std::cout << bodyPos[j].getX() << " " << bodyPos[j].getY() << " " << bodyPos[j].getZ() << std::endl;
-			}
-
 		}	
 	}
 	//std::cout << "/n/n/n/n/n" << std::endl;
@@ -318,28 +310,39 @@ void PhysicsEngine::ActivateAllObjects()
 
 
 
-btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Vertex3> &modelMesh, std::vector<unsigned int> &modelIndices, btVector3 &pos, bool useQuantizedBvhTree, bool collision)
+btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, btVector3 &pos, bool useQuantizedBvhTree, bool collision)
 {
 	btTriangleMesh* trimesh = new btTriangleMesh();
-	for (int i = 0; i < modelIndices.size(); i+=3)
+	//std::cout << modelIndices.size()  << " and " << modelMesh.size() << std::endl;
+	for (int j = 0; j < modelMesh.size(); j++)
 	{
-		glm::vec3 x = modelMesh[modelIndices[i]].m_position;
-		glm::vec3 y = modelMesh[modelIndices[i+1]].m_position;
-		glm::vec3 z = modelMesh[modelIndices[i+2]].m_position;
+		Mesh tempMesh = modelMesh[j];
+		std::vector<unsigned int> tempMeshIndice = tempMesh.GetIndices();
+		std::vector<Vertex3> tempMeshVertex = tempMesh.GetVertices();
 
-		btVector3 p0, p1, p2;
+		for (int i = 0; i < tempMeshIndice.size(); i += 3)
+		{
+			glm::vec3 x = tempMeshVertex[tempMeshIndice[i]].m_position;
+			glm::vec3 y = tempMeshVertex[tempMeshIndice[i+1]].m_position;
+			glm::vec3 z = tempMeshVertex[tempMeshIndice[i+2]].m_position;
+			/*glm::vec3 x = modelMesh[i].m_position;
+			glm::vec3 y = modelMesh[i + 1].m_position;
+			glm::vec3 z = modelMesh[i + 2].m_position;*/
 
-		p0.setX(x.x);
-		p0.setY(x.y);
-		p0.setZ(x.z);
-		p1.setX(y.x);
-		p1.setY(y.y);
-		p1.setZ(y.z);
-		p2.setX(z.x);
-		p2.setY(z.y);
-		p2.setZ(z.z);
+			btVector3 p0, p1, p2;
 
-		trimesh->addTriangle(p0, p1, p2);
+			p0.setX(x.x);
+			p0.setY(x.y);
+			p0.setZ(x.z);
+			p1.setX(y.x);
+			p1.setY(y.y);
+			p1.setZ(y.z);
+			p2.setX(z.x);
+			p2.setY(z.y);
+			p2.setZ(z.z);
+
+			trimesh->addTriangle(p0, p1, p2);
+		}
 	}
 
 	

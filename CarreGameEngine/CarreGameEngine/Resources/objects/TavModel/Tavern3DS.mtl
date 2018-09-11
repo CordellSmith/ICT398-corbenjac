@@ -1,0 +1,35 @@
+# Exported from 3D Builder
+
+newmtl 19___Default
+Kd 1.000000 1.000000 1.000000
+map_Kd tavWall.jpg
+
+newmtl 07___Default
+Kd 0.058800 0.235300 0.031400
+
+newmtl 14___Default
+Kd 1.000000 1.000000 1.000000
+map_Kd block1.JPG
+
+newmtl 09___Default
+Kd 1.000000 1.000000 1.000000
+map_Kd woodTable.jpg
+
+newmtl Window
+Kd 0.380400 0.839200 0.921600
+
+newmtl 08___Default
+Kd 1.000000 1.000000 1.000000
+map_Kd FatYakSign2.jpg
+
+newmtl 13___Default
+Kd 1.000000 1.000000 1.000000
+map_Kd TavDoor.jpg
+
+newmtl 20___Default
+Kd 1.000000 1.000000 1.000000
+map_Kd FatYakSign2.jpg
+
+newmtl 15___Default
+Kd 1.000000 1.000000 1.000000
+map_Kd CarltonDraughtSign.jpg

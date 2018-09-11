@@ -52,6 +52,7 @@
 #include <vector>
 #include <fstream>	// Used for testing of heightfield terrain shape (will be removed later)
 #include "LinearMath\btIDebugDraw.h"
+#include "..\Common\Vertex3.h"
 
 class PhysicsEngine
 {
@@ -160,6 +161,12 @@ class PhysicsEngine
 			* @return void
 			*/
 		void ActivateAllObjects();
+
+
+
+		btCollisionObject* TriangleMeshTest(std::vector<Vertex3> &modelMesh, std::vector<unsigned int> &modelIndices, btVector3 &pos, bool useQuantizedBvhTree, bool collision);
+
+
 
 	private:
 

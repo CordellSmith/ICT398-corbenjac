@@ -121,8 +121,8 @@ void GameWorld::UpdatePhysics()
 	// Draw each object at the updated positions based on physics simulation
 	std::multimap<std::string, IGameAsset*>::iterator itr;
 	int i = 1;
-	int numOfRocks = 10;
-	int numOfKnights = 20;
+	int numOfRocks = 5;
+	int numOfKnights = 0;
 	ComputerAI* compAI;
 	for (itr = m_gameAssets.begin(); itr != m_gameAssets.end(); itr++)
 	{
@@ -173,11 +173,16 @@ void GameWorld::UpdatePhysics()
 				i++;
 			}
 		}
+		
+		if (itr->first == "tavern")
+		{	
+			/*rX = m_collisionBodyPos[i].x();
+			rY = m_collisionBodyPos[i].y() - 100;
+			rZ = m_collisionBodyPos[i].z();*/
 
-		// Test chair model
-		if (itr->first == "chair")
-		{
+			//itr->second->SetPosition(glm::vec3(rX, rY, rZ));
 			m_glRenderer.Render(itr->second->GetModel());
+			i++;
 		}
 	}
 

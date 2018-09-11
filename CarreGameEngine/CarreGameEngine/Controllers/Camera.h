@@ -41,6 +41,21 @@ public:
 	}
 
 	/**
+	* @brief Constructor to set position and distance from player.
+	*
+	* Sets cmaera position and the distance from player to a specified value.
+	*
+	* @param float distanceFromPlayer
+	*
+	* @return null
+	*/
+	Camera(float distanceFromPlayer) {
+		m_position = glm::vec3(0.0, 0.0, 0.0);
+		m_distanceFromPlayer = distanceFromPlayer;
+		m_angleAroundPlayer = 0.0;
+	}
+
+	/**
 	* @brief Default constructor
 	*
 	* This sets the perspective matrix that is built from the field of fiew, aspect ratio
@@ -236,7 +251,7 @@ public:
 
 	void Zoom(float yoffset);
 	void ChangePitch(float yoffset);
-	void ChangeAngleAroundPlayer(float xoffset);
+	void ChangeYaw(float xoffset);
 	float CalculateHorizontalDistance();
 	float CalculateVerticalDistance();
 	void CalculateCameraPosition(float horizontalDistance, float verticalDistance);

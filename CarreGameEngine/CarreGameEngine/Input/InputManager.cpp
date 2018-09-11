@@ -32,22 +32,12 @@ void InputManager::KeyPressed(InputCodes code)
 	}
 }
 
-void InputManager::MousePressed(InputCodes code, float mouseX, float mouseY)
+void InputManager::MouseMove(float mouseX, float mouseY)
 {
 	if (m_camera == nullptr)
 		return;
-
-	switch (code)
-	{
-	case MouseButtonLeft:
-		m_camera->ChangeAngleAroundPlayer(mouseX);
-		break;
-	case MouseButtonRight:
-		m_camera->ChangePitch(mouseY);
-		break;
-	default:
-		break;
-	}
+	m_camera->ChangeYaw(mouseX);
+	m_camera->ChangePitch(mouseY);
 }
 
 void InputManager::WheelScrolled(double yoffset)

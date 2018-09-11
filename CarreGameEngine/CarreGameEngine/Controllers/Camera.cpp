@@ -87,13 +87,13 @@ void Camera::ChangePitch(float yoffest)
 	float pitchChange = yoffest;
 	m_pitch += pitchChange * mf;
 
-	if (m_pitch > glm::radians(70.0))
-		m_pitch = glm::radians(70.0);
-	if (m_pitch < glm::radians(1.0))
-		m_pitch = glm::radians(1.0);
+	if (m_pitch > glm::radians(80.0))
+		m_pitch = glm::radians(80.0);
+	if (m_pitch < glm::radians(-80.0))
+		m_pitch = glm::radians(-80.0);
 }
 
-void Camera::ChangeAngleAroundPlayer(float xoffset)
+void Camera::ChangeYaw(float xoffset)
 {
 	// multiplication factor changes how fast pitch up and down occurs
 	float mf = 0.1;

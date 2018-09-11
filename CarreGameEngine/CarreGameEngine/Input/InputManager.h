@@ -101,7 +101,7 @@ public:
 		*/
 	Camera* GetCamera() { return m_camera; }
 		
-	void MousePressed(InputCodes code, float mouseX, float mouseY);
+	void MouseMove(float mouseX, float mouseY);
 
 	void WheelScrolled(double offsetz);
 

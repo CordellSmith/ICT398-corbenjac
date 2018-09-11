@@ -4,7 +4,7 @@
 --Brief: Initialise all camera variables
 --Note: Needs improvements
 camPosX=300
-camPosY=250
+camPosY=300
 camPosZ=300
 yaw=0
 pitch=25

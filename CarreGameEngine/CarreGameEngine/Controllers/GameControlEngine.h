@@ -197,4 +197,12 @@ protected:
 
 	/// Player object
 	Player* player;
+
+
+
+	std::vector<unsigned int> m_rockModelIndice;
+	std::vector<Vertex3> m_rockModel;
+
+	std::vector<unsigned int> m_tavIndice;
+	std::vector<Vertex3> m_tavModel;
 };

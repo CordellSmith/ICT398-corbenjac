@@ -16,6 +16,9 @@
 	* @version 01
 	* @date 31/05/2018
 	*
+	* @author Ben Ward
+	* @version 02 - made it suitable for a first person camera.
+	* @date 11/09/2018
 	*/
 class Player 
 {
@@ -63,24 +66,48 @@ public:
 		/**
 		* @brief Moves the player forward
 		*
-		* Takes the delta time as a parameter (glfwGetTime()) and uses it to calculate the
+		* Takes the delta time as a parameter (glfwGetTime()) and the forward vector and uses it to calculate the
 		* speed at which the player will move. It then adjusts the position of the player
 		* in a forward direction for movement.
 		*
 		* @return void
 		*/
-	void MoveForward(float time);
+	void MoveForward(float time, glm::vec3& forward);
 
 		/**
 		* @brief Moves the player backward
 		*
-		* Takes the delta time as a parameter (glfwGetTime()) and uses it to calculate the
+		* Takes the delta time as a parameter (glfwGetTime()) and the forward vector and uses it to calculate the
 		* speed at which the player will move. It then adjusts the position of the player
 		* in a backward direction for movement.
 		*
 		* @return void
 		*/
-	void MoveBackward(float time);
+	void MoveBackward(float time, glm::vec3& forward);
+
+		/**
+		* @brief Moves the player left
+		*
+		* Takes the delta time as a parameter (glfwGetTime()), as well as the vector 
+		* representing the current left of the player and uses it to calculate the
+		* speed and direction at which the player will move. It then adjusts the position of the player
+		* in a right direction for movement.
+		*
+		* @return void
+		*/
+	void StrafeLeft(float time, glm::vec3& left);
+
+		/**
+		* @brief Moves the player left
+		*
+		* Takes the delta time as a parameter (glfwGetTime()), as well as the vector
+		* representing the current left of the player and uses it to calculate the
+		* speed and direction at which the player will move. It then adjusts the position of the player
+		* in a right direction for movement.
+		*
+		* @return void
+		*/
+	void StrafeRight(float time, glm::vec3& left);
 
 		/**
 		* @brief Turns the player clockwise

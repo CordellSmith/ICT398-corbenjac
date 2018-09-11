@@ -15,7 +15,7 @@ AllModels=
 	player=
 	{
 		--{filePath = "Resources/objects/taxi/taxi.obj", texFilePath = "", scaleX = 50.0, scaleY = 50.0, scaleZ = 50.0, posX = 7000.0, posY = 150.0, posZ = 5200.0, AI = false},
-		{filePath = "", texFilePath = "", scaleX = 50.0, scaleY = 50.0, scaleZ = 50.0, posX = 7000.0, posY = 150.0, posZ = 5200.0, AI = false},
+		{filePath = "", texFilePath = "", scaleX = 100.0, scaleY = 100.0, scaleZ = 100.0, posX = 7000.0, posY = 150.0, posZ = 5200.0, AI = false},
 	},
 	knight=
 	{

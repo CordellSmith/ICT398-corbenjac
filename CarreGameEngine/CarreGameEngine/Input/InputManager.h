@@ -67,7 +67,9 @@ enum InputCodes
 	* @date 29/03/2018
 	* @version 02
 	* @date 31/05/2018
-	*
+	* @author Ben Ward
+	* @version 03 - made it suitable for a first person camera.
+	* @date 11/09/2018
 	*/
 class InputManager
 {

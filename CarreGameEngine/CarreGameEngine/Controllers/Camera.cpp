@@ -113,7 +113,8 @@ float Camera::CalculateHorizontalDistance()
 
 float Camera::CalculateVerticalDistance()
 {
-	return (float)m_distanceFromPlayer * glm::sin(m_pitch);
+	float temp = (float)m_distanceFromPlayer * glm::sin(m_pitch);
+	return temp > 0.0 ? temp : 100.0f;
 }
 
 void Camera::CalculateCameraPosition(float horizontalDistance, float verticalDistance)

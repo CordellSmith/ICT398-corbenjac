@@ -11,17 +11,17 @@ void InputManager::KeyPressed(InputCodes code)
 	{
 		// Move forwards
 		case Up: case W: case w:
-			m_player->MoveForward((float)(TimeManager::Instance().DeltaTime));
+			m_player->MoveForward((float)(TimeManager::Instance().DeltaTime), glm::normalize(m_camera->GetView()));
 			break;
 		// Move backwards
 		case Down: case S: case s:
-			m_player->MoveBackward((float)(TimeManager::Instance().DeltaTime));
+			m_player->MoveBackward((float)(TimeManager::Instance().DeltaTime), glm::normalize(m_camera->GetView()));
 			break;
 		case Left: case A: case a:
-			m_player->TurnAntiClock((float)(TimeManager::Instance().DeltaTime));
+			m_player->StrafeLeft((float)(TimeManager::Instance().DeltaTime), glm::normalize(glm::cross(m_camera->GetUp(), m_camera->GetView())));
 			break;
 		case Right: case D: case d:
-			m_player->TurnClock((float)(TimeManager::Instance().DeltaTime));
+			m_player->StrafeRight((float)(TimeManager::Instance().DeltaTime), glm::normalize(glm::cross(m_camera->GetUp(), m_camera->GetView())));
 			break;
 		case q: case Q:
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

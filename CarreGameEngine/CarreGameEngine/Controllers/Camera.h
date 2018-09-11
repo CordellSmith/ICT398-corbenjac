@@ -23,6 +23,10 @@
 	*
 	* @version 02
 	* @date 31/05/2018
+	*
+	* @author Ben Ward
+	* @version 03 - made it suitable for a first person camera.
+	* @date 11/09/2018
 	*/
 class Camera
 {
@@ -131,7 +135,7 @@ public:
 	/**
 	* @brief Gets the camera view
 	*
-	* This function returns the cameras position in a vec3.
+	* This function returns the cameras forwards vector.
 	*
 	* @return glm::vec3
 	*/

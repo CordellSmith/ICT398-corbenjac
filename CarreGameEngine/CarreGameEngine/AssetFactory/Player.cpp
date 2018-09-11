@@ -21,23 +21,37 @@ const void Player::Destroy()
 	return void();
 }
 
-void Player::MoveForward(float time)
+void Player::MoveForward(float time, glm::vec3& forward)
 {
 	m_currentMoveSpeed = m_moveSpeed * time * 15;
-	float dx = m_currentMoveSpeed * glm::sin(m_playerModel->GetRotation().y);
-	float dz = m_currentMoveSpeed * glm::cos(m_playerModel->GetRotation().y);
+	//float dx = m_currentMoveSpeed * glm::sin(cameraRot);
+	//float dz = m_currentMoveSpeed * glm::cos(cameraRot);
 
-	glm::vec3 temp = m_playerModel->GetPosition() + glm::vec3(dx, 0, dz);
+	glm::vec3 temp = m_playerModel->GetPosition() + (m_currentMoveSpeed * forward);
 	m_playerModel->SetPosition(temp);
 }
 
-void Player::MoveBackward(float time)
+void Player::MoveBackward(float time, glm::vec3& forward)
 {
 	m_currentMoveSpeed = -m_moveSpeed * time * 15;
-	float dx = m_currentMoveSpeed * glm::sin(m_playerModel->GetRotation().y);
-	float dz = m_currentMoveSpeed * glm::cos(m_playerModel->GetRotation().y);
+	//float dx = m_currentMoveSpeed * glm::sin(cameraRot);
+	//float dz = m_currentMoveSpeed * glm::cos(cameraRot);
 
-	glm::vec3 temp = m_playerModel->GetPosition() + glm::vec3(dx, 0, dz);
+	glm::vec3 temp = m_playerModel->GetPosition() + (m_currentMoveSpeed * forward);
+	m_playerModel->SetPosition(temp);
+}
+
+void Player::StrafeLeft(float time, glm::vec3& left) {
+	m_currentMoveSpeed = m_moveSpeed * time * 15;
+
+	glm::vec3 temp = m_playerModel->GetPosition() + (m_currentMoveSpeed * left);
+	m_playerModel->SetPosition(temp);
+}
+
+void Player::StrafeRight(float time, glm::vec3& left) {
+	m_currentMoveSpeed = -m_moveSpeed * time * 15;
+
+	glm::vec3 temp = m_playerModel->GetPosition() + (m_currentMoveSpeed * left);
 	m_playerModel->SetPosition(temp);
 }
 

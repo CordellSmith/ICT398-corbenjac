@@ -69,5 +69,18 @@ AllTextures=
 		{filePath = "Resources/objects/TavModel/TavDoor.jpg"},
 		{filePath = "Resources/objects/TavModel/tavWall.jpg"},
 		{filePath = "Resources/objects/TavModel/woodTable.jpg"},
+	},
+	lecTheatre=
+	{
+		{filePath = "Resources/objects/LectureTheatre/Darkwood_s.jpg"},
+		{filePath = "Resources/objects/LectureTheatre/Exitsign.jpg"},
+		{filePath = "Resources/objects/LectureTheatre/GreenCarpet_S.jpg"},
+		{filePath = "Resources/objects/LectureTheatre/Limestone_seamless.jpg"},
+		{filePath = "Resources/objects/LectureTheatre/LTdoor.jpg"},
+		{filePath = "Resources/objects/LectureTheatre/MurdochUniversityLogo.png"},
+		{filePath = "Resources/objects/LectureTheatre/Projector.png"},
+		{filePath = "Resources/objects/LectureTheatre/RoofInside.jpg"},
+		{filePath = "Resources/objects/LectureTheatre/Rubber_s.jpeg"},
+		{filePath = "Resources/objects/LectureTheatre/Table.png"},
 	}
 }

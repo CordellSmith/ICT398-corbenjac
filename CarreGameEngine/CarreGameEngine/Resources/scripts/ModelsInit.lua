@@ -20,5 +20,13 @@ AllModels=
 	{
 		{filePath = "Resources/objects/knight.md2", texFilePath = "Resources/objects/knight.bmp", scaleX = 4.0, scaleY = 4.0, scaleZ = 4.0, posX = 7000.0, posY = 150.0, posZ = 6000.0, AI = true},
 		{filePath = "Resources/objects/knight.md2", texFilePath = "Resources/objects/knight.bmp", scaleX = 4.0, scaleY = 4.0, scaleZ = 4.0, posX = 7000.0, posY = 150.0, posZ = 5575.0, AI = false},
+	},
+	tavern=
+	{
+		{filePath = "Resources/objects/TavModel/Building.obj", texFilePath = "", scaleX = 1.0, scaleY = 1.0, scaleZ = 1.0, posX = 7000.0, posY = 150.0, posZ = 5200.0, AI = false},
 	}
+--	table=
+--	{
+--		{filePath = "Resources/objects/TavModel/Table.obj", texFilePath = "", scaleX = 50.0, scaleY = 50.0, scaleZ = 50.0, posX = 7000.0, posY = 150.0, posZ = 5200.0, AI = false},
+--	}
 }

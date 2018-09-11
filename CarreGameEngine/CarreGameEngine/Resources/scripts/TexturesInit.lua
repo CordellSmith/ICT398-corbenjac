@@ -9,7 +9,7 @@ AllTextures=
 {
   	taxi=
   	{
-    	{filePath = "Resources/objects/taxi/taxi_chrome_d.dds"},
+    		{filePath = "Resources/objects/taxi/taxi_chrome_d.dds"},
   		{filePath = "Resources/objects/taxi/taxi_chrome_s.dds"},
 		{filePath = "Resources/objects/taxi/taxi_d.dds"},
 		{filePath = "Resources/objects/taxi/taxi_damaged_d.dds"},
@@ -59,5 +59,15 @@ AllTextures=
 	terrain=
 	{
 		{filePath = "Resources/terrain/grass.jpg"},
+	},
+	tavern=
+	{
+		{filePath = "Resources/objects/TavModel/block1.jpg"},
+		{filePath = "Resources/objects/TavModel/CarltonDraughtSign.jpg"},
+		{filePath = "Resources/objects/TavModel/FatYakSign2.jpg"},
+		{filePath = "Resources/objects/TavModel/Map__3_Map_Output_Selector.bmp"},
+		{filePath = "Resources/objects/TavModel/TavDoor.jpg"},
+		{filePath = "Resources/objects/TavModel/tavWall.jpg"},
+		{filePath = "Resources/objects/TavModel/woodTable.jpg"},
 	}
 }

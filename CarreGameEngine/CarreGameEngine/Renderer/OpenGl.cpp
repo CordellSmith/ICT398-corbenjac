@@ -50,7 +50,9 @@ void OpenGl::Render(Model* model)
 			glActiveTexture(GL_TEXTURE0 + j); // activate proper texture unit before binding
 												// retrieve texture number (the N in diffuse_textureN)
 			std::string number;
-			std::string name = model->GetMeshBatch()[i].GetTextures()[0].m_type;
+			std::string name;
+			if (model->GetMeshBatch()[i].GetTextures().size() > 0)
+				name = model->GetMeshBatch()[i].GetTextures()[0].m_type;
 
 			if (name == "texture_diffuse")
 				number = std::to_string(diffuseNr++);
@@ -65,7 +67,8 @@ void OpenGl::Render(Model* model)
 
 			GLuint textureUniformId = model->GetShader()->GetVariable((name + number).c_str());
 			model->GetShader()->SetFloat(textureUniformId, j);
-			glBindTexture(GL_TEXTURE_2D, model->GetMeshBatch()[i].GetTextures()[0].m_id);
+			if (model->GetMeshBatch()[i].GetTextures().size() > 0)
+				glBindTexture(GL_TEXTURE_2D, model->GetMeshBatch()[i].GetTextures()[0].m_id);
 
 			if (meshBatchSize == 1)
 				break;

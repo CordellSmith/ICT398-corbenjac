@@ -125,6 +125,9 @@ void PhysicsEngine::CreatePlayerControlledRigidBody(btVector3 &playerObj)
 
 	// Set the index for the type of rigid body that is being created
 	body->setUserIndex(CAMERA);
+	body->setContactProcessingThreshold(BT_LARGE_FLOAT);
+	body->setCcdMotionThreshold(1e-10);
+	body->setCcdSweptSphereRadius(100);
 
 	// Add the body to the dynamic world
 	m_dynamicsWorld->addRigidBody(body);
@@ -219,14 +222,25 @@ void PhysicsEngine::Simulate(std::vector<btVector3> &bodyPos, btVector3 &playerO
 			m_playerObject = trans.getOrigin();
 			playerObj = m_playerObject;
 		}
+		/*else if (body->getUserIndex() == SPHERE)
+		{
+			std::cout << "Rock" << std::endl;
+		}*/
 		else
 		{
 			// Update object positions for drawing
 			bodyPos[j].setX(trans.getOrigin().getX());
 			bodyPos[j].setY(trans.getOrigin().getY());
 			bodyPos[j].setZ(trans.getOrigin().getZ());
+
+			if (body->getUserIndex() == SPHERE)
+			{
+				//std::cout << bodyPos[j].getX() << " " << bodyPos[j].getY() << " " << bodyPos[j].getZ() << std::endl;
+			}
+
 		}	
 	}
+	//std::cout << "/n/n/n/n/n" << std::endl;
 }
 
 // Testing for creating a heightfield terrain shape
@@ -304,36 +318,62 @@ void PhysicsEngine::ActivateAllObjects()
 
 
 
-btCollisionObject* PhysicsEngine::TriangleMeshTest(btVector3 &p0, btVector3 &p1, btVector3 &p2, btVector3 &pos, bool useQuantizedBvhTree, btVector3 &inertia, btScalar mass, btScalar restitution, bool collision)
+btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Vertex3> &modelMesh, std::vector<unsigned int> &modelIndices, btVector3 &pos, bool useQuantizedBvhTree, bool collision)
 {
 	btTriangleMesh* trimesh = new btTriangleMesh();
-	trimesh->addTriangle(p0, p1, p2);
+	for (int i = 0; i < modelIndices.size(); i+=3)
+	{
+		glm::vec3 x = modelMesh[modelIndices[i]].m_position;
+		glm::vec3 y = modelMesh[modelIndices[i+1]].m_position;
+		glm::vec3 z = modelMesh[modelIndices[i+2]].m_position;
+
+		btVector3 p0, p1, p2;
+
+		p0.setX(x.x);
+		p0.setY(x.y);
+		p0.setZ(x.z);
+		p1.setX(y.x);
+		p1.setY(y.y);
+		p1.setZ(y.z);
+		p2.setX(z.x);
+		p2.setY(z.y);
+		p2.setZ(z.z);
+
+		trimesh->addTriangle(p0, p1, p2);
+	}
+
+	
 
 	btTransform	trans;
 	trans.setIdentity();
 	trans.setOrigin(pos);
 
+	trimesh->setScaling(btVector3(100, 100, 100));
+
 	btCollisionShape* trimeshShape = new btBvhTriangleMeshShape(trimesh, useQuantizedBvhTree);
-	trimeshShape->calculateLocalInertia(mass, inertia); //gives error
+	m_collisionShapes.push_back(trimeshShape);
+
+	btVector3 inertia(0, 0, 0);
+	//trimeshShape->calculateLocalInertia(0, inertia); //gives error
 
 	btDefaultMotionState* motionstate = new btDefaultMotionState(trans);
-	btRigidBody* body = new btRigidBody(mass, motionstate, trimeshShape, inertia);
+	btRigidBody* body = new btRigidBody(0, motionstate, trimeshShape, inertia);
 
 
-	body->setRestitution(restitution);
 
 	//m_trianglemeshs.push_back(trimesh);
 	//m_triangleMeshBodies.push_back(body);
+	body->setUserIndex(SPHERE);
+	//body->setContactProcessingThreshold(BT_LARGE_FLOAT);
 	m_dynamicsWorld->addRigidBody(body);
-
 	//std::vector< btVector3* > tmp;
 	//m_vertices.push_back(tmp);
 	//m_vertices[m_triangleMeshBodies.size() - 1].push_back(&p0);
 	//m_vertices[m_triangleMeshBodies.size() - 1].push_back(&p1);
 	//m_vertices[m_triangleMeshBodies.size() - 1].push_back(&p2);
 
-	if (collision)
-		m_collisionShapes.push_back(trimeshShape);
+	//if (collision)
+		
 
 	//return m_triangleMeshBodies.size() - 1;
 	return body;

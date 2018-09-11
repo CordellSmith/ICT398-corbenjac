@@ -138,14 +138,12 @@ void GameControlEngine::Initialize()
 				// Create name asset data and add to asset map
 				modelAsset = m_assetFactory->CreateAsset(ASS_OBJECT, (*itModels).first);
 				modelAsset->LoadFromFilePath((*itModels).second.filePath);
-				modelAsset->AddTexutre(TextureManager::Instance().GetTextureID((*itModels).second.texFilePath), (*itModels).second.texFilePath);
+				if ((*itModels).first != "tavern")
+				{
+					modelAsset->AddTexutre(TextureManager::Instance().GetTextureID((*itModels).second.texFilePath), (*itModels).second.texFilePath);
+				}
 				modelAsset->SetScale(glm::vec3(assetScaleXYZ[0], assetScaleXYZ[1], assetScaleXYZ[2]));
 				modelAsset->SetPosition(glm::vec3(assetPosXYZ[0], assetPosXYZ[1], assetPosXYZ[2]));
-
-
-				
-
-
 
 				// If AI model, make AI for it
 				if ((*itModels).second.isAI[k])
@@ -160,14 +158,35 @@ void GameControlEngine::Initialize()
 				m_assetFactory->AddAsset(modelAsset);
 			}
 
-			tempModel = modelAsset->GetModel();
-			std::vector<Mesh> temp6 = tempModel->GetMeshBatch();
-			Mesh temp7 = temp6[0];
-			std::vector<Vertex3> temp8 = temp7.GetVertices();
-			int size = temp8.size();
-			std::string temp0 = (*itModels).first;
-			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
-			glm::vec3 temp4 = tempModel->GetPosition();
+			if ((*itModels).first == "rock")
+			{
+				tempModel = modelAsset->GetModel();
+				std::vector<Mesh> temp6 = tempModel->GetMeshBatch();
+				Mesh temp7 = temp6[0];
+				m_rockModel = temp7.GetVertices();
+
+				int size = m_rockModel.size();
+				std::string temp0 = (*itModels).first;
+				std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
+				glm::vec3 temp4 = tempModel->GetPosition();
+				m_rockModelIndice = temp7.GetIndices();
+				//std::cout << "Indices: " << m_rockModelIndice.size() << std::endl;
+			}
+			if ((*itModels).first == "tavern")
+			{
+				tempModel = modelAsset->GetModel();
+				std::vector<Mesh> temp6 = tempModel->GetMeshBatch();
+				Mesh temp7 = temp6[0];
+				m_tavModel = temp7.GetVertices();
+
+				int size = m_rockModel.size();
+				std::string temp0 = (*itModels).first;
+				std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
+				glm::vec3 temp4 = tempModel->GetPosition();
+				m_tavIndice = temp7.GetIndices();
+				//std::cout << "Indices: " << m_rockModelIndice.size() << std::endl;
+			}
+
 
 		}
 		// Player model
@@ -200,6 +219,8 @@ void GameControlEngine::Initialize()
 			std::string temp0 = (*itModels).first;
 			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
 			glm::vec3 temp4 = tempModel->GetPosition();
+			
+
 
 		}
 		
@@ -279,8 +300,8 @@ void GameControlEngine::InitializePhysics()
 	m_collisionBodyPos.push_back(bt_playerPos);
 
 	int i = 1;
-	int numOfRocks = 2;
-	int numOfKnights = 2;
+	int numOfRocks = 5;
+	int numOfKnights = 0;
 	// Loop through map and add all assets to the collision body list
 	std::multimap<std::string, IGameAsset*>::const_iterator itr;
 	for (itr = m_assetFactory->GetAssets().begin(); itr != m_assetFactory->GetAssets().end(); itr++)
@@ -305,7 +326,6 @@ void GameControlEngine::InitializePhysics()
 		
 		if (itr->second->GetAssetName() == "rock")
 		{
-			
 			for (int j = 0; j < numOfRocks; j++)
 			{
 				tempX = itr->second->GetPosition().x + RandomPos();
@@ -314,9 +334,24 @@ void GameControlEngine::InitializePhysics()
 
 				randomPos = btVector3(tempX, tempY, tempZ);
 
-				m_physicsWorld->CreateStaticRigidBody(randomPos, "rock");
+				//m_physicsWorld->CreateStaticRigidBody(randomPos, "rock");
+				m_physicsWorld->TriangleMeshTest(m_rockModel, m_rockModelIndice, randomPos, true, false);
 				m_collisionBodyPos.push_back(randomPos);
 			}
+		}
+		if (itr->second->GetAssetName() == "tavern")
+		{
+			
+				tempX = itr->second->GetPosition().x + RandomPos();
+				tempZ = itr->second->GetPosition().z + RandomPos();
+				tempY = m_terrains[0]->GetAverageHeight(tempX, tempZ) + 100;
+
+				randomPos = btVector3(tempX, tempY, tempZ);
+
+				//m_physicsWorld->CreateStaticRigidBody(randomPos, "rock");
+				m_physicsWorld->TriangleMeshTest(m_tavModel, m_tavIndice, randomPos, true, false);
+				m_collisionBodyPos.push_back(randomPos);
+			
 		}
 	}
 
@@ -350,3 +385,59 @@ void GameControlEngine::Destroy()
 		m_camera = nullptr;
 	}
 }
+
+
+//tempModel = player->GetModel();
+//std::vector<Mesh> temp6 = tempModel->GetMeshBatch();
+//Mesh temp7 = temp6[0];
+//std::vector<Vertex3> temp8 = temp7.GetVertices();
+//int size = temp8.size();
+//std::string temp0 = (*itModels).first;
+//std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
+//glm::vec3 temp4 = tempModel->GetPosition();
+//
+//
+//void PhysicsEngine::CreateStaticRigidBody(btVector3 &pos, std::string type)
+//{
+//	btCollisionShape* groundShape;
+//
+//	if (type == "knight")
+//		groundShape = new btBoxShape(btVector3(btScalar(80.0), btScalar(100.0), btScalar(80.0)));
+//	else if (type == "rock")
+//		groundShape = new btBoxShape(btVector3(btScalar(225.0), btScalar(100.0), btScalar(200.0)));
+//	else
+//		groundShape = new btBoxShape(btVector3(btScalar(0.0), btScalar(0.0), btScalar(0.0)));
+//
+//	m_collisionShapes.push_back(groundShape);
+//
+//	btVector3 temp = pos;
+//	//temp.setX(temp.getX() - 3000);
+//	//temp.setZ(temp.getZ() - 50);
+//
+//	// Initialize transform and location
+//	btTransform groundTransform;
+//	groundTransform.setIdentity();
+//	groundTransform.setOrigin(temp);
+//
+//	// Set mass (zero for static)
+//	m_mass = 0.0;
+//
+//	// Set dynamic objects to objects with mass that is non-zero
+//	m_isDynamic = (m_mass != 0.0f);
+//
+//	btVector3 localInertia(0.0, 0.0, 0.0);
+//
+//	if (m_isDynamic)
+//		groundShape->calculateLocalInertia(m_mass, localInertia);
+//
+//	//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
+//	btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
+//	btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, myMotionState, groundShape, localInertia);
+//	btRigidBody* body = new btRigidBody(rbInfo);
+//
+//	// Set the index for the type of rigid body that is being created
+//	body->setUserIndex(PLANE);
+//
+//	// Add the body to the dynamic world
+//	m_dynamicsWorld->addRigidBody(body);
+//}

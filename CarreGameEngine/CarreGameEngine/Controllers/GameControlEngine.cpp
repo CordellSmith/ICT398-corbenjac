@@ -344,7 +344,7 @@ void GameControlEngine::InitializePhysics()
 			
 				tempX = itr->second->GetPosition().x + RandomPos();
 				tempZ = itr->second->GetPosition().z + RandomPos();
-				tempY = m_terrains[0]->GetAverageHeight(tempX, tempZ) + 100;
+				tempY = m_terrains[0]->GetAverageHeight(tempX, tempZ);
 
 				randomPos = btVector3(tempX, tempY, tempZ);
 

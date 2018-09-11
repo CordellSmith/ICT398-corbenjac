@@ -51,8 +51,10 @@ void OpenGl::Render(Model* model)
 												// retrieve texture number (the N in diffuse_textureN)
 			std::string number;
 			std::string name;
-			if (model->GetMeshBatch()[i].GetTextures().size() > 0)
-				name = model->GetMeshBatch()[i].GetTextures()[0].m_type;
+			if (model->GetMeshBatch()[i].GetTextures().size() <= 0)
+				break;
+
+			name = model->GetMeshBatch()[i].GetTextures()[0].m_type;
 
 			if (name == "texture_diffuse")
 				number = std::to_string(diffuseNr++);
@@ -62,12 +64,12 @@ void OpenGl::Render(Model* model)
 				number = std::to_string(normalNr++);
 			else if (name == "texture_height")
 				number = std::to_string(heightNr++);
-			else
-				std::cout << "Incorrect texture Id in OpenGl renderer" << std::endl;
+			//else
+				//std::cout << "Incorrect texture Id in OpenGl renderer" << std::endl;
 
 			GLuint textureUniformId = model->GetShader()->GetVariable((name + number).c_str());
 			model->GetShader()->SetFloat(textureUniformId, j);
-			if (model->GetMeshBatch()[i].GetTextures().size() > 0)
+			//if (model->GetMeshBatch()[i].GetTextures().size() > 0)
 				glBindTexture(GL_TEXTURE_2D, model->GetMeshBatch()[i].GetTextures()[0].m_id);
 
 			if (meshBatchSize == 1)

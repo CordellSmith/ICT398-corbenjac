@@ -23,6 +23,10 @@
 	*
 	* @version 02
 	* @date 31/05/2018
+	*
+	* @author Ben Ward
+	* @version 03 - made it suitable for a first person camera.
+	* @date 11/09/2018
 	*/
 class Camera
 {
@@ -37,6 +41,21 @@ public:
 	Camera() { 
 		m_position = glm::vec3(0.0, 0.0, 0.0); 
 		m_distanceFromPlayer = 450.0;
+		m_angleAroundPlayer = 0.0;
+	}
+
+	/**
+	* @brief Constructor to set position and distance from player.
+	*
+	* Sets cmaera position and the distance from player to a specified value.
+	*
+	* @param float distanceFromPlayer
+	*
+	* @return null
+	*/
+	Camera(float distanceFromPlayer) {
+		m_position = glm::vec3(0.0, 0.0, 0.0);
+		m_distanceFromPlayer = distanceFromPlayer;
 		m_angleAroundPlayer = 0.0;
 	}
 
@@ -116,7 +135,7 @@ public:
 	/**
 	* @brief Gets the camera view
 	*
-	* This function returns the cameras position in a vec3.
+	* This function returns the cameras forwards vector.
 	*
 	* @return glm::vec3
 	*/
@@ -236,7 +255,7 @@ public:
 
 	void Zoom(float yoffset);
 	void ChangePitch(float yoffset);
-	void ChangeAngleAroundPlayer(float xoffset);
+	void ChangeYaw(float xoffset);
 	float CalculateHorizontalDistance();
 	float CalculateVerticalDistance();
 	void CalculateCameraPosition(float horizontalDistance, float verticalDistance);

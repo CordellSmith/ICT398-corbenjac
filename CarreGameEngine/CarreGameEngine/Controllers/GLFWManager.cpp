@@ -8,7 +8,7 @@ int main()
 	GLFWManager* pWindowManager = new GLFWManager();
 
 	// Create new camera object
-	Camera* camera = new Camera();
+	Camera* camera = new Camera(0.0);
 
 	GameControlEngine engine;
 	engine.SetWindowManager(pWindowManager);
@@ -55,7 +55,7 @@ int GLFWManager::Initialize(int width, int height, std::string strTitle, bool bF
 	// Cursor properties
 	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPos(m_window, 0, 0);
-	glfwSetScrollCallback(m_window, scroll_callback);
+	//glfwSetScrollCallback(m_window, scroll_callback); scroll callback not currently needed
 
 	// Turn of V-Sync
 	glfwSwapInterval(0);
@@ -109,10 +109,7 @@ bool GLFWManager::ProcessInput(bool continueGame = true)
 	glfwSetCursorPos(m_window, 0, 0);
 
 	// Tell input manager the mouse button has been (is being) clicked
-	if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT))
-		m_inputManager.MousePressed(InputCodes::MouseButtonLeft, (float)mouseX, (float)mouseY);
-	if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_RIGHT))
-		m_inputManager.MousePressed(InputCodes::MouseButtonRight, (float)mouseX, (float)mouseY);
+	m_inputManager.MouseMove((float)mouseX, (float)mouseY);
 
 	glfwPollEvents();
 

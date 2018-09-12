@@ -21,12 +21,8 @@ AllModels=
 		{filePath = "Resources/objects/knight.md2", texFilePath = "Resources/objects/knight.bmp", scaleX = 4.0, scaleY = 4.0, scaleZ = 4.0, posX = 7000.0, posY = 150.0, posZ = 6000.0, AI = true},
 		{filePath = "Resources/objects/knight.md2", texFilePath = "Resources/objects/knight.bmp", scaleX = 4.0, scaleY = 4.0, scaleZ = 4.0, posX = 7000.0, posY = 150.0, posZ = 5575.0, AI = false},
 	},
-	building=
-	{
-		{filePath = "Resources/objects/TavModel/Building.obj", texFilePath = "", scaleX = 100.0, scaleY = 100.0, scaleZ = 100.0, posX = 7000.0, posY = 150.0, posZ = 5200.0, AI = false},
-	},
 	lecTheatre=
 	{
-		{filePath = "Resources/objects/LectureTheatre/Building.obj", texFilePath = "", scaleX = 100.0, scaleY = 100.0, scaleZ = 100.0, posX = 7000.0, posY = -1000.0, posZ = 5200.0, AI = false},
+		{filePath = "Resources/objects/LectureTheatre/T/Building.obj", texFilePath = "", scaleX = 100.0, scaleY = 100.0, scaleZ = 100.0, posX = 7000.0, posY = -1000.0, posZ = 5200.0, AI = false},
 	}
 }

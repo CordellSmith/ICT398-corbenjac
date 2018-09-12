@@ -23,6 +23,6 @@ AllModels=
 	},
 	lecTheatre=
 	{
-		{filePath = "Resources/objects/LectureTheatre/Building.obj", texFilePath = "", scaleX = 100.0, scaleY = 100.0, scaleZ = 100.0, posX = 7000.0, posY = -1000.0, posZ = 5200.0, AI = false},
+		{filePath = "Resources/objects/LectureTheatre/LBLT.obj", texFilePath = "", scaleX = 60.0, scaleY = 60.0, scaleZ = 60.0, posX = 7000.0, posY = -1000.0, posZ = 5200.0, AI = false},
 	}
 }

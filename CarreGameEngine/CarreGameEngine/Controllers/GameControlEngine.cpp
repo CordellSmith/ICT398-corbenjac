@@ -41,6 +41,7 @@ void GameControlEngine::Initialize()
 	// Enable depth testing
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+	glEnable(GL_CULL_FACE);
 
 	// Initialize gameworld
 	m_gameWorld = new GameWorld();

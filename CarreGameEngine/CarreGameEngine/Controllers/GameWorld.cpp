@@ -74,13 +74,13 @@ void GameWorld::Update()
 	glClearColor(0.0, 0.0, 0.5, 1.0);
 
 	// Render terrain
-	for each (Bruteforce* terrain in m_terrains)
-	{
-		m_glRenderer.Render(terrain->GetModel());
-	}
+	//for each (Bruteforce* terrain in m_terrains)
+	//{
+	//	m_glRenderer.Render(terrain->GetModel());
+	//}
 
 	// Render player
-	m_glRenderer.Render(m_player->GetModel());
+	//m_glRenderer.Render(m_player->GetModel());
 
 	// Update all physics body locations *** All asset rendering is done through here for now because I dont want to have to call asset render twice ***
 	UpdatePhysics();
@@ -121,7 +121,7 @@ void GameWorld::UpdatePhysics()
 	// Draw each object at the updated positions based on physics simulation
 	std::multimap<std::string, IGameAsset*>::iterator itr;
 	int i = 1;
-	int numOfRocks = 5;
+	int numOfRocks = 0;
 	int numOfKnights = 0;
 	ComputerAI* compAI;
 	for (itr = m_gameAssets.begin(); itr != m_gameAssets.end(); itr++)
@@ -139,53 +139,55 @@ void GameWorld::UpdatePhysics()
 			itr->second->SetPosition(glm::vec3(tempPos.x, temp.y, tempPos.z));
 		}
 
-		if (itr->first == "knight")
+		//if (itr->first == "knight")
+		//{
+		//	/*compAI = itr->second->GetAI();
+		//	compAI->Update();
+
+		//	Vector2 tempPos = compAI->GetPosition();
+		//	itr->second->SetPosition(glm::vec3(tempPos.x, temp.y, tempPos.z));*/
+
+		//	for (int j = 0; j < numOfKnights; j++)
+		//	{
+		//		rX = m_collisionBodyPos[i].x();
+		//		rY = m_collisionBodyPos[i].y();
+		//		rZ = m_collisionBodyPos[i].z();
+
+		//		itr->second->SetPosition(glm::vec3(rX, rY, rZ));
+		//		itr->second->SetRotation(glm::vec3(0, randRot[i], 0));
+		//		m_glRenderer.Render(itr->second->GetModel());
+		//		i++;
+		//	}
+		//}
+
+		//if (itr->first == "rock")
+		//{
+		//	for (int j = 0; j < numOfRocks; j++)
+		//	{
+		//		rX = m_collisionBodyPos[i].x();
+		//		rY = m_collisionBodyPos[i].y() - 100;
+		//		rZ = m_collisionBodyPos[i].z();
+
+		//		itr->second->SetPosition(glm::vec3(rX, rY, rZ));
+		//		m_glRenderer.Render(itr->second->GetModel());
+		//		i++;
+		//	}
+		//}
+
+		if (itr->first == "lecTheatre")
 		{
-			/*compAI = itr->second->GetAI();
-			compAI->Update();
-
-			Vector2 tempPos = compAI->GetPosition();
-			itr->second->SetPosition(glm::vec3(tempPos.x, temp.y, tempPos.z));*/
-
-			for (int j = 0; j < numOfKnights; j++)
-			{
-				rX = m_collisionBodyPos[i].x();
-				rY = m_collisionBodyPos[i].y();
-				rZ = m_collisionBodyPos[i].z();
-
-				itr->second->SetPosition(glm::vec3(rX, rY, rZ));
-				itr->second->SetRotation(glm::vec3(0, randRot[i], 0));
-				m_glRenderer.Render(itr->second->GetModel());
-				i++;
-			}
-		}
-
-		if (itr->first == "rock")
-		{
-			for (int j = 0; j < numOfRocks; j++)
-			{
-				rX = m_collisionBodyPos[i].x();
+			
+				/*rX = m_collisionBodyPos[i].x();
 				rY = m_collisionBodyPos[i].y() - 100;
-				rZ = m_collisionBodyPos[i].z();
+				rZ = m_collisionBodyPos[i].z();*/
 
-				itr->second->SetPosition(glm::vec3(rX, rY, rZ));
+				//itr->second->SetPosition(glm::vec3(rX, rY, rZ));
 				m_glRenderer.Render(itr->second->GetModel());
 				i++;
-			}
-		}
-		
-		if (itr->first == "building")
-		{	
-			/*rX = m_collisionBodyPos[i].x();
-			rY = m_collisionBodyPos[i].y() - 100;
-			rZ = m_collisionBodyPos[i].z();*/
-
-			//itr->second->SetPosition(glm::vec3(rX, rY, rZ));
-			m_glRenderer.Render(itr->second->GetModel());
-			i++;
 		}
 	}
 
 	glm::vec3 tempPlayer = m_player->GetPosition();
-	m_player->SetPosition(glm::vec3(temp2.getX(), m_terrains[0]->GetAverageHeight(temp2.getX(), temp2.getZ()), temp2.getZ()));
+	//m_player->SetPosition(glm::vec3(temp2.getX(), m_terrains[0]->GetAverageHeight(temp2.getX(), temp2.getZ()), temp2.getZ()));
+	m_player->SetPosition(glm::vec3(temp2.getX(), temp2.getY(), temp2.getZ()));
 }

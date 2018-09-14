@@ -2,8 +2,12 @@
 
 newmtl White
 Kd 1.000000 1.000000 1.000000
-map_Kd Limestone_seamless.jpg
+map_Kd RoofInside.jpg
 
 newmtl White_0
+Kd 1.000000 1.000000 1.000000
+map_Kd Limestone_seamless.jpg
+
+newmtl White_1
 Kd 1.000000 1.000000 1.000000
 map_Kd GreenCarpet_S.jpg

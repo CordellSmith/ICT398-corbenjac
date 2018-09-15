@@ -8,6 +8,21 @@ newmtl White_0
 Kd 1.000000 1.000000 1.000000
 map_Kd Limestone_seamless.jpg
 
+newmtl White_0
+Kd 1.000000 1.000000 1.000000
+map_Kd Limestone_seamless.jpg
+
 newmtl White_1
 Kd 1.000000 1.000000 1.000000
 map_Kd GreenCarpet_S.jpg
+
+newmtl None_NONE
+Kd 0.800000 0.800000 0.800000
+
+newmtl White_2
+Kd 1.000000 1.000000 1.000000
+map_Kd Rubber_s.jpeg
+
+newmtl White_2
+Kd 1.000000 1.000000 1.000000
+map_Kd Rubber_s.jpeg

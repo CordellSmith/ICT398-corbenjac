@@ -24,5 +24,9 @@ AllModels=
 	lecTheatre=
 	{
 		{filePath = "Resources/objects/LectureTheatre/LBLT.obj", texFilePath = "", scaleX = 150.0, scaleY = 150.0, scaleZ = 150.0, posX = 7000.0, posY = -1300.0, posZ = 5200.0, AI = false},
+	},
+	table=
+	{
+		{filePath = "Resources/objects/Table/Table.obj", texFilePath = "", scaleX = 100.0, scaleY = 100.0, scaleZ = 100.0, posX = 7000.0, posY = -1300.0, posZ = 5200.0, AI = false},
 	}
 }

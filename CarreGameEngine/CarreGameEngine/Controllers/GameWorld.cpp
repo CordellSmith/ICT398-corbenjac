@@ -185,6 +185,18 @@ void GameWorld::UpdatePhysics()
 				m_glRenderer.Render(itr->second->GetModel());
 				i++;
 		}
+
+		if (itr->first == "table")
+		{
+
+			/*rX = m_collisionBodyPos[i].x();
+			rY = m_collisionBodyPos[i].y() - 100;
+			rZ = m_collisionBodyPos[i].z();*/
+
+			//itr->second->SetPosition(glm::vec3(rX, rY, rZ));
+			m_glRenderer.Render(itr->second->GetModel());
+			i++;
+		}
 	}
 
 	glm::vec3 tempPlayer = m_player->GetPosition();

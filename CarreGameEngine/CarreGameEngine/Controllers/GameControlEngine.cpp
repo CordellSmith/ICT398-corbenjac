@@ -174,6 +174,20 @@ void GameControlEngine::Initialize()
 				//std::cout << "Indices: " << m_rockModelIndice.size() << std::endl;
 			}
 
+			if ((*itModels).first == "table")
+			{
+				tempModel = modelAsset->GetModel();
+				m_modelMeshDataTable = tempModel->GetMeshBatch();
+				Mesh temp7 = m_modelMeshDataTable[0];
+				m_tableModel = temp7.GetVertices();
+
+				int size = m_tableModel.size();
+				std::string temp0 = (*itModels).first;
+				std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
+				glm::vec3 temp4 = tempModel->GetPosition();
+				m_tableModelIndice = temp7.GetIndices();
+			}
+
 			if ((*itModels).first == "lecTheatre")
 			{
 				tempModel = modelAsset->GetModel();
@@ -188,9 +202,6 @@ void GameControlEngine::Initialize()
 				m_lecTheatreIndice = temp7.GetIndices();
 				//std::cout << "Indices: " << m_rockModelIndice.size() << std::endl;
 			}
-			
-
-
 		}
 		// Player model
 		else if ((*itModels).first == "player")

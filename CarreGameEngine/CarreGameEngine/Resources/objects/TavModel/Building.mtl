@@ -1,59 +1,100 @@
-# Exported from 3D Builder
+# Blender MTL File: 'Building.blend'
+# Material Count: 11
 
 newmtl None
-Kd 0.800000 0.800000 0.800000
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd Limestone_seamless.jpg
 
-newmtl None
-Kd 0.800000 0.800000 0.800000
+newmtl None_Darkwood_s.jpg
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd Darkwood_s.jpg
 
-newmtl None
-Kd 0.800000 0.800000 0.800000
+newmtl None_Exitsign.jpg
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd Exitsign.jpg
 
-newmtl None
-Kd 0.800000 0.800000 0.800000
+newmtl None_GreenCarpet_S.jpg
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd GreenCarpet_S.jpg
 
-newmtl None
-Kd 0.800000 0.800000 0.800000
+newmtl None_LTdoor.jpg
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd LTdoor.jpg
 
-newmtl None
-Kd 0.800000 0.800000 0.800000
+newmtl None_MurdochUniversityLogo.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd MurdochUniversityLogo.png
 
-newmtl None
-Kd 0.800000 0.800000 0.800000
+newmtl None_NONE
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
 
-newmtl None
-Kd 0.800000 0.800000 0.800000
+newmtl None_Projector.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd Projector.png
 
-newmtl None
-Kd 0.800000 0.800000 0.800000
+newmtl None_RoofInside.jpg
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd RoofInside.jpg
 
-newmtl None
-Kd 0.800000 0.800000 0.800000
+newmtl None_Rubber_s.jpeg
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd Rubber_s.jpeg
 
-newmtl None
-Kd 0.800000 0.800000 0.800000
-
-newmtl Material.002
-Kd 0.098039 0.109804 0.070588
-
-newmtl Material.003
-Kd 0.639216 0.376471 0.262745
-
-newmtl Material.010
-Kd 0.192157 0.082353 0.035294
-
-newmtl Material.004
-Kd 0.043137 0.043137 0.043137
-
-newmtl White
-Kd 1.000000 1.000000 1.000000
-map_Kd papyrus.jpg
-
-newmtl Material.008
-Kd 0.800000 0.784314 0.325490
-
-newmtl Material.009
-Kd 0.003922 0.003922 0.003922
-
-newmtl Material.011
-Kd 0.639216 0.639216 0.639216
+newmtl None_Table.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd Table.png

@@ -2,10 +2,6 @@
 
 #include "GL/glew.h"
 
-// This hack job needs to be replaced - cs
-int randPositions[20];
-int randRotations[20];
-
 const int GameControlEngine::RunEngine()
 {
 	Initialize();
@@ -109,7 +105,6 @@ void GameControlEngine::Initialize()
 	float assetScaleXYZ[3];
 	float assetPosXYZ[3];
 
-
 	Model* tempModel;
 
 	// Get iterator to start of models map
@@ -159,19 +154,18 @@ void GameControlEngine::Initialize()
 				m_assetFactory->AddAsset(modelAsset);
 			}
 
-			if ((*itModels).first == "rock")
+			if ((*itModels).first == "table")
 			{
 				tempModel = modelAsset->GetModel();
-				m_modelMeshDataRock = tempModel->GetMeshBatch();
-				Mesh temp7 = m_modelMeshDataRock[0];
-				m_rockModel = temp7.GetVertices();
+				m_modelMeshDataTable = tempModel->GetMeshBatch();
+				Mesh temp7 = m_modelMeshDataTable[0];
+				m_tableModel = temp7.GetVertices();
 
-				int size = m_rockModel.size();
+				int size = m_tableModel.size();
 				std::string temp0 = (*itModels).first;
 				std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
 				glm::vec3 temp4 = tempModel->GetPosition();
-				m_rockModelIndice = temp7.GetIndices();
-				//std::cout << "Indices: " << m_rockModelIndice.size() << std::endl;
+				m_tableModelIndice = temp7.GetIndices();
 			}
 
 			if ((*itModels).first == "lecTheatre")
@@ -188,9 +182,6 @@ void GameControlEngine::Initialize()
 				m_lecTheatreIndice = temp7.GetIndices();
 				//std::cout << "Indices: " << m_rockModelIndice.size() << std::endl;
 			}
-			
-
-
 		}
 		// Player model
 		else if ((*itModels).first == "player")
@@ -214,19 +205,13 @@ void GameControlEngine::Initialize()
 			player->SetPosition(glm::vec3(assetPosXYZ[0], assetPosXYZ[1], assetPosXYZ[2]));
 			player->SetScale(glm::vec3(assetScaleXYZ[0], assetScaleXYZ[1], assetScaleXYZ[2]));
 		}
-		
-		
 
 		// Increment iterator
 		itModels++;
 	}
 
-	
-
 	/********************Loading of all models at once*******************/
-
 	m_windowManager->GetInputManager()->SetPlayer(player);
-
 
 	/********************AI Testing*******************/
 	/*ComputerAI* p = new ComputerAI();
@@ -234,16 +219,6 @@ void GameControlEngine::Initialize()
 	p->Update();
 	getchar();*/
 	/********************AI Testing*******************/
-
-	// This is trash and needs to be replaced - cs
-	for (int i = 0; i < 15; i++)
-	{
-		int randNum1 = rand() % (6000 - 0 + 1) + 0;
-		int randNum2 = rand() % (360 - 1 + 1) + 1;
-
-		randPositions[i] = randNum1;
-		randRotations[i] = randNum2;
-	}
 
 	// Physics engine initialization
 	InitializePhysics();
@@ -272,11 +247,6 @@ void GameControlEngine::GameLoop()
 	}
 }
 
-float RandomPos()
-{
-	return rand() % (4000 - 0 + 1) + 0;
-}
-
 void GameControlEngine::InitializePhysics()
 {
 	// Create camera rigid body to collide with objects
@@ -299,51 +269,19 @@ void GameControlEngine::InitializePhysics()
 	{
 		btVector3 randomPos;
 		float tempX, tempY, tempZ;
-
-		if (itr->second->GetAssetName() == "knight")
-		{
-			for (int j = 0; j < numOfKnights; j++)
-			{
-				tempX = itr->second->GetPosition().x + RandomPos();
-				tempZ = itr->second->GetPosition().z + RandomPos();
-				tempY = m_terrains[0]->GetAverageHeight(tempX, tempZ) + 100;
-
-				randomPos = btVector3(tempX, tempY, tempZ);
-				
-				m_physicsWorld->CreateStaticRigidBody(randomPos, "knight");
-				m_collisionBodyPos.push_back(randomPos);
-			}
-		}
 		
-		if (itr->second->GetAssetName() == "rock")
-		{
-			for (int j = 0; j < numOfRocks; j++)
-			{
-				tempX = itr->second->GetPosition().x + RandomPos();
-				tempZ = itr->second->GetPosition().z + RandomPos();
-				tempY = m_terrains[0]->GetAverageHeight(tempX, tempZ) + 100;
-
-				randomPos = btVector3(tempX, tempY, tempZ);
-
-				//m_physicsWorld->CreateStaticRigidBody(randomPos, "rock");
-				m_physicsWorld->TriangleMeshTest(m_modelMeshDataRock, randomPos, true, false);
-				m_collisionBodyPos.push_back(randomPos);
-			}
-		}
 		if (itr->second->GetAssetName() == "lecTheatre")
 		{
-			
 				tempX = itr->second->GetPosition().x;
 				tempZ = itr->second->GetPosition().z;
 				tempY = itr->second->GetPosition().y;
 
 				randomPos = btVector3(tempX, tempY, tempZ);
-				std::cout << m_lecTheatreModel.size() << " and " << m_lecTheatreIndice.size() << std::endl;
+				std::cout << "Physics Init " << itr->second->GetAssetName() << ": " << m_lecTheatreModel.size() << " and " << m_lecTheatreIndice.size() << std::endl;
 
 				//m_physicsWorld->CreateStaticRigidBody(randomPos, "rock");
 				m_physicsWorld->TriangleMeshTest(m_modelMeshData, randomPos, true, false);
-				m_collisionBodyPos.push_back(randomPos);
-			
+				m_collisionBodyPos.push_back(randomPos);	
 		}
 	}
 

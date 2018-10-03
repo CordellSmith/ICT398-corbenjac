@@ -64,4 +64,18 @@ AllModels=
 			AI = false
 		},
 	},
+	crate=
+	{
+		{
+			filePath = "Resources/objects/crate/Crate1.obj", 
+			texFilePath = "",
+			scaleX = 1000.0, 
+			scaleY = 1000.0, 
+			scaleZ = 1000.0,
+			posX = 14000.0, 
+			posY = 900.0, 
+			posZ = 10100.0, 
+			AI = false
+		},
+	},
 }

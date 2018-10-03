@@ -20,6 +20,8 @@ void GameWorld::Init(Player* player, std::multimap<std::string, IGameAsset*> gam
 	float verticalDistance = m_camera->CalculateVerticalDistance();
 	m_camera->CalculateCameraPosition(horizontalDistance, verticalDistance);
 
+	m_camera->SetPosition(glm::vec3(glm::vec3(14100, 500, 10100)));
+	
 	// Prepare terrains
 	for each (Bruteforce* terrain in m_terrains)
 	{
@@ -129,9 +131,16 @@ void GameWorld::UpdatePhysics()
 			m_glRenderer.Render(itr->second->GetModel());
 			i++;
 		}
+
+		if (itr->first == "chair")
+		{
+			m_glRenderer.Render(itr->second->GetModel());
+			i++;
+		}
 	}
 
 	glm::vec3 tempPlayer = m_player->GetPosition();
 	//m_player->SetPosition(glm::vec3(temp2.getX(), m_terrains[0]->GetAverageHeight(temp2.getX(), temp2.getZ()), temp2.getZ()));
 	m_player->SetPosition(glm::vec3(temp2.getX(), temp2.getY(), temp2.getZ()));
+	std::cout << m_player->GetPosition().x << " " << m_player->GetPosition().y << " " << m_player->GetPosition().z << std::endl;
 }

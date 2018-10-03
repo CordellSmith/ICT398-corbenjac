@@ -81,6 +81,15 @@ public:
 	void Update();
 
 		/**
+		* @brief Renders the updated scene
+		*
+		* The draw call that is called every frame after updating the physics.
+		*
+		* @return void
+		*/
+	void Draw();
+
+		/**
 		* @brief Destroys the game world
 		*
 		* Anything that was created within this current game world context is
@@ -89,15 +98,6 @@ public:
 		* @return void
 		*/
 	void Destroy();
-
-		/**
-		* @brief Prepares the colour panel
-		*
-		* Used to prepare the test model to be drawn to the screen.
-		*
-		* @return void
-		*/
-	void PrepareColourPanel();
 
 		/**
 		* @brief Gets the camera object

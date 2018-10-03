@@ -47,7 +47,7 @@ void GameControlEngine::Initialize()
 	m_camera->PositionCamera(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z, m_camera->GetYaw(), glm::radians(m_camera->GetPitch()));
 
 	// Create new player
-	player = new Player("Player");
+	m_player = new Player("Player");
 
 	/**********************************Loading of all heightfields at once**************************************/
 	// Get iterator to start of heightfields map
@@ -113,105 +113,121 @@ void GameControlEngine::Initialize()
 	// Loop through map until all models created
 	while (itModels != m_allModelsData.end())
 	{
-		// For each different type of model that isn't the player model
-		if ((*itModels).first != "player")
+		// For each model of same type
+		for (int k = 0; k < (*itModels).second.modelPositions.size(); k++)
 		{
-			// For each model of same type
-			for (int k = 0; k < (*itModels).second.modelPositions.size(); k++)
+			// Get scales
+			for (int j = 0; j < (*itModels).second.modelScales[k].size(); j++)
 			{
-				// Get scales
-				for (int j = 0; j < (*itModels).second.modelScales[k].size(); j++)
-				{
-					assetScaleXYZ[j] = (*itModels).second.modelScales[k][j];
-				}
-
-				// Get positions
-				for (int j = 0; j < (*itModels).second.modelPositions[k].size(); j++)
-				{
-					assetPosXYZ[j] = (*itModels).second.modelPositions[k][j];
-				}
-
-				// Create name asset data and add to asset map
-				modelAsset = m_assetFactory->CreateAsset(ASS_OBJECT, (*itModels).first);
-				modelAsset->LoadFromFilePath((*itModels).second.filePath);
-				if ((*itModels).first != "lecTheatre")
-				{
-					modelAsset->AddTexutre(TextureManager::Instance().GetTextureID((*itModels).second.texFilePath), (*itModels).second.texFilePath);
-				}
-				modelAsset->SetScale(glm::vec3(assetScaleXYZ[0], assetScaleXYZ[1], assetScaleXYZ[2]));
-				modelAsset->SetPosition(glm::vec3(assetPosXYZ[0], assetPosXYZ[1], assetPosXYZ[2]));
-
-				// If AI model, make AI for it
-				if ((*itModels).second.isAI[k])
-				{
-					// Create new computerAI and push to vector storing them
-					modelAI = new ComputerAI(glm::vec3((*itModels).second.modelPositions[k][0], (*itModels).second.modelPositions[k][1], (*itModels).second.modelPositions[k][2]));
-					m_allAI.push_back(modelAI);
-					modelAsset->SetAI(modelAI);
-					std::cout << "Model loaded" << std::endl;
-				}
-
-				m_assetFactory->AddAsset(modelAsset);
+				assetScaleXYZ[j] = (*itModels).second.modelScales[k][j];
 			}
 
-			if ((*itModels).first == "table")
+			// Get positions
+			for (int j = 0; j < (*itModels).second.modelPositions[k].size(); j++)
 			{
-				tempModel = modelAsset->GetModel();
-				m_modelMeshDataTable = tempModel->GetMeshBatch();
-				Mesh temp7 = m_modelMeshDataTable[0];
-				m_tableModel = temp7.GetVertices();
-
-				int size = m_tableModel.size();
-				std::string temp0 = (*itModels).first;
-				std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
-				glm::vec3 temp4 = tempModel->GetPosition();
-				m_tableModelIndice = temp7.GetIndices();
+				assetPosXYZ[j] = (*itModels).second.modelPositions[k][j];
 			}
 
-			if ((*itModels).first == "lecTheatre")
+			// Create name asset data and add to asset map
+			modelAsset = m_assetFactory->CreateAsset(ASS_OBJECT, (*itModels).first);
+			modelAsset->LoadFromFilePath((*itModels).second.filePath);
+			if ((*itModels).first != "lecTheatre")
 			{
-				tempModel = modelAsset->GetModel();
-				m_modelMeshData = tempModel->GetMeshBatch();
-				Mesh temp7 = m_modelMeshData[0];
-				m_lecTheatreModel = temp7.GetVertices();
-
-				int size = m_lecTheatreModel.size();
-				std::string temp0 = (*itModels).first;
-				std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
-				glm::vec3 temp4 = tempModel->GetPosition();
-				m_lecTheatreIndice = temp7.GetIndices();
-				//std::cout << "Indices: " << m_rockModelIndice.size() << std::endl;
+				modelAsset->AddTexutre(TextureManager::Instance().GetTextureID((*itModels).second.texFilePath), (*itModels).second.texFilePath);
 			}
+			modelAsset->SetScale(glm::vec3(assetScaleXYZ[0], assetScaleXYZ[1], assetScaleXYZ[2]));
+			modelAsset->SetPosition(glm::vec3(assetPosXYZ[0], assetPosXYZ[1], assetPosXYZ[2]));
+
+			// If AI model, make AI for it
+			if ((*itModels).second.isAI[k])
+			{
+				// Create new computerAI and push to vector storing them
+				modelAI = new ComputerAI(glm::vec3((*itModels).second.modelPositions[k][0], (*itModels).second.modelPositions[k][1], (*itModels).second.modelPositions[k][2]));
+				m_allAI.push_back(modelAI);
+				modelAsset->SetAI(modelAI);
+				std::cout << "Model loaded" << std::endl;
+			}
+
+			m_assetFactory->AddAsset(modelAsset);
 		}
-		// Player model
-		else if ((*itModels).first == "player")
+
+		if ((*itModels).first == "lecTheatre")
+		{
+			tempModel = modelAsset->GetModel();
+			m_modelMeshData = tempModel->GetMeshBatch();
+			Mesh temp7 = m_modelMeshData[0];
+			m_lecTheatreModel = temp7.GetVertices();
+
+			int size = m_lecTheatreModel.size();
+			std::string temp0 = (*itModels).first;
+			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
+			glm::vec3 temp4 = tempModel->GetPosition();
+			m_lecTheatreIndice = temp7.GetIndices();
+		}
+	
+		if ((*itModels).first == "table")
+		{
+			tempModel = modelAsset->GetModel();
+			m_modelMeshDataTable = tempModel->GetMeshBatch();
+			Mesh temp7 = m_modelMeshDataTable[0];
+			m_tableModel = temp7.GetVertices();
+
+			int size = m_tableModel.size();
+			std::string temp0 = (*itModels).first;
+			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
+			glm::vec3 temp4 = tempModel->GetPosition();
+			m_tableModelIndice = temp7.GetIndices();
+		}
+
+		if ((*itModels).first == "chair")
+		{
+			tempModel = modelAsset->GetModel();
+			m_modelMeshDataTable = tempModel->GetMeshBatch();
+			Mesh temp7 = m_modelMeshDataTable[0];
+			m_tableModel = temp7.GetVertices();
+
+			int size = m_tableModel.size();
+			std::string temp0 = (*itModels).first;
+			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
+			glm::vec3 temp4 = tempModel->GetPosition();
+			m_tableModelIndice = temp7.GetIndices();
+		}
+
+		if ((*itModels).first == "crate")
+		{
+			tempModel = modelAsset->GetModel();
+			m_modelMeshDataTable = tempModel->GetMeshBatch();
+			Mesh temp7 = m_modelMeshDataTable[0];
+			m_tableModel = temp7.GetVertices();
+
+			int size = m_tableModel.size();
+			std::string temp0 = (*itModels).first;
+			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
+			glm::vec3 temp4 = tempModel->GetPosition();
+			m_tableModelIndice = temp7.GetIndices();
+		}
+
+		if ((*itModels).first == "player")
 		{
 			for (int k = 0; k < (*itModels).second.modelPositions.size(); k++)
 			{
-				// Get scales
-				for (int j = 0; j < (*itModels).second.modelScales[k].size(); j++)
-				{
-					assetScaleXYZ[j] = (*itModels).second.modelScales[k][j];
-				}
-
 				// Get positions
 				for (int j = 0; j < (*itModels).second.modelPositions[k].size(); j++)
 				{
 					assetPosXYZ[j] = (*itModels).second.modelPositions[k][j];
 				}
 			}
+
 			// Initialize player model
-			player->LoadFromFilePath((*itModels).second.filePath);
-			player->SetPosition(glm::vec3(assetPosXYZ[0], assetPosXYZ[1], assetPosXYZ[2]));
-			player->SetScale(glm::vec3(assetScaleXYZ[0], assetScaleXYZ[1], assetScaleXYZ[2]));
+			m_player->SetPosition(glm::vec3(assetPosXYZ[0], assetPosXYZ[1], assetPosXYZ[2]));
 		}
-
+		
 		// Increment iterator
 		itModels++;
 	}
 
 	/********************Loading of all models at once*******************/
-	m_windowManager->GetInputManager()->SetPlayer(player);
+	m_windowManager->GetInputManager()->SetPlayer(m_player);
 
 	/********************AI Testing*******************/
 	/*ComputerAI* p = new ComputerAI();
@@ -225,7 +241,7 @@ void GameControlEngine::Initialize()
 
 	// Initialize the game world, pass in terrain, assets and physics engine *** Can be reworked *** 
 	m_gameWorld->SetTerrains(m_terrains);
-	m_gameWorld->Init(player, m_assetFactory->GetAssets());
+	m_gameWorld->Init(m_player, m_assetFactory->GetAssets());
 	m_gameWorld->SetAI(m_allAI);
 	m_gameWorld->SetPhysicsWorld(m_physicsWorld, m_collisionBodyPos);
 }
@@ -250,39 +266,71 @@ void GameControlEngine::GameLoop()
 void GameControlEngine::InitializePhysics()
 {
 	// Create camera rigid body to collide with objects
-	glm::vec3 camerPos(player->GetPosition());
-	btVector3 bt_cameraPos(camerPos.x, camerPos.y, camerPos.z);
+	btVector3 bt_cameraPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
 	m_physicsWorld->CreatePlayerControlledRigidBody(bt_cameraPos);
 	m_collisionBodyPos.push_back(bt_cameraPos);
 
-	// Add player (taxi) to the rigid bodies
-	//glm::vec3 playerPos(m_camera->GetPosition());
-	//btVector3 bt_playerPos(playerPos.x, playerPos.y, playerPos.z);
-	//m_collisionBodyPos.push_back(bt_playerPos);
-
-	//int i = 1;
-	int numOfRocks = 0;
-	int numOfKnights = 0;
-	// Loop through map and add all assets to the collision body list
+	// Iterate throgh objects map and add all objects to the collision body list
 	std::multimap<std::string, IGameAsset*>::const_iterator itr;
 	for (itr = m_assetFactory->GetAssets().begin(); itr != m_assetFactory->GetAssets().end(); itr++)
 	{
-		btVector3 randomPos;
+		btVector3 objRigidBodyPosition;
 		float tempX, tempY, tempZ;
 		
 		if (itr->second->GetAssetName() == "lecTheatre")
 		{
-				tempX = itr->second->GetPosition().x;
-				tempZ = itr->second->GetPosition().z;
-				tempY = itr->second->GetPosition().y;
+				// Have to convert from glm::vec3 to Bullets btVector3
+				objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 
-				randomPos = btVector3(tempX, tempY, tempZ);
-				std::cout << "Physics Init " << itr->second->GetAssetName() << ": " << m_lecTheatreModel.size() << " and " << m_lecTheatreIndice.size() << std::endl;
+				// Add static floor rigid body in physics world (size set to 1000 x 1000)
+				m_physicsWorld->CreateStaticRigidBody(objRigidBodyPosition);
+				// Add to our array of collision bodies
+				m_collisionBodyPos.push_back(objRigidBodyPosition);
 
-				//m_physicsWorld->CreateStaticRigidBody(randomPos, "rock");
-				m_physicsWorld->TriangleMeshTest(m_modelMeshData, randomPos, true, false);
-				m_collisionBodyPos.push_back(randomPos);	
+				//tempX = itr->second->GetPosition().x;
+				//tempZ = itr->second->GetPosition().z;
+				//tempY = itr->second->GetPosition().y;
+
+				//randomPos = btVector3(tempX, tempY, tempZ);
+				//std::cout << "Physics Init " << itr->second->GetAssetName() << ": " << m_lecTheatreModel.size() << " and " << m_lecTheatreIndice.size() << std::endl;
+
+				////m_physicsWorld->CreateStaticRigidBody(randomPos, "rock");
+				//m_physicsWorld->TriangleMeshTest(m_modelMeshData, randomPos, true, false);
+				//m_collisionBodyPos.push_back(randomPos);	
 		}
+
+		// Cordell Testing 03/10/18
+		if (itr->second->GetAssetName() == "table")
+		{
+			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
+
+			// Add crates dynamic rigid body in physics world (size set to 100 x 100 x 100)
+			m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition);
+			// Add to our array of collision bodies
+			m_collisionBodyPos.push_back(objRigidBodyPosition);
+		}
+
+		if (itr->second->GetAssetName() == "chair")
+		{
+			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
+
+			// Add crates dynamic rigid body in physics world (size set to 100 x 100 x 100)
+			m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition);
+			// Add to our array of collision bodies
+			m_collisionBodyPos.push_back(objRigidBodyPosition);
+		}
+
+		if (itr->second->GetAssetName() == "crate")
+		{
+			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
+
+			// Add crates dynamic rigid body in physics world (size set to 100 x 100 x 100)
+			m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition);
+			// Add to our array of collision bodies
+			m_collisionBodyPos.push_back(objRigidBodyPosition);
+		}
+
+
 	}
 
 	//  *** Can this be changed to the terrain mesh? *** 

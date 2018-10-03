@@ -20,6 +20,8 @@ void GameWorld::Init(Player* player, std::multimap<std::string, IGameAsset*> gam
 	float verticalDistance = m_camera->CalculateVerticalDistance();
 	m_camera->CalculateCameraPosition(horizontalDistance, verticalDistance);
 
+	m_camera->SetPosition(glm::vec3(glm::vec3(14100, 500, 10100)));
+	
 	// Prepare terrains
 	for each (Bruteforce* terrain in m_terrains)
 	{
@@ -55,7 +57,7 @@ void GameWorld::Update()
 	glClearColor(0.0, 0.0, 0.5, 1.0);
 
 	// Render player
-	//m_glRenderer.Render(m_player->GetModel());
+	m_glRenderer.Render(m_player->GetModel());
 
 	// Update all physics body locations *** All asset rendering is done through here for now because I dont want to have to call asset render twice ***
 	UpdatePhysics();
@@ -85,23 +87,25 @@ void GameWorld::UpdatePhysics()
 {
 	// Update physicsWorld
 	// TODO: Make this better (Jack)
-	glm::vec3 temp1(m_player->GetPosition());
 	
-	btVector3 temp2(temp1.x, temp1.y, temp1.z);
-	m_physicsWorld->Simulate(m_collisionBodyPos, temp2);
-
+	btVector3 bt_playerPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
+	
 	// Set updated camera location
-	m_camera->SetPosition(glm::vec3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z));
+	//m_camera->SetPosition(glm::vec3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z));
 		
+	m_physicsWorld->Simulate(m_collisionBodyPos, bt_playerPos);
 	// Draw each object at the updated positions based on physics simulation
 	std::multimap<std::string, IGameAsset*>::iterator itr;
+	// iterator set at 1 because the camera is collision body 0
 	int i = 1;
 
 	ComputerAI* compAI;
 	for (itr = m_gameAssets.begin(); itr != m_gameAssets.end(); itr++)
 	{
-		glm::vec3 temp = glm::vec3(m_collisionBodyPos[i].x(), m_terrains[0]->GetAverageHeight(m_collisionBodyPos[i].x(), m_collisionBodyPos[i].z()) + 100, m_collisionBodyPos[i].z());
-		float rX, rY, rZ;
+		//glm::vec3 temp = glm::vec3(m_collisionBodyPos[i].x(), m_terrains[0]->GetAverageHeight(m_collisionBodyPos[i].x(), m_collisionBodyPos[i].z()) + 100, m_collisionBodyPos[i].z());
+		//float rX, rY, rZ;
+		
+		glm::vec3 updPosition = glm::vec3(m_collisionBodyPos[i].x(), m_collisionBodyPos[i].y(), m_collisionBodyPos[i].z());
 
 		compAI = itr->second->GetAI();
 		if (compAI != NULL)
@@ -109,29 +113,38 @@ void GameWorld::UpdatePhysics()
 			compAI->Update();
 
 			Vector2 tempPos = compAI->GetPosition();
-			itr->second->SetPosition(glm::vec3(tempPos.x, temp.y, tempPos.z));
+			//itr->second->SetPosition(glm::vec3(tempPos.x, temp.y, tempPos.z));
 		}
 
 		if (itr->first == "lecTheatre")
 		{
-			
-				/*rX = m_collisionBodyPos[i].x();
-				rY = m_collisionBodyPos[i].y() - 100;
-				rZ = m_collisionBodyPos[i].z();*/
-
-				//itr->second->SetPosition(glm::vec3(rX, rY, rZ));
-				m_glRenderer.Render(itr->second->GetModel());
-				i++;
+			itr->second->GetModel()->SetPosition(updPosition);
+			m_glRenderer.Render(itr->second->GetModel());
+			i++;
 		}
 
 		if (itr->first == "table")
 		{
+			itr->second->GetModel()->SetPosition(updPosition);
+			m_glRenderer.Render(itr->second->GetModel());
+			i++;
+		}
+
+		if (itr->first == "chair")
+		{
+			itr->second->GetModel()->SetPosition(updPosition);
+			m_glRenderer.Render(itr->second->GetModel());
+			i++;
+		}
+
+		if (itr->first == "crate")
+		{
+			itr->second->GetModel()->SetPosition(updPosition);
 			m_glRenderer.Render(itr->second->GetModel());
 			i++;
 		}
 	}
 
-	glm::vec3 tempPlayer = m_player->GetPosition();
-	//m_player->SetPosition(glm::vec3(temp2.getX(), m_terrains[0]->GetAverageHeight(temp2.getX(), temp2.getZ()), temp2.getZ()));
-	m_player->SetPosition(glm::vec3(temp2.getX(), temp2.getY(), temp2.getZ()));
+	m_player->SetPosition(glm::vec3(bt_playerPos.getX(), bt_playerPos.getY(), bt_playerPos.getZ()));
+	std::cout << m_player->GetPosition().x << " " << m_player->GetPosition().y << " " << m_player->GetPosition().z << std::endl;
 }

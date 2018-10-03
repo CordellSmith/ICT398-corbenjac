@@ -196,12 +196,7 @@ protected:
 	std::vector<ComputerAI*> m_allAI;
 
 	/// Player object
-	Player* player;
-
-
-
-	std::vector<unsigned int> m_rockModelIndice;
-	std::vector<Vertex3> m_rockModel;
+	Player* m_player;
 
 	std::vector<unsigned int> m_tableModelIndice;
 	std::vector<Vertex3> m_tableModel;

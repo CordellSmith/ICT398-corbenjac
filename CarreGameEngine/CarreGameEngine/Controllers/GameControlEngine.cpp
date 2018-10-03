@@ -113,99 +113,102 @@ void GameControlEngine::Initialize()
 	// Loop through map until all models created
 	while (itModels != m_allModelsData.end())
 	{
-		// For each different type of model that isn't the player model
-		if ((*itModels).first != "player")
+		// For each model of same type
+		for (int k = 0; k < (*itModels).second.modelPositions.size(); k++)
 		{
-			// For each model of same type
-			for (int k = 0; k < (*itModels).second.modelPositions.size(); k++)
+			// Get scales
+			for (int j = 0; j < (*itModels).second.modelScales[k].size(); j++)
 			{
-				// Get scales
-				for (int j = 0; j < (*itModels).second.modelScales[k].size(); j++)
-				{
-					assetScaleXYZ[j] = (*itModels).second.modelScales[k][j];
-				}
-
-				// Get positions
-				for (int j = 0; j < (*itModels).second.modelPositions[k].size(); j++)
-				{
-					assetPosXYZ[j] = (*itModels).second.modelPositions[k][j];
-				}
-
-				// Create name asset data and add to asset map
-				modelAsset = m_assetFactory->CreateAsset(ASS_OBJECT, (*itModels).first);
-				modelAsset->LoadFromFilePath((*itModels).second.filePath);
-				if ((*itModels).first != "lecTheatre")
-				{
-					modelAsset->AddTexutre(TextureManager::Instance().GetTextureID((*itModels).second.texFilePath), (*itModels).second.texFilePath);
-				}
-				modelAsset->SetScale(glm::vec3(assetScaleXYZ[0], assetScaleXYZ[1], assetScaleXYZ[2]));
-				modelAsset->SetPosition(glm::vec3(assetPosXYZ[0], assetPosXYZ[1], assetPosXYZ[2]));
-
-				// If AI model, make AI for it
-				if ((*itModels).second.isAI[k])
-				{
-					// Create new computerAI and push to vector storing them
-					modelAI = new ComputerAI(glm::vec3((*itModels).second.modelPositions[k][0], (*itModels).second.modelPositions[k][1], (*itModels).second.modelPositions[k][2]));
-					m_allAI.push_back(modelAI);
-					modelAsset->SetAI(modelAI);
-					std::cout << "Model loaded" << std::endl;
-				}
-
-				m_assetFactory->AddAsset(modelAsset);
+				assetScaleXYZ[j] = (*itModels).second.modelScales[k][j];
 			}
 
-			if ((*itModels).first == "table")
+			// Get positions
+			for (int j = 0; j < (*itModels).second.modelPositions[k].size(); j++)
 			{
-				tempModel = modelAsset->GetModel();
-				m_modelMeshDataTable = tempModel->GetMeshBatch();
-				Mesh temp7 = m_modelMeshDataTable[0];
-				m_tableModel = temp7.GetVertices();
-
-				int size = m_tableModel.size();
-				std::string temp0 = (*itModels).first;
-				std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
-				glm::vec3 temp4 = tempModel->GetPosition();
-				m_tableModelIndice = temp7.GetIndices();
+				assetPosXYZ[j] = (*itModels).second.modelPositions[k][j];
 			}
 
-			if ((*itModels).first == "lecTheatre")
+			// Create name asset data and add to asset map
+			modelAsset = m_assetFactory->CreateAsset(ASS_OBJECT, (*itModels).first);
+			modelAsset->LoadFromFilePath((*itModels).second.filePath);
+			if ((*itModels).first != "lecTheatre")
 			{
-				tempModel = modelAsset->GetModel();
-				m_modelMeshData = tempModel->GetMeshBatch();
-				Mesh temp7 = m_modelMeshData[0];
-				m_lecTheatreModel = temp7.GetVertices();
-
-				int size = m_lecTheatreModel.size();
-				std::string temp0 = (*itModels).first;
-				std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
-				glm::vec3 temp4 = tempModel->GetPosition();
-				m_lecTheatreIndice = temp7.GetIndices();
-				//std::cout << "Indices: " << m_rockModelIndice.size() << std::endl;
+				modelAsset->AddTexutre(TextureManager::Instance().GetTextureID((*itModels).second.texFilePath), (*itModels).second.texFilePath);
 			}
+			modelAsset->SetScale(glm::vec3(assetScaleXYZ[0], assetScaleXYZ[1], assetScaleXYZ[2]));
+			modelAsset->SetPosition(glm::vec3(assetPosXYZ[0], assetPosXYZ[1], assetPosXYZ[2]));
+
+			// If AI model, make AI for it
+			if ((*itModels).second.isAI[k])
+			{
+				// Create new computerAI and push to vector storing them
+				modelAI = new ComputerAI(glm::vec3((*itModels).second.modelPositions[k][0], (*itModels).second.modelPositions[k][1], (*itModels).second.modelPositions[k][2]));
+				m_allAI.push_back(modelAI);
+				modelAsset->SetAI(modelAI);
+				std::cout << "Model loaded" << std::endl;
+			}
+
+			m_assetFactory->AddAsset(modelAsset);
 		}
-		// Player model
-		else if ((*itModels).first == "player")
+
+		if ((*itModels).first == "lecTheatre")
+		{
+			tempModel = modelAsset->GetModel();
+			m_modelMeshData = tempModel->GetMeshBatch();
+			Mesh temp7 = m_modelMeshData[0];
+			m_lecTheatreModel = temp7.GetVertices();
+
+			int size = m_lecTheatreModel.size();
+			std::string temp0 = (*itModels).first;
+			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
+			glm::vec3 temp4 = tempModel->GetPosition();
+			m_lecTheatreIndice = temp7.GetIndices();
+			//std::cout << "Indices: " << m_rockModelIndice.size() << std::endl;
+		}
+	
+		if ((*itModels).first == "table")
+		{
+			tempModel = modelAsset->GetModel();
+			m_modelMeshDataTable = tempModel->GetMeshBatch();
+			Mesh temp7 = m_modelMeshDataTable[0];
+			m_tableModel = temp7.GetVertices();
+
+			int size = m_tableModel.size();
+			std::string temp0 = (*itModels).first;
+			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
+			glm::vec3 temp4 = tempModel->GetPosition();
+			m_tableModelIndice = temp7.GetIndices();
+		}
+
+		if ((*itModels).first == "chair")
+		{
+			tempModel = modelAsset->GetModel();
+			m_modelMeshDataTable = tempModel->GetMeshBatch();
+			Mesh temp7 = m_modelMeshDataTable[0];
+			m_tableModel = temp7.GetVertices();
+
+			int size = m_tableModel.size();
+			std::string temp0 = (*itModels).first;
+			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
+			glm::vec3 temp4 = tempModel->GetPosition();
+			m_tableModelIndice = temp7.GetIndices();
+		}
+
+		if ((*itModels).first == "player")
 		{
 			for (int k = 0; k < (*itModels).second.modelPositions.size(); k++)
 			{
-				// Get scales
-				for (int j = 0; j < (*itModels).second.modelScales[k].size(); j++)
-				{
-					assetScaleXYZ[j] = (*itModels).second.modelScales[k][j];
-				}
-
 				// Get positions
 				for (int j = 0; j < (*itModels).second.modelPositions[k].size(); j++)
 				{
 					assetPosXYZ[j] = (*itModels).second.modelPositions[k][j];
 				}
 			}
+
 			// Initialize player model
-			player->LoadFromFilePath((*itModels).second.filePath);
 			player->SetPosition(glm::vec3(assetPosXYZ[0], assetPosXYZ[1], assetPosXYZ[2]));
-			player->SetScale(glm::vec3(assetScaleXYZ[0], assetScaleXYZ[1], assetScaleXYZ[2]));
 		}
-
+		
 		// Increment iterator
 		itModels++;
 	}
@@ -255,14 +258,6 @@ void GameControlEngine::InitializePhysics()
 	m_physicsWorld->CreatePlayerControlledRigidBody(bt_cameraPos);
 	m_collisionBodyPos.push_back(bt_cameraPos);
 
-	// Add player (taxi) to the rigid bodies
-	//glm::vec3 playerPos(m_camera->GetPosition());
-	//btVector3 bt_playerPos(playerPos.x, playerPos.y, playerPos.z);
-	//m_collisionBodyPos.push_back(bt_playerPos);
-
-	//int i = 1;
-	int numOfRocks = 0;
-	int numOfKnights = 0;
 	// Loop through map and add all assets to the collision body list
 	std::multimap<std::string, IGameAsset*>::const_iterator itr;
 	for (itr = m_assetFactory->GetAssets().begin(); itr != m_assetFactory->GetAssets().end(); itr++)

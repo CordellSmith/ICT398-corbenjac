@@ -167,7 +167,7 @@ class PhysicsEngine
 
 		btCollisionObject* TriangleMeshTest(std::vector<Mesh> &modelMesh, btVector3 &pos, bool useQuantizedBvhTree, bool collision);
 
-
+		btDiscreteDynamicsWorld* GetDynamicsWorld() { return m_dynamicsWorld; };
 
 	private:
 

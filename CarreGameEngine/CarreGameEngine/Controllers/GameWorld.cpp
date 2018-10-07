@@ -93,7 +93,7 @@ void GameWorld::UpdatePhysics()
 	// Set updated camera location
 	//m_camera->SetPosition(glm::vec3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z));
 		
-	m_physicsWorld->Simulate(m_collisionBodyPos, bt_playerPos);
+	//m_physicsWorld->Simulate(m_collisionBodyPos, bt_playerPos);
 	// Draw each object at the updated positions based on physics simulation
 	std::multimap<std::string, IGameAsset*>::iterator itr;
 	// iterator set at 1 because the camera is collision body 0
@@ -143,6 +143,16 @@ void GameWorld::UpdatePhysics()
 			m_glRenderer.Render(itr->second->GetModel());
 			i++;
 		}
+	}
+
+	// Ray casting
+	glm::vec3 camDirection = m_camera->GetView() * 10000.0f;
+	btCollisionWorld::ClosestRayResultCallback rayCallback(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z));
+	m_physicsWorld->GetDynamicsWorld()->rayTest(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z), rayCallback);
+
+	if (rayCallback.hasHit())
+	{
+		std::cout << "HIT: " << rayCallback.m_collisionObject->getUserIndex() << std::endl;
 	}
 
 	m_player->SetPosition(glm::vec3(bt_playerPos.getX(), bt_playerPos.getY(), bt_playerPos.getZ()));

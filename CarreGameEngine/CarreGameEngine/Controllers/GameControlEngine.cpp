@@ -266,9 +266,9 @@ void GameControlEngine::GameLoop()
 void GameControlEngine::InitializePhysics()
 {
 	// Create camera rigid body to collide with objects
-	btVector3 bt_cameraPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
-	m_physicsWorld->CreatePlayerControlledRigidBody(bt_cameraPos);
-	m_collisionBodyPos.push_back(bt_cameraPos);
+	//btVector3 bt_cameraPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
+	//m_physicsWorld->CreatePlayerControlledRigidBody(bt_cameraPos);
+	//m_collisionBodyPos.push_back(bt_cameraPos);
 
 	// Iterate throgh objects map and add all objects to the collision body list
 	std::multimap<std::string, IGameAsset*>::const_iterator itr;

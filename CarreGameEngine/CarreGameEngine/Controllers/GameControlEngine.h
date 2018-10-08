@@ -197,14 +197,4 @@ protected:
 
 	/// Player object
 	Player* m_player;
-
-	std::vector<unsigned int> m_tableModelIndice;
-	std::vector<Vertex3> m_tableModel;
-
-	std::vector<unsigned int> m_lecTheatreIndice;
-	std::vector<Vertex3> m_lecTheatreModel;
-
-	std::vector<Mesh> m_modelMeshData;
-	std::vector<Mesh> m_modelMeshDataTable;
-	std::vector<Mesh> m_modelMeshDataRock;
 };

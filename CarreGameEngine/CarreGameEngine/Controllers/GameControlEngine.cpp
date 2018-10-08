@@ -151,62 +151,6 @@ void GameControlEngine::Initialize()
 			m_assetFactory->AddAsset(modelAsset);
 		}
 
-		if ((*itModels).first == "lecTheatre")
-		{
-			tempModel = modelAsset->GetModel();
-			m_modelMeshData = tempModel->GetMeshBatch();
-			Mesh temp7 = m_modelMeshData[0];
-			m_lecTheatreModel = temp7.GetVertices();
-
-			int size = m_lecTheatreModel.size();
-			std::string temp0 = (*itModels).first;
-			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
-			glm::vec3 temp4 = tempModel->GetPosition();
-			m_lecTheatreIndice = temp7.GetIndices();
-		}
-	
-		if ((*itModels).first == "table")
-		{
-			tempModel = modelAsset->GetModel();
-			m_modelMeshDataTable = tempModel->GetMeshBatch();
-			Mesh temp7 = m_modelMeshDataTable[0];
-			m_tableModel = temp7.GetVertices();
-
-			int size = m_tableModel.size();
-			std::string temp0 = (*itModels).first;
-			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
-			glm::vec3 temp4 = tempModel->GetPosition();
-			m_tableModelIndice = temp7.GetIndices();
-		}
-
-		if ((*itModels).first == "chair")
-		{
-			tempModel = modelAsset->GetModel();
-			m_modelMeshDataTable = tempModel->GetMeshBatch();
-			Mesh temp7 = m_modelMeshDataTable[0];
-			m_tableModel = temp7.GetVertices();
-
-			int size = m_tableModel.size();
-			std::string temp0 = (*itModels).first;
-			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
-			glm::vec3 temp4 = tempModel->GetPosition();
-			m_tableModelIndice = temp7.GetIndices();
-		}
-
-		if ((*itModels).first == "crate")
-		{
-			tempModel = modelAsset->GetModel();
-			m_modelMeshDataTable = tempModel->GetMeshBatch();
-			Mesh temp7 = m_modelMeshDataTable[0];
-			m_tableModel = temp7.GetVertices();
-
-			int size = m_tableModel.size();
-			std::string temp0 = (*itModels).first;
-			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
-			glm::vec3 temp4 = tempModel->GetPosition();
-			m_tableModelIndice = temp7.GetIndices();
-		}
-
 		if ((*itModels).first == "player")
 		{
 			for (int k = 0; k < (*itModels).second.modelPositions.size(); k++)
@@ -266,9 +210,9 @@ void GameControlEngine::GameLoop()
 void GameControlEngine::InitializePhysics()
 {
 	// Create camera rigid body to collide with objects
-	//btVector3 bt_cameraPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
-	//m_physicsWorld->CreatePlayerControlledRigidBody(bt_cameraPos);
-	//m_collisionBodyPos.push_back(bt_cameraPos);
+	btVector3 bt_cameraPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
+	m_physicsWorld->CreatePlayerControlledRigidBody(bt_cameraPos);
+	m_collisionBodyPos.push_back(bt_cameraPos);
 
 	// Iterate throgh objects map and add all objects to the collision body list
 	std::multimap<std::string, IGameAsset*>::const_iterator itr;
@@ -329,14 +273,10 @@ void GameControlEngine::InitializePhysics()
 			// Add to our array of collision bodies
 			m_collisionBodyPos.push_back(objRigidBodyPosition);
 		}
-
-
 	}
 
-	//  *** Can this be changed to the terrain mesh? *** 
-	// Create static rigid body (floor)
-	//m_physicsWorld->CreateStaticRigidBody();
-	//m_collisionBodyPos->push_back(btVector3(0.0, 0.0, 0.0));
+	// Parse physics data to player
+	m_player->ParsePhysics(m_physicsWorld, &m_collisionBodyPos);
 
 	// Activate all rigid body objects
 	m_physicsWorld->ActivateAllObjects();

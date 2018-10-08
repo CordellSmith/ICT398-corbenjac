@@ -9,6 +9,9 @@ void InputManager::KeyPressed(InputCodes code)
 
 	switch (code)
 	{
+		case Space:
+			m_player->ThrowBall((float)(TimeManager::Instance().DeltaTime), glm::normalize(m_camera->GetView()));
+			break;
 		// Move forwards
 		case Up: case W: case w:
 			m_player->MoveForward((float)(TimeManager::Instance().DeltaTime), glm::normalize(m_camera->GetView()));

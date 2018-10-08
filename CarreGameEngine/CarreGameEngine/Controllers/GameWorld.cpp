@@ -93,7 +93,7 @@ void GameWorld::UpdatePhysics()
 	// Set updated camera location
 	//m_camera->SetPosition(glm::vec3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z));
 		
-	//m_physicsWorld->Simulate(m_collisionBodyPos, bt_playerPos);
+	m_physicsWorld->Simulate(m_collisionBodyPos, bt_playerPos);
 	// Draw each object at the updated positions based on physics simulation
 	std::multimap<std::string, IGameAsset*>::iterator itr;
 	// iterator set at 1 because the camera is collision body 0
@@ -102,8 +102,9 @@ void GameWorld::UpdatePhysics()
 	ComputerAI* compAI;
 	for (itr = m_gameAssets.begin(); itr != m_gameAssets.end(); itr++)
 	{
-		//glm::vec3 temp = glm::vec3(m_collisionBodyPos[i].x(), m_terrains[0]->GetAverageHeight(m_collisionBodyPos[i].x(), m_collisionBodyPos[i].z()) + 100, m_collisionBodyPos[i].z());
-		//float rX, rY, rZ;
+		// Break out if collision body position vectoris greater than assets map
+		//if (i > m_gameAssets.size())
+		//	break;
 		
 		glm::vec3 updPosition = glm::vec3(m_collisionBodyPos[i].x(), m_collisionBodyPos[i].y(), m_collisionBodyPos[i].z());
 
@@ -147,14 +148,20 @@ void GameWorld::UpdatePhysics()
 
 	// Ray casting
 	glm::vec3 camDirection = m_camera->GetView() * 10000.0f;
-	btCollisionWorld::ClosestRayResultCallback rayCallback(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z));
+	btCollisionWorld::ClosestRayResultCallback rayCallback(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y + 250, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z));
 	m_physicsWorld->GetDynamicsWorld()->rayTest(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z), rayCallback);
 
-	if (rayCallback.hasHit())
-	{
-		std::cout << "HIT: " << rayCallback.m_collisionObject->getUserIndex() << std::endl;
-	}
+	//if (rayCallback.hasHit())
+	//{
+	//	if (rayCallback.m_collisionObject->getUserIndex() == 5)
+	//		std::cout << "HIT Ground" << std::endl;
+	//	else
+	//	{
+	//		std::cout << "HIT: " << rayCallback.m_collisionObject->getUserIndex() 
+	//		<< "Distance: " << std::endl;
+	//	}
+	//}
 
 	m_player->SetPosition(glm::vec3(bt_playerPos.getX(), bt_playerPos.getY(), bt_playerPos.getZ()));
-	std::cout << m_player->GetPosition().x << " " << m_player->GetPosition().y << " " << m_player->GetPosition().z << std::endl;
+	//std::cout << m_player->GetPosition().x << " " << m_player->GetPosition().y << " " << m_player->GetPosition().z << std::endl;
 }

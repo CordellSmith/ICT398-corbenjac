@@ -229,6 +229,45 @@ void PhysicsEngine::Simulate(std::vector<btVector3> &bodyPos, btVector3 &playerO
 	//std::cout << "/n/n/n/n/n" << std::endl;
 }
 
+// Create a dynamic rigid body
+btRigidBody* PhysicsEngine::AddBall(btVector3 &startPos)
+{
+	// Create box shape and add to shape array
+	btCollisionShape* ballShape = new btSphereShape(10);
+	m_collisionShapes.push_back(ballShape);
+
+	// Create a dynamic object
+	btTransform startTransform;
+	startTransform.setIdentity();
+
+	// Set mass (non-zero for dynamic)
+	m_mass = 1.0;
+
+	// Set dynamic objects to objects with mass that is non-zero
+	m_isDynamic = (m_mass != 1.0f);
+
+	btVector3 localInertia(0.0, 0.0, 0.0);
+
+	if (m_isDynamic)
+		ballShape->calculateLocalInertia(m_mass, localInertia);
+
+	// Set origin of body
+	startTransform.setOrigin(startPos);
+
+	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, myMotionState, ballShape, localInertia);
+	btRigidBody* body = new btRigidBody(rbInfo);
+
+	// Set the index for the type of rigid body that is being created
+	body->setUserIndex(SPHERE);
+
+	// Add the body to the dynamic world
+	m_dynamicsWorld->addRigidBody(body);
+
+	return body;
+}
+
 // Testing for creating a heightfield terrain shape
 void PhysicsEngine::CreateHeightfieldTerrainShape()
 {
@@ -298,11 +337,6 @@ void PhysicsEngine::ActivateAllObjects()
 		obj->forceActivationState(DISABLE_DEACTIVATION);
 	}
 }
-
-
-
-
-
 
 btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, btVector3 &pos, bool useQuantizedBvhTree, bool collision)
 {

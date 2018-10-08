@@ -145,6 +145,13 @@ class PhysicsEngine
 			*/
 		//bool CreateAllRigidBodies(Data &objectData);
 
+			/*
+			* @brief 
+			* @param 
+			* @return 
+			*/
+		btRigidBody* AddBall(btVector3 &startPos);
+
 			/**
 			* @brief Create a heightfield terrain shape
 			*
@@ -163,13 +170,13 @@ class PhysicsEngine
 			*/
 		void ActivateAllObjects();
 
-
-
 		btCollisionObject* TriangleMeshTest(std::vector<Mesh> &modelMesh, btVector3 &pos, bool useQuantizedBvhTree, bool collision);
 
 		btDiscreteDynamicsWorld* GetDynamicsWorld() { return m_dynamicsWorld; };
 
-	private:
+		btAlignedObjectArray<btCollisionShape*>& GetCollisionShapes() { return m_collisionShapes; };
+
+	protected:
 
 			/// Determines if shape is dynamic or not
 		bool m_isDynamic;
@@ -223,10 +230,6 @@ class PhysicsEngine
 		unsigned char *m_terrainData;
 
 		//btIDebugDraw test;
-
-	protected:
-
-
 };
 
 #endif

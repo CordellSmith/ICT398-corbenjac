@@ -81,15 +81,6 @@ public:
 	void Update();
 
 		/**
-		* @brief Renders the updated scene
-		*
-		* The draw call that is called every frame after updating the physics.
-		*
-		* @return void
-		*/
-	void Draw();
-
-		/**
 		* @brief Destroys the game world
 		*
 		* Anything that was created within this current game world context is

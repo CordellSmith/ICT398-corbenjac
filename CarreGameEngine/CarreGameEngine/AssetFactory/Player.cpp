@@ -69,12 +69,16 @@ void Player::TurnAntiClock(float time)
 
 void Player::ThrowBall(float time, glm::vec3& forward)
 {
-	std::cout << "THROW" << std::endl;
 	btVector3 camPos = btVector3(m_playerModel->GetPosition().x, m_playerModel->GetPosition().y, m_playerModel->GetPosition().z);
-	m_collisionBodyPos->push_back(btVector3(forward.x, forward.y, forward.z));
+	//m_collisionBodyPos->push_back(btVector3(forward.x, forward.y, forward.z));
+	// Get camera lookAt vector
+	glm::vec3 look = m_playerModel->GetCamera()->GetView() * 100.0f;
+	// Create new sphere rigid body 
+	btRigidBody* sphere = m_physicsWorld->AddSphere(10.0, camPos);
+	// Add to rigid bodies array
+	m_physicsWorld->GetRigidBodies().push_back(sphere);
+	// Add linear velocity to the sphere
+	sphere->setLinearVelocity(btVector3(look.x, look.y, look.z));
+	std::cout << "THROW" << std::endl;
 	std::cout << "Collision Body Pos Size: " << m_collisionBodyPos->size() << std::endl;
-	m_physicsWorld->AddBall(camPos);
-	std::cout << "Collision shapes Size: " << m_physicsWorld->GetCollisionShapes().size() << std::endl;
-	std::cout << "Collision num of collision shapes in physics world: " << m_physicsWorld->GetDynamicsWorld()->getNumCollisionObjects() << std::endl;
-	m_physicsWorld->ActivateAllObjects();
 }

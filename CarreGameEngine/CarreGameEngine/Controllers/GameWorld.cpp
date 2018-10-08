@@ -105,9 +105,15 @@ void GameWorld::UpdatePhysics()
 		// Break out if collision body position vectoris greater than assets map
 		//if (i > m_gameAssets.size())
 		//	break;
-		
 		glm::vec3 updPosition = glm::vec3(m_collisionBodyPos[i].x(), m_collisionBodyPos[i].y(), m_collisionBodyPos[i].z());
 
+		// HERE!
+		if (m_physicsWorld->GetRigidBodies().size() != 0)
+		{
+			if (m_physicsWorld->GetRigidBodies()[i]->getCollisionShape()->getShapeType() == SPHERE_SHAPE_PROXYTYPE)
+				m_physicsWorld->RenderSphere(m_physicsWorld->GetRigidBodies()[i]);
+		}
+		
 		compAI = itr->second->GetAI();
 		if (compAI != NULL)
 		{
@@ -151,16 +157,16 @@ void GameWorld::UpdatePhysics()
 	btCollisionWorld::ClosestRayResultCallback rayCallback(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y + 250, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z));
 	m_physicsWorld->GetDynamicsWorld()->rayTest(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z), rayCallback);
 
-	//if (rayCallback.hasHit())
-	//{
-	//	if (rayCallback.m_collisionObject->getUserIndex() == 5)
-	//		std::cout << "HIT Ground" << std::endl;
-	//	else
-	//	{
-	//		std::cout << "HIT: " << rayCallback.m_collisionObject->getUserIndex() 
-	//		<< "Distance: " << std::endl;
-	//	}
-	//}
+	if (rayCallback.hasHit())
+	{
+		if (rayCallback.m_collisionObject->getUserIndex() == 5)
+			std::cout << "HIT Ground" << std::endl;
+		else
+		{
+			std::cout << "HIT: " << rayCallback.m_collisionObject->getUserIndex() 
+			<< "Distance: " << std::endl;
+		}
+	}
 
 	m_player->SetPosition(glm::vec3(bt_playerPos.getX(), bt_playerPos.getY(), bt_playerPos.getZ()));
 	//std::cout << m_player->GetPosition().x << " " << m_player->GetPosition().y << " " << m_player->GetPosition().z << std::endl;

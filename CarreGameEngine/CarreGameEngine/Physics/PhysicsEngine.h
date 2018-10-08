@@ -150,7 +150,7 @@ class PhysicsEngine
 			* @param 
 			* @return 
 			*/
-		btRigidBody* AddBall(btVector3 &startPos);
+		btRigidBody* AddSphere(float radius, btVector3 &startPos);
 
 			/**
 			* @brief Create a heightfield terrain shape
@@ -176,6 +176,10 @@ class PhysicsEngine
 
 		btAlignedObjectArray<btCollisionShape*>& GetCollisionShapes() { return m_collisionShapes; };
 
+		std::vector<btRigidBody*>& GetRigidBodies() { return m_rigidBodies; }
+
+		void RenderSphere(btRigidBody* sphere);
+
 	protected:
 
 			/// Determines if shape is dynamic or not
@@ -186,6 +190,9 @@ class PhysicsEngine
 
 			/// Array of collision shapes
 		btAlignedObjectArray<btCollisionShape*> m_collisionShapes;
+
+			/// Array of rigid bodies
+		std::vector<btRigidBody*> m_rigidBodies;
 
 			/// Mass value of body
 		btScalar m_mass;
@@ -198,6 +205,9 @@ class PhysicsEngine
 
 			/// New force applied to player controlled object (don't think this is needed)
 		btVector3 m_newForce;
+
+			/// Used for ball projectile
+		GLUquadricObj* m_quad;
 
 			/*
 			* @brief Creates a rigid body for the camera

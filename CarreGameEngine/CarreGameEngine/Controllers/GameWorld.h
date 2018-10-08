@@ -22,6 +22,7 @@
 #include "..\Renderer\OpenGl.h"
 #include "..\Renderer\Shader.h"
 #include "..\AI\ComputerAI.h"
+#include "glut.h"
 
 //#pragma comment(lib, "legacy_stdio_definitions.lib")
 

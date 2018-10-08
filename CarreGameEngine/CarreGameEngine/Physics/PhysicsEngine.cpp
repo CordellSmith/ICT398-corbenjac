@@ -38,6 +38,7 @@ PhysicsEngine::PhysicsEngine()
 	m_oldForce.setZero();
 	m_newForce.setZero();
 
+	m_quad = gluNewQuadric();
 
 	/*btIDebugDraw tempp;
 	m_dynamicsWorld->setDebugDrawer(btIDebugDraw::DebugDrawModes::DBG_MAX_DEBUG_DRAW_MODE);
@@ -145,6 +146,8 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos)
 	// Create a dynamic object
 	btTransform startTransform;
 	startTransform.setIdentity();
+	// Set origin of body
+	startTransform.setOrigin(pos);
 
 	// Set mass (non-zero for dynamic)
 	m_mass = 1.0;
@@ -157,8 +160,6 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos)
 	if (m_isDynamic)
 		boxShape->calculateLocalInertia(m_mass, localInertia);
 
-	// Set origin of body
-	startTransform.setOrigin(pos);
 
 	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
@@ -230,15 +231,17 @@ void PhysicsEngine::Simulate(std::vector<btVector3> &bodyPos, btVector3 &playerO
 }
 
 // Create a dynamic rigid body
-btRigidBody* PhysicsEngine::AddBall(btVector3 &startPos)
+btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos)
 {
 	// Create box shape and add to shape array
-	btCollisionShape* ballShape = new btSphereShape(10);
-	m_collisionShapes.push_back(ballShape);
+	btCollisionShape* sphereShape = new btSphereShape(radius);
+	m_collisionShapes.push_back(sphereShape);
 
 	// Create a dynamic object
 	btTransform startTransform;
 	startTransform.setIdentity();
+	// Set origin of body
+	startTransform.setOrigin(startPos);
 
 	// Set mass (non-zero for dynamic)
 	m_mass = 1.0;
@@ -249,14 +252,11 @@ btRigidBody* PhysicsEngine::AddBall(btVector3 &startPos)
 	btVector3 localInertia(0.0, 0.0, 0.0);
 
 	if (m_isDynamic)
-		ballShape->calculateLocalInertia(m_mass, localInertia);
-
-	// Set origin of body
-	startTransform.setOrigin(startPos);
+		sphereShape->calculateLocalInertia(m_mass, localInertia);
 
 	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, myMotionState, ballShape, localInertia);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, myMotionState, sphereShape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 
 	// Set the index for the type of rigid body that is being created
@@ -266,6 +266,24 @@ btRigidBody* PhysicsEngine::AddBall(btVector3 &startPos)
 	m_dynamicsWorld->addRigidBody(body);
 
 	return body;
+}
+
+void PhysicsEngine::RenderSphere(btRigidBody* sphere)
+{
+	if (sphere->getCollisionShape()->getShapeType() != SPHERE_SHAPE_PROXYTYPE)
+		return;
+	glColor3f(1.0, 0.0, 0.0);
+
+	float r = ((btSphereShape*)sphere->getCollisionShape())->getRadius();
+	btTransform t;
+	sphere->getMotionState()->getWorldTransform(t);
+
+	float mat[16];
+	t.getOpenGLMatrix(mat);
+	glPushMatrix();
+		glMultMatrixf(mat);	// translation and rotation
+		gluSphere(m_quad, r, 20, 20);
+	glPopMatrix();
 }
 
 // Testing for creating a heightfield terrain shape

@@ -178,8 +178,6 @@ class PhysicsEngine
 
 		std::vector<btRigidBody*>& GetRigidBodies() { return m_rigidBodies; }
 
-		void RenderSphere(btRigidBody* sphere);
-
 	protected:
 
 			/// Determines if shape is dynamic or not

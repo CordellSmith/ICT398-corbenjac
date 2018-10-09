@@ -219,7 +219,7 @@ void GameControlEngine::InitializePhysics()
 	for (itr = m_assetFactory->GetAssets().begin(); itr != m_assetFactory->GetAssets().end(); itr++)
 	{
 		btVector3 objRigidBodyPosition;
-		float tempX, tempY, tempZ;
+		//float tempX, tempY, tempZ;
 		
 		if (itr->second->GetAssetName() == "lecTheatre")
 		{
@@ -240,43 +240,33 @@ void GameControlEngine::InitializePhysics()
 
 				////m_physicsWorld->CreateStaticRigidBody(randomPos, "rock");
 				//m_physicsWorld->TriangleMeshTest(m_modelMeshData, randomPos, true, false);
-				//m_collisionBodyPos.push_back(randomPos);	
+				//m_collisionBodyPos.push_back(randomPos);
+				continue;
 		}
 
-		// Cordell Testing 03/10/18
-		if (itr->second->GetAssetName() == "table")
+		if (itr->second->GetAssetName() == "ball")
 		{
+			// Have to convert from glm::vec3 to Bullets btVector3
 			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 
-			// Add crates dynamic rigid body in physics world (size set to 100 x 100 x 100)
-			m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition);
+			// Add static floor rigid body in physics world (size set to 1000 x 1000)
+			m_physicsWorld->AddSphere(100.0, objRigidBodyPosition);
 			// Add to our array of collision bodies
 			m_collisionBodyPos.push_back(objRigidBodyPosition);
+			continue;
 		}
 
-		if (itr->second->GetAssetName() == "chair")
-		{
-			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
-
-			// Add crates dynamic rigid body in physics world (size set to 100 x 100 x 100)
-			m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition);
-			// Add to our array of collision bodies
-			m_collisionBodyPos.push_back(objRigidBodyPosition);
-		}
-
-		if (itr->second->GetAssetName() == "crate")
-		{
-			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
-
-			// Add crates dynamic rigid body in physics world (size set to 100 x 100 x 100)
-			m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition);
-			// Add to our array of collision bodies
-			m_collisionBodyPos.push_back(objRigidBodyPosition);
-		}
+		// Cordell	03/10/18 -- Start
+		//			09/10/18 -- Only generating box shape rigid objects, removed name specific code
+		objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
+		// Add crates dynamic rigid body in physics world (size set to 100 x 100 x 100)
+		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition);
+		// Add to our array of collision bodies
+		m_collisionBodyPos.push_back(objRigidBodyPosition);
 	}
 
 	// Parse physics data to player
-	m_player->ParsePhysics(m_physicsWorld, &m_collisionBodyPos);
+	m_player->ParsePhysics(*m_physicsWorld, &m_collisionBodyPos);
 
 	// Activate all rigid body objects
 	m_physicsWorld->ActivateAllObjects();

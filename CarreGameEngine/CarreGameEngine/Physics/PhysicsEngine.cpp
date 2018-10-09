@@ -95,7 +95,7 @@ void PhysicsEngine::CreatePlayerControlledRigidBody(btVector3 &playerObj)
 	//btCollisionShape* camShape = new btBoxShape(btVector3(btScalar(30), btScalar(20), btScalar(50)));
 	btCollisionShape* camShape = new btCapsuleShape(100, 200);
 	//btCollisionShape* camShape = new btSphereShape(10);
-	m_collisionShapes.push_back(camShape);
+	//m_collisionShapes.push_back(camShape);
 
 	// Create a dynamic object
 	btTransform startTransform;
@@ -141,7 +141,7 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos)
 {
 	// Create box shape and add to shape array
 	btCollisionShape* boxShape = new btBoxShape(btVector3(btScalar(400), btScalar(400), btScalar(400)));
-	m_collisionShapes.push_back(boxShape);
+	//m_collisionShapes.push_back(boxShape);
 
 	// Create a dynamic object
 	btTransform startTransform;
@@ -173,10 +173,50 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos)
 	m_dynamicsWorld->addRigidBody(body);
 }
 
+
+// Create a dynamic rigid body
+btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos)
+{
+	// Create box shape and add to shape array
+	btCollisionShape* sphereShape = new btSphereShape(radius);
+	//m_collisionShapes.push_back(sphereShape);
+
+	// Create a dynamic object
+	btTransform startTransform;
+	startTransform.setIdentity();
+	// Set origin of body
+	startTransform.setOrigin(startPos);
+
+	// Set mass (non-zero for dynamic)
+	m_mass = 1.0;
+
+	// Set dynamic objects to objects with mass that is non-zero
+	m_isDynamic = (m_mass != 1.0f);
+
+	btVector3 localInertia(0.0, 0.0, 0.0);
+
+	if (m_isDynamic)
+		sphereShape->calculateLocalInertia(m_mass, localInertia);
+
+	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, myMotionState, sphereShape, localInertia);
+	btRigidBody* body = new btRigidBody(rbInfo);
+
+	// Set the index for the type of rigid body that is being created
+	body->setUserIndex(SPHERE);
+
+	// Add the body to the dynamic world
+	m_dynamicsWorld->addRigidBody(body);
+
+	return body;
+}
+
 // Simulate the dynamic world
 void PhysicsEngine::Simulate(std::vector<btVector3> &bodyPos, btVector3 &playerObj)
 {
 	m_dynamicsWorld->stepSimulation(1.f / 60.f, 10);
+	std::cout << m_dynamicsWorld->getNumCollisionObjects() << std::endl;
 
 	// Update positions of all dynamic objects
 	for (int j = m_dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
@@ -210,9 +250,9 @@ void PhysicsEngine::Simulate(std::vector<btVector3> &bodyPos, btVector3 &playerO
 		{
 			// TODO: Make this better (Jack)
 			// Apply force in direction camera was moved
-			m_newForce.setX((playerObj.x() - m_playerObject.x()) * 20000);
+			m_newForce.setX((playerObj.x() - m_playerObject.x()) * 15000);
 			//m_newForce.setY((playerObj.y() - m_playerObject.y()) * 10000);
-			m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 20000);
+			m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 15000);
 
 			// Update rigid body location for drawing
 			body->applyCentralForce(m_newForce);
@@ -228,62 +268,6 @@ void PhysicsEngine::Simulate(std::vector<btVector3> &bodyPos, btVector3 &playerO
 		}	
 	}
 	//std::cout << "/n/n/n/n/n" << std::endl;
-}
-
-// Create a dynamic rigid body
-btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos)
-{
-	// Create box shape and add to shape array
-	btCollisionShape* sphereShape = new btSphereShape(radius);
-	m_collisionShapes.push_back(sphereShape);
-
-	// Create a dynamic object
-	btTransform startTransform;
-	startTransform.setIdentity();
-	// Set origin of body
-	startTransform.setOrigin(startPos);
-
-	// Set mass (non-zero for dynamic)
-	m_mass = 1.0;
-
-	// Set dynamic objects to objects with mass that is non-zero
-	m_isDynamic = (m_mass != 1.0f);
-
-	btVector3 localInertia(0.0, 0.0, 0.0);
-
-	if (m_isDynamic)
-		sphereShape->calculateLocalInertia(m_mass, localInertia);
-
-	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, myMotionState, sphereShape, localInertia);
-	btRigidBody* body = new btRigidBody(rbInfo);
-
-	// Set the index for the type of rigid body that is being created
-	body->setUserIndex(SPHERE);
-
-	// Add the body to the dynamic world
-	m_dynamicsWorld->addRigidBody(body);
-
-	return body;
-}
-
-void PhysicsEngine::RenderSphere(btRigidBody* sphere)
-{
-	if (sphere->getCollisionShape()->getShapeType() != SPHERE_SHAPE_PROXYTYPE)
-		return;
-	glColor3f(1.0, 0.0, 0.0);
-
-	float r = ((btSphereShape*)sphere->getCollisionShape())->getRadius();
-	btTransform t;
-	sphere->getMotionState()->getWorldTransform(t);
-
-	float mat[16];
-	t.getOpenGLMatrix(mat);
-	glPushMatrix();
-		glMultMatrixf(mat);	// translation and rotation
-		gluSphere(m_quad, r, 20, 20);
-	glPopMatrix();
 }
 
 // Testing for creating a heightfield terrain shape

@@ -96,24 +96,20 @@ void GameWorld::UpdatePhysics()
 	m_physicsWorld->Simulate(m_collisionBodyPos, bt_playerPos);
 	// Draw each object at the updated positions based on physics simulation
 	std::multimap<std::string, IGameAsset*>::iterator itr;
-	// iterator set at 1 because the camera is collision body 0
+	// i is set to 1 because the camera is collision body 0
 	int i = 1;
 
 	ComputerAI* compAI;
 	for (itr = m_gameAssets.begin(); itr != m_gameAssets.end(); itr++)
 	{
 		// Break out if collision body position vectoris greater than assets map
-		//if (i > m_gameAssets.size())
-		//	break;
-		glm::vec3 updPosition = glm::vec3(m_collisionBodyPos[i].x(), m_collisionBodyPos[i].y(), m_collisionBodyPos[i].z());
 
-		// HERE!
-		if (m_physicsWorld->GetRigidBodies().size() != 0)
-		{
-			if (m_physicsWorld->GetRigidBodies()[i]->getCollisionShape()->getShapeType() == SPHERE_SHAPE_PROXYTYPE)
-				m_physicsWorld->RenderSphere(m_physicsWorld->GetRigidBodies()[i]);
-		}
-		
+		// The collisionBodyPos array stores the position vector of all the objects in the scene.
+		// They are updated through the Simulation above, then called again here to update and render. The map calls in an alphabetical 
+		// ordering system { chair, crate, lecTheatre, player, table }
+			   
+		glm::vec3 updPosition = glm::vec3(m_collisionBodyPos[i].x(), m_collisionBodyPos[i].y(), m_collisionBodyPos[i].z());
+	
 		compAI = itr->second->GetAI();
 		if (compAI != NULL)
 		{
@@ -127,46 +123,47 @@ void GameWorld::UpdatePhysics()
 		{
 			itr->second->GetModel()->SetPosition(updPosition);
 			m_glRenderer.Render(itr->second->GetModel());
-			i++;
 		}
 
 		if (itr->first == "table")
 		{
 			itr->second->GetModel()->SetPosition(updPosition);
 			m_glRenderer.Render(itr->second->GetModel());
-			i++;
 		}
 
 		if (itr->first == "chair")
 		{
 			itr->second->GetModel()->SetPosition(updPosition);
 			m_glRenderer.Render(itr->second->GetModel());
-			i++;
 		}
 
 		if (itr->first == "crate")
 		{
 			itr->second->GetModel()->SetPosition(updPosition);
 			m_glRenderer.Render(itr->second->GetModel());
-			i++;
 		}
+
+		if (itr->first == "ball")
+		{
+			itr->second->GetModel()->SetPosition(updPosition);
+			m_glRenderer.Render(itr->second->GetModel());
+		}
+		i++;
+
+		//std::cout << "i: " << i << " obj: " << itr->first << std::endl;
+		std::cout << "collision body size: " << m_collisionBodyPos.size() << std::endl;
 	}
 
 	// Ray casting
 	glm::vec3 camDirection = m_camera->GetView() * 10000.0f;
-	btCollisionWorld::ClosestRayResultCallback rayCallback(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y + 250, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z));
+	btCollisionWorld::ClosestRayResultCallback rayCallback(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z));
 	m_physicsWorld->GetDynamicsWorld()->rayTest(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z), rayCallback);
 
-	if (rayCallback.hasHit())
-	{
-		if (rayCallback.m_collisionObject->getUserIndex() == 5)
-			std::cout << "HIT Ground" << std::endl;
-		else
-		{
-			std::cout << "HIT: " << rayCallback.m_collisionObject->getUserIndex() 
-			<< "Distance: " << std::endl;
-		}
-	}
+	//if (rayCallback.hasHit())
+	//{
+	//	if (rayCallback.m_collisionObject->getUserIndex() != 5)
+	//		std::cout << "HIT Object: " << rayCallback.m_collisionObject->getCollisionShape()->getShapeType() << std::endl;
+	//}
 
 	m_player->SetPosition(glm::vec3(bt_playerPos.getX(), bt_playerPos.getY(), bt_playerPos.getZ()));
 	//std::cout << m_player->GetPosition().x << " " << m_player->GetPosition().y << " " << m_player->GetPosition().z << std::endl;

@@ -108,7 +108,7 @@ public:
 	void WheelScrolled(double offsetz);
 
 	void SetPlayer(Player* player) { m_player = player; }
-		
+			
 protected:
 	/// Camera object
 	Camera* m_camera;

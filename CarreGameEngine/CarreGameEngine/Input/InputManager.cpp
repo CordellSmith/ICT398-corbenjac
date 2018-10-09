@@ -10,7 +10,7 @@ void InputManager::KeyPressed(InputCodes code)
 	switch (code)
 	{
 		case Space:
-			m_player->ThrowBall((float)(TimeManager::Instance().DeltaTime), glm::normalize(m_camera->GetView()));
+			m_player->ThrowBall((float)(TimeManager::Instance().DeltaTime), m_camera);
 			break;
 		// Move forwards
 		case Up: case W: case w:

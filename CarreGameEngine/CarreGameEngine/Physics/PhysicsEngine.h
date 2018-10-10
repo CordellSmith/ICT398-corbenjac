@@ -55,6 +55,17 @@
 #include "..\Common\Vertex3.h"
 #include "..\AssetFactory\Model.h"
 
+struct CollisionBody {
+
+	CollisionBody(std::string name, const btVector3& position) 
+	{ 
+		m_name = name;
+		m_position = position;
+	};
+	std::string m_name;
+	btVector3 m_position;
+};
+
 class PhysicsEngine
 {
 	public:
@@ -136,7 +147,7 @@ class PhysicsEngine
 			*
 			* @return void
 			*/
-		void Simulate(std::vector<btVector3> &bodyPos, btVector3 &playerObj);
+		void Simulate(std::vector<CollisionBody*>& collisionBodies, btVector3 &playerObj);
 
 			/*
 			* @brief Public function that calls different private functions for creation of rigid bodies
@@ -144,6 +155,13 @@ class PhysicsEngine
 			* @return True if all game object rigid bodies created, false otherwise
 			*/
 		//bool CreateAllRigidBodies(Data &objectData);
+
+			/*
+			* @brief 
+			* @param 
+			* @return 
+			*/
+		btRigidBody* AddSphere(float radius, btVector3 &startPos);
 
 			/**
 			* @brief Create a heightfield terrain shape
@@ -163,13 +181,13 @@ class PhysicsEngine
 			*/
 		void ActivateAllObjects();
 
-
-
 		btCollisionObject* TriangleMeshTest(std::vector<Mesh> &modelMesh, btVector3 &pos, bool useQuantizedBvhTree, bool collision);
 
+		btDiscreteDynamicsWorld* GetDynamicsWorld() { return m_dynamicsWorld; };
 
+		btAlignedObjectArray<btCollisionShape*>& GetCollisionShapes() { return m_collisionShapes; };
 
-	private:
+	protected:
 
 			/// Determines if shape is dynamic or not
 		bool m_isDynamic;
@@ -223,10 +241,6 @@ class PhysicsEngine
 		unsigned char *m_terrainData;
 
 		//btIDebugDraw test;
-
-	protected:
-
-
 };
 
 #endif

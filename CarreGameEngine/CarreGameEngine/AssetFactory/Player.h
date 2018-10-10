@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "Model.h"
+#include "../Physics/PhysicsEngine.h"
 
 	/**
 	* @class Player
@@ -228,6 +228,14 @@ public:
 		*/
 	Model* GetModel() { return m_playerModel; }
 
+	void ThrowBall(float time, Camera* cam);
+
+	void ParsePhysics(PhysicsEngine& physicsWorld, std::vector<CollisionBody*>& collisionBodies)
+	{ 
+		m_physicsWorld = physicsWorld;
+		m_collisionBodies = &collisionBodies;
+	}
+
 protected:
 	std::string m_filePath;
 	std::string m_name;
@@ -238,4 +246,7 @@ protected:
 	float m_currentTurnSpeed;
 	float m_moveSpeed = 2;
 	float m_turnSpeed = 0.5;
+
+	PhysicsEngine m_physicsWorld;
+	std::vector<CollisionBody*>* m_collisionBodies;
 };

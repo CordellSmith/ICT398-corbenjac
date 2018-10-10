@@ -25,11 +25,11 @@ AllModels=
 	table=
 	{
 		{
-			filePath = "Resources/objects/table/table.obj", 
+			filePath = "Resources/objects/table/Table.obj", 
 			texFilePath = "", 
-			scaleX = 80.0, 
-			scaleY = 80.0, 
-			scaleZ = 80.0, 
+			scaleX = 20.0, 
+			scaleY = 20.0, 
+			scaleZ = 20.0, 
 			posX = 9880.0, 
 			posY = 1000.0, 
 			posZ = 10100.0, 
@@ -74,6 +74,20 @@ AllModels=
 			scaleZ = 1000.0,
 			posX = 14000.0, 
 			posY = 900.0, 
+			posZ = 10100.0, 
+			AI = false
+		},
+	},
+	ball=
+	{
+		{
+			filePath = "Resources/objects/ball/ball.obj", 
+			texFilePath = "",
+			scaleX = 1.0, 
+			scaleY = 1.0, 
+			scaleZ = 1.0,
+			posX = 14000.0, 
+			posY = 1500.0, 
 			posZ = 10100.0, 
 			AI = false
 		},

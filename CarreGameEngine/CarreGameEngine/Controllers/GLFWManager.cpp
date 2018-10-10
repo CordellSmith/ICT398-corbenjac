@@ -54,7 +54,7 @@ int GLFWManager::Initialize(int width, int height, std::string strTitle, bool bF
 
 	// Cursor properties
 	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	glfwSetCursorPos(m_window, 0, 0);
+	glfwSetCursorPos(m_window, width/2, height/2);
 	//glfwSetScrollCallback(m_window, scroll_callback); scroll callback not currently needed
 
 	// Turn of V-Sync
@@ -85,6 +85,17 @@ bool GLFWManager::ProcessInput(bool continueGame = true)
 	if (glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS || glfwWindowShouldClose(m_window) != 0)
 		return false;
 
+	// Used for single fire when key is released
+	static int oldState = GLFW_RELEASE;
+	if (glfwGetKey(m_window, GLFW_KEY_SPACE))
+	{
+		int newState = glfwGetKey(m_window, GLFW_KEY_SPACE);
+		if (newState == GLFW_RELEASE && oldState == GLFW_PRESS) {
+			m_inputManager.KeyPressed(InputCodes::Space);
+		}
+		oldState = newState;
+	}
+		
 	if (glfwGetKey(m_window, GLFW_KEY_UP) || glfwGetKey(m_window, GLFW_KEY_W))
 		m_inputManager.KeyPressed(InputCodes::Up);
 	if (glfwGetKey(m_window, GLFW_KEY_DOWN) || glfwGetKey(m_window, GLFW_KEY_S))

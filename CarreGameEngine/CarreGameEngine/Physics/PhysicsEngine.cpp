@@ -38,7 +38,6 @@ PhysicsEngine::PhysicsEngine()
 	m_oldForce.setZero();
 	m_newForce.setZero();
 
-
 	/*btIDebugDraw tempp;
 	m_dynamicsWorld->setDebugDrawer(btIDebugDraw::DebugDrawModes::DBG_MAX_DEBUG_DRAW_MODE);
 	m_dynamicsWorld->deb*/
@@ -94,7 +93,7 @@ void PhysicsEngine::CreatePlayerControlledRigidBody(btVector3 &playerObj)
 	//btCollisionShape* camShape = new btBoxShape(btVector3(btScalar(30), btScalar(20), btScalar(50)));
 	btCollisionShape* camShape = new btCapsuleShape(100, 200);
 	//btCollisionShape* camShape = new btSphereShape(10);
-	m_collisionShapes.push_back(camShape);
+	//m_collisionShapes.push_back(camShape);
 
 	// Create a dynamic object
 	btTransform startTransform;
@@ -140,11 +139,13 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos)
 {
 	// Create box shape and add to shape array
 	btCollisionShape* boxShape = new btBoxShape(btVector3(btScalar(400), btScalar(400), btScalar(400)));
-	m_collisionShapes.push_back(boxShape);
+	//m_collisionShapes.push_back(boxShape);
 
 	// Create a dynamic object
 	btTransform startTransform;
 	startTransform.setIdentity();
+	// Set origin of body
+	startTransform.setOrigin(pos);
 
 	// Set mass (non-zero for dynamic)
 	m_mass = 1.0;
@@ -157,8 +158,6 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos)
 	if (m_isDynamic)
 		boxShape->calculateLocalInertia(m_mass, localInertia);
 
-	// Set origin of body
-	startTransform.setOrigin(pos);
 
 	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
@@ -172,8 +171,47 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos)
 	m_dynamicsWorld->addRigidBody(body);
 }
 
+
+// Create a dynamic rigid body
+btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos)
+{
+	// Create box shape and add to shape array
+	btCollisionShape* sphereShape = new btSphereShape(radius);
+	//m_collisionShapes.push_back(sphereShape);
+
+	// Create a dynamic object
+	btTransform startTransform;
+	startTransform.setIdentity();
+	// Set origin of body
+	startTransform.setOrigin(startPos);
+
+	// Set mass (non-zero for dynamic)
+	m_mass = 1.0;
+
+	// Set dynamic objects to objects with mass that is non-zero
+	m_isDynamic = (m_mass != 1.0f);
+
+	btVector3 localInertia(0.0, 0.0, 0.0);
+
+	if (m_isDynamic)
+		sphereShape->calculateLocalInertia(m_mass, localInertia);
+
+	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, myMotionState, sphereShape, localInertia);
+	btRigidBody* body = new btRigidBody(rbInfo);
+
+	// Set the index for the type of rigid body that is being created
+	body->setUserIndex(SPHERE);
+
+	// Add the body to the dynamic world
+	m_dynamicsWorld->addRigidBody(body);
+
+	return body;
+}
+
 // Simulate the dynamic world
-void PhysicsEngine::Simulate(std::vector<btVector3> &bodyPos, btVector3 &playerObj)
+void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVector3& playerObj)
 {
 	m_dynamicsWorld->stepSimulation(1.f / 60.f, 10);
 
@@ -209,9 +247,9 @@ void PhysicsEngine::Simulate(std::vector<btVector3> &bodyPos, btVector3 &playerO
 		{
 			// TODO: Make this better (Jack)
 			// Apply force in direction camera was moved
-			m_newForce.setX((playerObj.x() - m_playerObject.x()) * 20000);
-			//m_newForce.setY((playerObj.y() - m_playerObject.y()) * 10000);
-			m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 20000);
+			m_newForce.setX((playerObj.x() - m_playerObject.x()) * 15000);
+			m_newForce.setY((playerObj.y() - m_playerObject.y()) * 10000);
+			m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 15000);
 
 			// Update rigid body location for drawing
 			body->applyCentralForce(m_newForce);
@@ -221,9 +259,9 @@ void PhysicsEngine::Simulate(std::vector<btVector3> &bodyPos, btVector3 &playerO
 		else
 		{
 			// Update object positions for drawing
-			bodyPos[j].setX(trans.getOrigin().getX());
-			bodyPos[j].setY(trans.getOrigin().getY());
-			bodyPos[j].setZ(trans.getOrigin().getZ());
+			collisionBodies[j]->m_position.setX(trans.getOrigin().getX());
+			collisionBodies[j]->m_position.setY(trans.getOrigin().getY());
+			collisionBodies[j]->m_position.setZ(trans.getOrigin().getZ());
 		}	
 	}
 	//std::cout << "/n/n/n/n/n" << std::endl;
@@ -298,11 +336,6 @@ void PhysicsEngine::ActivateAllObjects()
 		obj->forceActivationState(DISABLE_DEACTIVATION);
 	}
 }
-
-
-
-
-
 
 btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, btVector3 &pos, bool useQuantizedBvhTree, bool collision)
 {

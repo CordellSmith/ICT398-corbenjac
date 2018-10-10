@@ -151,62 +151,6 @@ void GameControlEngine::Initialize()
 			m_assetFactory->AddAsset(modelAsset);
 		}
 
-		if ((*itModels).first == "lecTheatre")
-		{
-			tempModel = modelAsset->GetModel();
-			m_modelMeshData = tempModel->GetMeshBatch();
-			Mesh temp7 = m_modelMeshData[0];
-			m_lecTheatreModel = temp7.GetVertices();
-
-			int size = m_lecTheatreModel.size();
-			std::string temp0 = (*itModels).first;
-			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
-			glm::vec3 temp4 = tempModel->GetPosition();
-			m_lecTheatreIndice = temp7.GetIndices();
-		}
-	
-		if ((*itModels).first == "table")
-		{
-			tempModel = modelAsset->GetModel();
-			m_modelMeshDataTable = tempModel->GetMeshBatch();
-			Mesh temp7 = m_modelMeshDataTable[0];
-			m_tableModel = temp7.GetVertices();
-
-			int size = m_tableModel.size();
-			std::string temp0 = (*itModels).first;
-			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
-			glm::vec3 temp4 = tempModel->GetPosition();
-			m_tableModelIndice = temp7.GetIndices();
-		}
-
-		if ((*itModels).first == "chair")
-		{
-			tempModel = modelAsset->GetModel();
-			m_modelMeshDataTable = tempModel->GetMeshBatch();
-			Mesh temp7 = m_modelMeshDataTable[0];
-			m_tableModel = temp7.GetVertices();
-
-			int size = m_tableModel.size();
-			std::string temp0 = (*itModels).first;
-			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
-			glm::vec3 temp4 = tempModel->GetPosition();
-			m_tableModelIndice = temp7.GetIndices();
-		}
-
-		if ((*itModels).first == "crate")
-		{
-			tempModel = modelAsset->GetModel();
-			m_modelMeshDataTable = tempModel->GetMeshBatch();
-			Mesh temp7 = m_modelMeshDataTable[0];
-			m_tableModel = temp7.GetVertices();
-
-			int size = m_tableModel.size();
-			std::string temp0 = (*itModels).first;
-			std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
-			glm::vec3 temp4 = tempModel->GetPosition();
-			m_tableModelIndice = temp7.GetIndices();
-		}
-
 		if ((*itModels).first == "player")
 		{
 			for (int k = 0; k < (*itModels).second.modelPositions.size(); k++)
@@ -240,10 +184,10 @@ void GameControlEngine::Initialize()
 	InitializePhysics();
 
 	// Initialize the game world, pass in terrain, assets and physics engine *** Can be reworked *** 
-	m_gameWorld->SetTerrains(m_terrains);
 	m_gameWorld->Init(m_player, m_assetFactory->GetAssets());
+	m_gameWorld->SetTerrains(m_terrains);
 	m_gameWorld->SetAI(m_allAI);
-	m_gameWorld->SetPhysicsWorld(m_physicsWorld, m_collisionBodyPos);
+	m_gameWorld->SetPhysicsWorld(m_physicsWorld, m_collisionBodies);
 }
 
 void GameControlEngine::GameLoop()
@@ -268,14 +212,14 @@ void GameControlEngine::InitializePhysics()
 	// Create camera rigid body to collide with objects
 	btVector3 bt_cameraPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
 	m_physicsWorld->CreatePlayerControlledRigidBody(bt_cameraPos);
-	m_collisionBodyPos.push_back(bt_cameraPos);
+	m_collisionBodies.push_back(new CollisionBody("player", bt_cameraPos));
 
 	// Iterate throgh objects map and add all objects to the collision body list
 	std::multimap<std::string, IGameAsset*>::const_iterator itr;
 	for (itr = m_assetFactory->GetAssets().begin(); itr != m_assetFactory->GetAssets().end(); itr++)
 	{
 		btVector3 objRigidBodyPosition;
-		float tempX, tempY, tempZ;
+		//float tempX, tempY, tempZ;
 		
 		if (itr->second->GetAssetName() == "lecTheatre")
 		{
@@ -285,7 +229,8 @@ void GameControlEngine::InitializePhysics()
 				// Add static floor rigid body in physics world (size set to 1000 x 1000)
 				m_physicsWorld->CreateStaticRigidBody(objRigidBodyPosition);
 				// Add to our array of collision bodies
-				m_collisionBodyPos.push_back(objRigidBodyPosition);
+				//m_collisionBodyPos.push_back(objRigidBodyPosition);
+				m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 
 				//tempX = itr->second->GetPosition().x;
 				//tempZ = itr->second->GetPosition().z;
@@ -296,47 +241,35 @@ void GameControlEngine::InitializePhysics()
 
 				////m_physicsWorld->CreateStaticRigidBody(randomPos, "rock");
 				//m_physicsWorld->TriangleMeshTest(m_modelMeshData, randomPos, true, false);
-				//m_collisionBodyPos.push_back(randomPos);	
+				//m_collisionBodyPos.push_back(randomPos);
+				continue;
 		}
 
-		// Cordell Testing 03/10/18
-		if (itr->second->GetAssetName() == "table")
+		if (itr->second->GetAssetName() == "ball")
 		{
+			// Have to convert from glm::vec3 to Bullets btVector3
 			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 
-			// Add crates dynamic rigid body in physics world (size set to 100 x 100 x 100)
-			m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition);
+			// Add static floor rigid body in physics world (size set to 1000 x 1000)
+			m_physicsWorld->AddSphere(100.0, objRigidBodyPosition);
 			// Add to our array of collision bodies
-			m_collisionBodyPos.push_back(objRigidBodyPosition);
+			//m_collisionBodyPos.push_back(objRigidBodyPosition);
+			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
+			continue;
 		}
 
-		if (itr->second->GetAssetName() == "chair")
-		{
-			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
-
-			// Add crates dynamic rigid body in physics world (size set to 100 x 100 x 100)
-			m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition);
-			// Add to our array of collision bodies
-			m_collisionBodyPos.push_back(objRigidBodyPosition);
-		}
-
-		if (itr->second->GetAssetName() == "crate")
-		{
-			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
-
-			// Add crates dynamic rigid body in physics world (size set to 100 x 100 x 100)
-			m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition);
-			// Add to our array of collision bodies
-			m_collisionBodyPos.push_back(objRigidBodyPosition);
-		}
-
-
+		// Cordell	03/10/18 -- Start
+		//			09/10/18 -- Only generating box shape rigid objects, removed name specific code
+		objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
+		// Add crates dynamic rigid body in physics world (size set to 100 x 100 x 100)
+		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition);
+		// Add to our array of collision bodies
+		//m_collisionBodyPos.push_back(objRigidBodyPosition);
+		m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 	}
 
-	//  *** Can this be changed to the terrain mesh? *** 
-	// Create static rigid body (floor)
-	//m_physicsWorld->CreateStaticRigidBody();
-	//m_collisionBodyPos->push_back(btVector3(0.0, 0.0, 0.0));
+	// Parse physics data to player
+	m_player->ParsePhysics(*m_physicsWorld, m_collisionBodies);
 
 	// Activate all rigid body objects
 	m_physicsWorld->ActivateAllObjects();

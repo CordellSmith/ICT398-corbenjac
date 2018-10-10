@@ -175,7 +175,7 @@ protected:
 	PhysicsEngine* m_physicsWorld;
 
 	/// Vector of all collision objects (static and dynamic)
-	std::vector<btVector3> m_collisionBodyPos;
+	std::vector<CollisionBody*> m_collisionBodies;
 
 	/// Game world object
 	GameWorld* m_gameWorld;
@@ -197,14 +197,4 @@ protected:
 
 	/// Player object
 	Player* m_player;
-
-	std::vector<unsigned int> m_tableModelIndice;
-	std::vector<Vertex3> m_tableModel;
-
-	std::vector<unsigned int> m_lecTheatreIndice;
-	std::vector<Vertex3> m_lecTheatreModel;
-
-	std::vector<Mesh> m_modelMeshData;
-	std::vector<Mesh> m_modelMeshDataTable;
-	std::vector<Mesh> m_modelMeshDataRock;
 };

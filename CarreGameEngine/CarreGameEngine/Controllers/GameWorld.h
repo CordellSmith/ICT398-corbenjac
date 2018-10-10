@@ -22,6 +22,7 @@
 #include "..\Renderer\OpenGl.h"
 #include "..\Renderer\Shader.h"
 #include "..\AI\ComputerAI.h"
+#include "glut.h"
 
 //#pragma comment(lib, "legacy_stdio_definitions.lib")
 
@@ -81,15 +82,6 @@ public:
 	void Update();
 
 		/**
-		* @brief Renders the updated scene
-		*
-		* The draw call that is called every frame after updating the physics.
-		*
-		* @return void
-		*/
-	void Draw();
-
-		/**
 		* @brief Destroys the game world
 		*
 		* Anything that was created within this current game world context is
@@ -129,7 +121,7 @@ public:
 		* @param std::vector<btVector3> collisionBodies
 		* @return void
 		*/
-	void SetPhysicsWorld(PhysicsEngine* physicsEngine, std::vector<btVector3> collisionBodies);
+	void SetPhysicsWorld(PhysicsEngine* physicsEngine, std::vector<CollisionBody*>& collisionBodies);
 
 		/**
 		* @brief Updates all physics
@@ -173,6 +165,8 @@ public:
 		*/
 	void SetAI(std::vector<ComputerAI*> allAI) { m_allAI = allAI; }
 
+	std::vector<CollisionBody*>& GetCollisionBodies() { return *m_collisionBodies; }
+
 protected:
 	/// Shader sources
 	ShaderSource m_assimpShaderSource, m_shaderSource1, m_shaderSource2, m_testShaderSource;
@@ -184,7 +178,7 @@ protected:
 	PhysicsEngine* m_physicsWorld;
 
 	/// Vector of all collision objects (static and dynamic)
-	std::vector<btVector3> m_collisionBodyPos;
+	std::vector<CollisionBody*>* m_collisionBodies;
 
 	std::multimap<std::string, IGameAsset*> m_gameAssets;
 

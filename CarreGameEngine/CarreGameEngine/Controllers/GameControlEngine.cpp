@@ -105,8 +105,6 @@ void GameControlEngine::Initialize()
 	float assetScaleXYZ[3];
 	float assetPosXYZ[3];
 
-	Model* tempModel;
-
 	// Get iterator to start of models map
 	std::unordered_map<std::string, ModelsData>::iterator itModels = m_allModelsData.begin();
 
@@ -131,6 +129,8 @@ void GameControlEngine::Initialize()
 			// Create name asset data and add to asset map
 			modelAsset = m_assetFactory->CreateAsset(ASS_OBJECT, (*itModels).first);
 			modelAsset->LoadFromFilePath((*itModels).second.filePath);
+
+			// Not sure why this is here
 			if ((*itModels).first != "lecTheatre")
 			{
 				modelAsset->AddTexutre(TextureManager::Instance().GetTextureID((*itModels).second.texFilePath), (*itModels).second.texFilePath);
@@ -223,6 +223,26 @@ void GameControlEngine::InitializePhysics()
 		
 		if (itr->second->GetAssetName() == "lecTheatre")
 		{
+			// Have to convert from glm::vec3 to Bullets btVector3
+			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
+
+			// Add static floor rigid body in physics world (size set to 1000 x 1000)
+			m_physicsWorld->CreateStaticRigidBody(objRigidBodyPosition);
+			// Add to our array of collision bodies
+			//m_collisionBodyPos.push_back(objRigidBodyPosition);
+			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
+
+			float tempX = itr->second->GetPosition().x;
+			float tempZ = itr->second->GetPosition().z;
+			float tempY = itr->second->GetPosition().y;
+
+			btVector3 lecPos = btVector3(tempX, tempY, tempZ);
+			std::cout << "Physics Init " << itr->second->GetAssetName() << ": " << itr->second->GetModel()->GetMeshBatch().size() << " and " << itr->second->GetModel()->GetMeshBatch().size() << std::endl;
+
+			//m_physicsWorld->CreateStaticRigidBody(randomPos, "rock");
+			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), lecPos, true, false);
+			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), lecPos));
+			continue;
 		}
 
 		if (itr->second->GetAssetName() == "ball")
@@ -238,6 +258,8 @@ void GameControlEngine::InitializePhysics()
 			continue;
 		}
 
+		/// Cordell	03/10/18 -- Start
+		///			09/10/18 -- Only generating box shape rigid objects, removed name specific code
 		objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 		// Add crates dynamic rigid body in physics world (size set to 100 x 100 x 100)
 		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition);

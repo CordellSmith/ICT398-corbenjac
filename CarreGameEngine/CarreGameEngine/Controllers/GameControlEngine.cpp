@@ -223,26 +223,6 @@ void GameControlEngine::InitializePhysics()
 		
 		if (itr->second->GetAssetName() == "lecTheatre")
 		{
-				// Have to convert from glm::vec3 to Bullets btVector3
-				objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
-
-				// Add static floor rigid body in physics world (size set to 1000 x 1000)
-				m_physicsWorld->CreateStaticRigidBody(objRigidBodyPosition);
-				// Add to our array of collision bodies
-				//m_collisionBodyPos.push_back(objRigidBodyPosition);
-				m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
-
-				//tempX = itr->second->GetPosition().x;
-				//tempZ = itr->second->GetPosition().z;
-				//tempY = itr->second->GetPosition().y;
-
-				//randomPos = btVector3(tempX, tempY, tempZ);
-				//std::cout << "Physics Init " << itr->second->GetAssetName() << ": " << m_lecTheatreModel.size() << " and " << m_lecTheatreIndice.size() << std::endl;
-
-				////m_physicsWorld->CreateStaticRigidBody(randomPos, "rock");
-				//m_physicsWorld->TriangleMeshTest(m_modelMeshData, randomPos, true, false);
-				//m_collisionBodyPos.push_back(randomPos);
-				continue;
 		}
 
 		if (itr->second->GetAssetName() == "ball")
@@ -258,8 +238,6 @@ void GameControlEngine::InitializePhysics()
 			continue;
 		}
 
-		// Cordell	03/10/18 -- Start
-		//			09/10/18 -- Only generating box shape rigid objects, removed name specific code
 		objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 		// Add crates dynamic rigid body in physics world (size set to 100 x 100 x 100)
 		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition);

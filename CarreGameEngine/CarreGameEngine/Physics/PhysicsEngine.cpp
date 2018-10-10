@@ -339,6 +339,24 @@ void PhysicsEngine::ActivateAllObjects()
 
 btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, btVector3 &pos, bool useQuantizedBvhTree, bool collision)
 {
+	/// Cordell Testing 10/10/18
+	//// STATIC LECTURE THEATRE MESH COLLIDER
+	////Get the data that has been read in to the LBLT model in the renderer and use that information to generate a btTriangleMesh
+	//if ((*itModels).first == "LecTheatre")
+	//{
+	//	for (int i = 0; i < modelAsset->GetModel()->GetMeshBatch().size(); i++)
+	//	{
+	//		tMeshArray.push_back;
+	//		btTriangleIndexVertexArray* tmesh = new btTriangleIndexVertexArray(
+	//			(int)modelAsset->GetModel()->GetMeshBatch()[i].GetIndices().size() / 3,
+	//			(int*)&modelAsset->GetModel()->GetMeshBatch()[i].GetIndices()[0],
+	//			(int)(3 * sizeof(int)),
+	//			(btScalar*)&modelAsset->GetModel()->GetMeshBatch()[i].GetVertices()[0],
+	//			(int)sizeof(modelAsset->GetModel()->GetMeshBatch()[i].GetVertices()[0])
+	//		);
+	//	}
+	//}
+
 	btTriangleMesh* trimesh = new btTriangleMesh();
 	//std::cout << modelIndices.size()  << " and " << modelMesh.size() << std::endl;
 	for (int j = 0; j < modelMesh.size(); j++)
@@ -372,13 +390,11 @@ btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh,
 		}
 	}
 
-	
-
 	btTransform	trans;
 	trans.setIdentity();
 	trans.setOrigin(pos);
 
-	trimesh->setScaling(btVector3(100, 100, 100));
+	trimesh->setScaling(btVector3(600, 500, 600));
 
 	btCollisionShape* trimeshShape = new btBvhTriangleMeshShape(trimesh, useQuantizedBvhTree);
 	m_collisionShapes.push_back(trimeshShape);

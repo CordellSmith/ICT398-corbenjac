@@ -76,10 +76,10 @@ void GameWorld::Destroy()
 		delete m_terrains[i];
 }
 
-void GameWorld::SetPhysicsWorld(PhysicsEngine* physicsEngine, std::vector<btVector3> collisionBodyPositions)
+void GameWorld::SetPhysicsWorld(PhysicsEngine* physicsEngine, std::vector<CollisionBody*>& collisionBodies)
 {
 	m_physicsWorld = physicsEngine;
-	m_collisionBodyPos = collisionBodyPositions;
+	m_collisionBodies = &collisionBodies;
 }
 
 // Update all physics
@@ -93,65 +93,23 @@ void GameWorld::UpdatePhysics()
 	// Set updated camera location
 	//m_camera->SetPosition(glm::vec3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z));
 		
-	m_physicsWorld->Simulate(m_collisionBodyPos, bt_playerPos);
+	m_physicsWorld->Simulate(GetCollisionBodies(), bt_playerPos);
 	// Draw each object at the updated positions based on physics simulation
-	std::multimap<std::string, IGameAsset*>::iterator itr;
-	// i is set to 1 because the camera is collision body 0
-	int i = 1;
-
+	std::multimap<std::string, IGameAsset*>::iterator itr = m_gameAssets.begin();
 	ComputerAI* compAI;
-	for (itr = m_gameAssets.begin(); itr != m_gameAssets.end(); itr++)
+
+	// Loop through all the rigid bodies
+	for (int i = 0; i < GetCollisionBodies().size(); i++)
 	{
-		// Break out if collision body position vectoris greater than assets map
+		glm::vec3 updPosition = glm::vec3(
+			GetCollisionBodies()[i]->m_position.x(),
+			GetCollisionBodies()[i]->m_position.y(),
+			GetCollisionBodies()[i]->m_position.z());
 
-		// The collisionBodyPos array stores the position vector of all the objects in the scene.
-		// They are updated through the Simulation above, then called again here to update and render. The map calls in an alphabetical 
-		// ordering system { chair, crate, lecTheatre, player, table }
-			   
-		glm::vec3 updPosition = glm::vec3(m_collisionBodyPos[i].x(), m_collisionBodyPos[i].y(), m_collisionBodyPos[i].z());
-	
-		compAI = itr->second->GetAI();
-		if (compAI != NULL)
-		{
-			compAI->Update();
-
-			Vector2 tempPos = compAI->GetPosition();
-			//itr->second->SetPosition(glm::vec3(tempPos.x, temp.y, tempPos.z));
-		}
-
-		if (itr->first == "lecTheatre")
-		{
-			itr->second->GetModel()->SetPosition(updPosition);
-			m_glRenderer.Render(itr->second->GetModel());
-		}
-
-		if (itr->first == "table")
-		{
-			itr->second->GetModel()->SetPosition(updPosition);
-			m_glRenderer.Render(itr->second->GetModel());
-		}
-
-		if (itr->first == "chair")
-		{
-			itr->second->GetModel()->SetPosition(updPosition);
-			m_glRenderer.Render(itr->second->GetModel());
-		}
-
-		if (itr->first == "crate")
-		{
-			itr->second->GetModel()->SetPosition(updPosition);
-			m_glRenderer.Render(itr->second->GetModel());
-		}
-
-		if (itr->first == "ball")
-		{
-			itr->second->GetModel()->SetPosition(updPosition);
-			m_glRenderer.Render(itr->second->GetModel());
-		}
-		i++;
-
-		//std::cout << "i: " << i << " obj: " << itr->first << std::endl;
-		std::cout << "collision body size: " << m_collisionBodyPos.size() << std::endl;
+		// Search through map using find. If found, update that objects position
+		m_gameAssets.find(GetCollisionBodies()[i]->m_name)->second->GetModel()->SetPosition(updPosition);
+		// Search through map using find. If found, render the object
+		m_glRenderer.Render(m_gameAssets.find(GetCollisionBodies()[i]->m_name)->second->GetModel());
 	}
 
 	// Ray casting

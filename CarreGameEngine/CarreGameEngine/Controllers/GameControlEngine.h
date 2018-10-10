@@ -175,7 +175,7 @@ protected:
 	PhysicsEngine* m_physicsWorld;
 
 	/// Vector of all collision objects (static and dynamic)
-	std::vector<btVector3> m_collisionBodyPos;
+	std::vector<CollisionBody*> m_collisionBodies;
 
 	/// Game world object
 	GameWorld* m_gameWorld;

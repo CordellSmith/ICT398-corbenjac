@@ -25,7 +25,7 @@ AllModels=
 	table=
 	{
 		{
-			filePath = "Resources/objects/table/table.obj", 
+			filePath = "Resources/objects/table/Table.obj", 
 			texFilePath = "", 
 			scaleX = 20.0, 
 			scaleY = 20.0, 

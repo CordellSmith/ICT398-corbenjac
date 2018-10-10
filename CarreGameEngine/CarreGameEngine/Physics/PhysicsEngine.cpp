@@ -38,8 +38,6 @@ PhysicsEngine::PhysicsEngine()
 	m_oldForce.setZero();
 	m_newForce.setZero();
 
-	m_quad = gluNewQuadric();
-
 	/*btIDebugDraw tempp;
 	m_dynamicsWorld->setDebugDrawer(btIDebugDraw::DebugDrawModes::DBG_MAX_DEBUG_DRAW_MODE);
 	m_dynamicsWorld->deb*/
@@ -213,10 +211,9 @@ btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos)
 }
 
 // Simulate the dynamic world
-void PhysicsEngine::Simulate(std::vector<btVector3> &bodyPos, btVector3 &playerObj)
+void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVector3& playerObj)
 {
 	m_dynamicsWorld->stepSimulation(1.f / 60.f, 10);
-	std::cout << m_dynamicsWorld->getNumCollisionObjects() << std::endl;
 
 	// Update positions of all dynamic objects
 	for (int j = m_dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
@@ -251,7 +248,7 @@ void PhysicsEngine::Simulate(std::vector<btVector3> &bodyPos, btVector3 &playerO
 			// TODO: Make this better (Jack)
 			// Apply force in direction camera was moved
 			m_newForce.setX((playerObj.x() - m_playerObject.x()) * 15000);
-			//m_newForce.setY((playerObj.y() - m_playerObject.y()) * 10000);
+			m_newForce.setY((playerObj.y() - m_playerObject.y()) * 10000);
 			m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 15000);
 
 			// Update rigid body location for drawing
@@ -262,9 +259,9 @@ void PhysicsEngine::Simulate(std::vector<btVector3> &bodyPos, btVector3 &playerO
 		else
 		{
 			// Update object positions for drawing
-			bodyPos[j].setX(trans.getOrigin().getX());
-			bodyPos[j].setY(trans.getOrigin().getY());
-			bodyPos[j].setZ(trans.getOrigin().getZ());
+			collisionBodies[j]->m_position.setX(trans.getOrigin().getX());
+			collisionBodies[j]->m_position.setY(trans.getOrigin().getY());
+			collisionBodies[j]->m_position.setZ(trans.getOrigin().getZ());
 		}	
 	}
 	//std::cout << "/n/n/n/n/n" << std::endl;

@@ -230,10 +230,10 @@ public:
 
 	void ThrowBall(float time, Camera* cam);
 
-	const void ParsePhysics(PhysicsEngine& physicsWorld, std::vector<btVector3>* collisionBodyPos)
+	void ParsePhysics(PhysicsEngine& physicsWorld, std::vector<CollisionBody*>& collisionBodies)
 	{ 
 		m_physicsWorld = physicsWorld;
-		m_collisionBodyPos = collisionBodyPos;
+		m_collisionBodies = &collisionBodies;
 	}
 
 protected:
@@ -248,5 +248,5 @@ protected:
 	float m_turnSpeed = 0.5;
 
 	PhysicsEngine m_physicsWorld;
-	std::vector<btVector3>* m_collisionBodyPos;
+	std::vector<CollisionBody*>* m_collisionBodies;
 };

@@ -75,12 +75,13 @@ void Player::ThrowBall(float time, Camera* cam)
 	
 	// Add crates sphere shape rigid body
 	btRigidBody* sphere = m_physicsWorld.AddSphere(150.0, camPos);
-	// Add to our array of collision bodies
-	m_collisionBodyPos->push_back(camPos);
 	// Add linear velocity to the sphere
 	sphere->setLinearVelocity(btVector3(look.x, look.y, look.z));
 
+	// Add to our array of collision bodies
+	m_collisionBodies->push_back(new CollisionBody("ball", camPos));
+
 	// Testing
 	std::cout << "THROW" << std::endl;
-	std::cout << "Collision Body Pos Size: " << m_collisionBodyPos->size() << std::endl;
+	//std::cout << "Collision Body Pos Size: " << m_collisionBodies->size() << std::endl;
 }

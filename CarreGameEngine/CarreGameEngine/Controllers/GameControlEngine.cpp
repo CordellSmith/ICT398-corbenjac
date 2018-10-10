@@ -184,10 +184,10 @@ void GameControlEngine::Initialize()
 	InitializePhysics();
 
 	// Initialize the game world, pass in terrain, assets and physics engine *** Can be reworked *** 
-	m_gameWorld->SetTerrains(m_terrains);
 	m_gameWorld->Init(m_player, m_assetFactory->GetAssets());
+	m_gameWorld->SetTerrains(m_terrains);
 	m_gameWorld->SetAI(m_allAI);
-	m_gameWorld->SetPhysicsWorld(m_physicsWorld, m_collisionBodyPos);
+	m_gameWorld->SetPhysicsWorld(m_physicsWorld, m_collisionBodies);
 }
 
 void GameControlEngine::GameLoop()
@@ -212,7 +212,7 @@ void GameControlEngine::InitializePhysics()
 	// Create camera rigid body to collide with objects
 	btVector3 bt_cameraPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
 	m_physicsWorld->CreatePlayerControlledRigidBody(bt_cameraPos);
-	m_collisionBodyPos.push_back(bt_cameraPos);
+	m_collisionBodies.push_back(new CollisionBody("player", bt_cameraPos));
 
 	// Iterate throgh objects map and add all objects to the collision body list
 	std::multimap<std::string, IGameAsset*>::const_iterator itr;
@@ -229,7 +229,8 @@ void GameControlEngine::InitializePhysics()
 				// Add static floor rigid body in physics world (size set to 1000 x 1000)
 				m_physicsWorld->CreateStaticRigidBody(objRigidBodyPosition);
 				// Add to our array of collision bodies
-				m_collisionBodyPos.push_back(objRigidBodyPosition);
+				//m_collisionBodyPos.push_back(objRigidBodyPosition);
+				m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 
 				//tempX = itr->second->GetPosition().x;
 				//tempZ = itr->second->GetPosition().z;
@@ -252,7 +253,8 @@ void GameControlEngine::InitializePhysics()
 			// Add static floor rigid body in physics world (size set to 1000 x 1000)
 			m_physicsWorld->AddSphere(100.0, objRigidBodyPosition);
 			// Add to our array of collision bodies
-			m_collisionBodyPos.push_back(objRigidBodyPosition);
+			//m_collisionBodyPos.push_back(objRigidBodyPosition);
+			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 			continue;
 		}
 
@@ -262,11 +264,12 @@ void GameControlEngine::InitializePhysics()
 		// Add crates dynamic rigid body in physics world (size set to 100 x 100 x 100)
 		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition);
 		// Add to our array of collision bodies
-		m_collisionBodyPos.push_back(objRigidBodyPosition);
+		//m_collisionBodyPos.push_back(objRigidBodyPosition);
+		m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 	}
 
 	// Parse physics data to player
-	m_player->ParsePhysics(*m_physicsWorld, &m_collisionBodyPos);
+	m_player->ParsePhysics(*m_physicsWorld, m_collisionBodies);
 
 	// Activate all rigid body objects
 	m_physicsWorld->ActivateAllObjects();

@@ -57,7 +57,7 @@ void GameWorld::Update()
 	// Render player
 	m_glRenderer.Render(m_player->GetModel());
 
-	// Physics debug draw
+	/// Debug draw
 	m_physicsWorld->DebugDraw();
 
 	// Update all physics body locations *** All asset rendering is done through here for now because I dont want to have to call asset render twice ***

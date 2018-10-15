@@ -7,7 +7,7 @@ Player::Player(std::string playerName)
 
 	m_currentMoveSpeed = 0;
 	m_currentTurnSpeed = 0;
-	m_moveSpeed = 30;
+	m_moveSpeed = 150;
 	m_turnSpeed = 0.1;
 }
 

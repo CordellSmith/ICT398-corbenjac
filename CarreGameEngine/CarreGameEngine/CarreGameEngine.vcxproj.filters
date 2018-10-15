@@ -54,6 +54,7 @@
     <ClInclude Include="Controllers\GLFWManager.h" />
     <ClInclude Include="Controllers\TimeManager.h" />
     <ClInclude Include="Controllers\IWindowManager.h" />
+    <ClInclude Include="Physics\DebugDraw.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\scripts\ModelInit.lua" />

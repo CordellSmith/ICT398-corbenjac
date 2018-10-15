@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="Resources\scripts\CameraInit.lua" />
+    <None Include="Resources\shaders\DebugDraw.shader" />
     <None Include="res\scripts\ModelInit.lua" />
     <None Include="Resources\scripts\ModelsInit.lua" />
     <None Include="Resources\scripts\TerrainsInit.lua" />

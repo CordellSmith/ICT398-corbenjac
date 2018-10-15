@@ -38,6 +38,14 @@ PhysicsEngine::PhysicsEngine()
 	m_oldForce.setZero();
 	m_newForce.setZero();
 
+	// Debug draw shader init
+	m_debugShader = new Shader();
+
+	// Camera object for MVP matrix
+	m_camera = new Camera();
+
+	m_debugMesh = new Mesh();
+
 	/*btIDebugDraw tempp;
 	m_dynamicsWorld->setDebugDrawer(btIDebugDraw::DebugDrawModes::DBG_MAX_DEBUG_DRAW_MODE);
 	m_dynamicsWorld->deb*/
@@ -394,7 +402,7 @@ btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh,
 	trans.setIdentity();
 	trans.setOrigin(pos);
 
-	trimesh->setScaling(btVector3(600, 500, 600));
+	trimesh->setScaling(btVector3(10, 10, 10));
 
 	btCollisionShape* trimeshShape = new btBvhTriangleMeshShape(trimesh, useQuantizedBvhTree);
 	m_collisionShapes.push_back(trimeshShape);
@@ -424,6 +432,104 @@ btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh,
 	//return m_triangleMeshBodies.size() - 1;
 	return body;
 }
+
+void PhysicsEngine::DrawLine(const btVector3 &from, const btVector3 &to)
+{
+	// draws a simple line of pixels between points but stores them for later draw
+	LineValues Line;
+	Line.p1 = from;
+	Line.p2 = to;
+
+	m_debugLines.push_back(Line);
+
+	// we don't care about colour?		
+}
+
+void PhysicsEngine::ReadInMesh(Mesh* mesh)
+{
+	for (int i = 0; i < mesh->GetVertices().size(); i+=2)
+	{
+		// Point A
+		btVector3 from(mesh->GetVertices()[i].m_position.x, mesh->GetVertices()[i].m_position.y, mesh->GetVertices()[i].m_position.z);
+
+		// Point B
+		btVector3 to(mesh->GetVertices()[i+1].m_position.x, mesh->GetVertices()[i + 1].m_position.y, mesh->GetVertices()[i + 1].m_position.z);
+
+		// Add line A->B
+		DrawLine(from, to);
+	}
+
+	m_debugMesh = mesh;
+}
+
+void PhysicsEngine::InitDebugDraw()
+{
+	// Create a debug shader source (vertext and fragment shader)
+	ShaderSource debugShaderSource = ParseShaders("Resources/shaders/DebugDraw.shader");
+
+	// Initialise the shader program for the physics engine
+	GetDebugShader()->Initialize(debugShaderSource.VertexSource, debugShaderSource.FragmentSource);
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(m_debugLines[0]) * m_debugLines.size(), &m_debugLines[0], GL_STATIC_DRAW);
+
+	// load the vertex data info
+	glVertexAttribPointer(1,  // the handle for the inPos shader attrib should be at pos 0
+		3,	// there are 3 values xyz
+		GL_FLOAT, // float value
+		GL_FALSE, // don't need to be normalised
+		4 * sizeof(float),  // how many floats to the next one(be aware btVector3 uses 4 floats)
+		(GLvoid*)&m_debugLines[0]  // where do they start as an index); // use 3 values, but add stride each time to get to the next
+	);
+
+	glBindVertexArray(0);
+}
+
+void PhysicsEngine::DebugDraw()
+{
+	// Enable shader
+	m_debugShader->TurnOn();
+
+	glm::mat4 projectionMatrix = m_camera->GetProjectionMatrix();
+	glm::mat4 modelMatrix = CreateTransformationMatrix(m_debugMesh->GetPosition(), m_debugMesh->GetRotation(), m_debugMesh->GetScale());
+	glm::mat4 viewMatrix = CreateViewMatrix(m_camera);
+
+	GLint modelMatrixId = m_debugShader->GetVariable("model");
+	GLint viewMatrixId = m_debugShader->GetVariable("view");
+	GLint projectionMatrixId = m_debugShader->GetVariable("projection");
+
+	m_debugShader->SetMatrix4(modelMatrixId, 1, false, &modelMatrix[0][0]);
+	m_debugShader->SetMatrix4(viewMatrixId, 1, false, &viewMatrix[0][0]);
+	m_debugShader->SetMatrix4(projectionMatrixId, 1, false, &projectionMatrix[0][0]);
+
+	// Bind the VAO
+	glBindVertexArray(VAO);
+
+	// Enable the position attribute
+	glEnableVertexAttribArray(0);
+
+	// Draw the lines
+	glDrawArrays(GL_LINES, 0, m_debugLines.size() * 2);
+
+	// Disable the position attribute
+	glDisableVertexAttribArray(0);
+	
+	// Unbind the VAO
+	glBindVertexArray(0);
+
+	// Drawn once then cleared
+	//m_debugLines.clear();
+
+	// Disable shader
+	m_debugShader->TurnOff();
+}
+
+
 
 
 

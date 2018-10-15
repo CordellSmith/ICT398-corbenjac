@@ -64,5 +64,6 @@
     <None Include="Resources\scripts\WindowInit.lua" />
     <None Include="Resources\shaders\Default.shader" />
     <None Include="Resources\shaders\Terrain.shader" />
+    <None Include="Resources\shaders\DebugDraw.shader" />
   </ItemGroup>
 </Project>

@@ -41,6 +41,11 @@
 *
 * @date 31/05/2018
 * @version 2.0	Final version for submission.
+*
+*
+* @date 15/10/2018
+* @author Cordell Smith
+* @version 2.1 Adding debug draw functionality for a mesh
 */
 
 #ifndef PHYSICSENGINE_H
@@ -54,6 +59,7 @@
 #include "LinearMath\btIDebugDraw.h"
 #include "..\Common\Vertex3.h"
 #include "..\AssetFactory\Model.h"
+#include "..\Common\MyMath.h"
 
 struct CollisionBody {
 
@@ -187,6 +193,54 @@ class PhysicsEngine
 
 		btAlignedObjectArray<btCollisionShape*>& GetCollisionShapes() { return m_collisionShapes; };
 
+		struct {
+			btVector3 p1;
+			btVector3 p2;
+
+		} typedef LineValues;
+
+			/**
+			* @brief Creates the debug draw lines
+			*
+			*
+			*
+			* @return void
+			*/
+		void DrawLine(const btVector3 &from, const btVector3 &to);
+
+			/**
+			* @brief Initialises the debug draw
+			*
+			*
+			*
+			* @return void
+			*/
+		void InitDebugDraw();
+
+			/**
+			* @brief Reads in the mesh to be debug drawn
+			*
+			*
+			*
+			* @return void
+			*/
+		void ReadInMesh(Mesh* mesh);
+
+			/**
+			* @brief Sets up the debug draw lines to be rendered
+			*
+			* 
+			*
+			* @return void
+			*/
+		void DebugDraw();
+
+		Shader* GetDebugShader() { return m_debugShader; };
+
+		void SetCamera(Camera* camera) { m_camera = camera; }
+
+		unsigned int VAO, VBO;
+
 	protected:
 
 			/// Determines if shape is dynamic or not
@@ -239,6 +293,16 @@ class PhysicsEngine
 
 			/// Holds all heightfield data (used for testing)
 		unsigned char *m_terrainData;
+
+			/// Debug draw
+		std::vector<LineValues> m_debugLines;
+
+		Shader* m_debugShader;
+
+		Mesh* m_debugMesh;
+
+		Camera* m_camera;
+
 
 		//btIDebugDraw test;
 };

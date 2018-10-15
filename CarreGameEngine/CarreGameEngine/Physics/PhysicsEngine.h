@@ -52,14 +52,17 @@
 #define PHYSICSENGINE_H
 
 // Includes
-#include "btBulletDynamicsCommon.h"
-#include "BulletCollision\CollisionShapes\btHeightfieldTerrainShape.h"
 #include <vector>
 #include <fstream>	// Used for testing of heightfield terrain shape (will be removed later)
-#include "LinearMath\btIDebugDraw.h"
+#include "btBulletDynamicsCommon.h"
+#include "BulletCollision\CollisionShapes\btHeightfieldTerrainShape.h"
 #include "..\Common\Vertex3.h"
-#include "..\AssetFactory\Model.h"
 #include "..\Common\MyMath.h"
+#include "..\AssetFactory\Model.h"
+#include "..\Physics\DebugDraw.h"
+#include "DebugDraw.h"
+
+class DebugDraw;
 
 struct CollisionBody {
 
@@ -75,7 +78,6 @@ struct CollisionBody {
 class PhysicsEngine
 {
 	public:
-
 			/**
 			* @brief Enum for the different types of rigid bodies created.
 			*
@@ -193,20 +195,19 @@ class PhysicsEngine
 
 		btAlignedObjectArray<btCollisionShape*>& GetCollisionShapes() { return m_collisionShapes; };
 
-		struct {
+		struct LineValues {
+			LineValues() { }
+			LineValues(const btVector3& v1, const btVector3& v2, const btVector3& v3) 
+			{ 
+				p1 = v1;
+				p2 = v2;
+				p3 = v3;
+			}
 			btVector3 p1;
 			btVector3 p2;
+			btVector3 p3;
 
-		} typedef LineValues;
-
-			/**
-			* @brief Creates the debug draw lines
-			*
-			*
-			*
-			* @return void
-			*/
-		void DrawLine(const btVector3 &from, const btVector3 &to);
+		}typedef LineValues;
 
 			/**
 			* @brief Initialises the debug draw
@@ -216,15 +217,6 @@ class PhysicsEngine
 			* @return void
 			*/
 		void InitDebugDraw();
-
-			/**
-			* @brief Reads in the mesh to be debug drawn
-			*
-			*
-			*
-			* @return void
-			*/
-		void ReadInMesh(Mesh* mesh);
 
 			/**
 			* @brief Sets up the debug draw lines to be rendered
@@ -299,10 +291,10 @@ class PhysicsEngine
 
 		Shader* m_debugShader;
 
-		Mesh* m_debugMesh;
+		// Used to alter the scale, position, rotation of the debug draw (lines)
+		glm::mat4 m_modelMatrix;
 
 		Camera* m_camera;
-
 
 		//btIDebugDraw test;
 };

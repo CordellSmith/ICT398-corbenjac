@@ -220,36 +220,26 @@ void GameControlEngine::InitializePhysics()
 	for (itr = m_assetFactory->GetAssets().begin(); itr != m_assetFactory->GetAssets().end(); itr++)
 	{
 		btVector3 objRigidBodyPosition;
-		//float tempX, tempY, tempZ;
 		
 		if (itr->second->GetAssetName() == "lecTheatre")
 		{
-			// Have to convert from glm::vec3 to Bullets btVector3
+			// Convert from glm::vec3 to Bullets btVector3
 			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 
 			// Add static floor rigid body in physics world (size set to 1000 x 1000)
 			m_physicsWorld->CreateStaticRigidBody(objRigidBodyPosition);
 			// Add to our array of collision bodies
-			//m_collisionBodyPos.push_back(objRigidBodyPosition);
 			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 
-			float tempX = itr->second->GetPosition().x;
-			float tempZ = itr->second->GetPosition().z;
-			float tempY = itr->second->GetPosition().y;
-
-			btVector3 lecPos = btVector3(tempX, tempY, tempZ);
 			std::cout << "Physics Init " << itr->second->GetAssetName() << ": " << itr->second->GetModel()->GetMeshBatch().size() << " and " << itr->second->GetModel()->GetMeshBatch().size() << std::endl;
 
-			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), lecPos, true, false);
-			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), lecPos));
-
+			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), objRigidBodyPosition, true, false);
+			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
+			
 			/// 15/10/18 CSmith Debug Draw
-			// Load in lecture theatre mesh to physics debug draw
-			for (int i = 0; i < itr->second->GetModel()->GetMeshBatch().size(); i++)
-				m_physicsWorld->ReadInMesh(&itr->second->GetModel()->GetMeshBatch()[i]);
 			// This has to be called after the mesh data is passed in
-			std::cout << "Debug Mesh: " << itr->first << " loaded" << std::endl;
 			m_physicsWorld->InitDebugDraw();
+			std::cout << "Debug Mesh: " << itr->first << " loaded" << std::endl;
 
 			continue;
 		}
@@ -264,8 +254,12 @@ void GameControlEngine::InitializePhysics()
 			// Add to our array of collision bodies
 			//m_collisionBodyPos.push_back(objRigidBodyPosition);
 			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
+
 			continue;
 		}
+
+		if (itr->second->GetAssetName() == "player")
+			continue;
 
 		/// Cordell	03/10/18 -- Start
 		///			09/10/18 -- Only generating box shape rigid objects, removed name specific code

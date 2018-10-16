@@ -246,22 +246,41 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 		{
 			trans = obj->getWorldTransform();
 		}
-		
+	
 		// Check to see if player object
-		//if (body->getUserIndex() == CAMERA)
-		//{
-		//	// TODO: Make this better (Jack)
-		//	// Apply force in direction camera was moved
-		//	m_newForce.setX((playerObj.x() - m_playerObject.x()) * 1500);
-		//	//m_newForce.setY((playerObj.y() - m_playerObject.y()) * 10000);
-		//	m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 1500);
+		if (body->getUserIndex() == CAMERA)
+		{
+			// TODO: Make this better (Jack)
+			// Apply force in direction camera was moved
+			m_newForce.setX((playerObj.x() - m_playerObject.x()) * 1500);
+			//m_newForce.setY((playerObj.y() - m_playerObject.y()) * 10000);
+			m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 1500);
 
-		//	// Update rigid body location for drawing
-		//	body->applyCentralForce(m_newForce);
-		//	m_playerObject = trans.getOrigin();
-		//	playerObj = m_playerObject;
-		//}
-		//else
+			// Update rigid body location for drawing
+			body->applyCentralForce(m_newForce);
+			m_playerObject = trans.getOrigin();
+			playerObj = m_playerObject;
+
+			btVector3 btFrom(playerObj.getX(), playerObj.getY(), playerObj.getZ());
+			btVector3 btTo(playerObj.getX(), -5000.0f, playerObj.getZ());
+			btCollisionWorld::ClosestRayResultCallback res(btFrom, btTo);
+
+			m_dynamicsWorld->rayTest(btFrom, btTo, res); // m_btWorld is btDiscreteDynamicsWorld
+
+			// Messing with terrain tracking
+			float stepValue = res.m_hitPointWorld.getY();
+
+			if (res.hasHit() && res.m_hitPointWorld.getY() > stepValue) 
+			{
+				m_newForce.setY((playerObj.y() - m_playerObject.y()) + 225);
+			}
+			else if (res.hasHit() && res.m_hitPointWorld.getY() < stepValue)
+			{
+				m_newForce.setY((playerObj.y() - m_playerObject.y()) + 225);
+			}
+			printf("Collision at: <%.2f, %.2f, %.2f>\n", res.m_hitPointWorld.getX(), res.m_hitPointWorld.getY(), res.m_hitPointWorld.getZ());
+		}
+		else
 		{
 			// Update object positions for drawing
 			collisionBodies[j]->m_position.setX(trans.getOrigin().getX());

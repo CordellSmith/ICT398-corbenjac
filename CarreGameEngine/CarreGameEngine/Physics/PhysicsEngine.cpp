@@ -662,3 +662,577 @@ void PhysicsEngine::ParseModel(Model* model)
 	// Add the body to the dynamic world
 	dynamicsWorld->addRigidBody(body);
 }*/
+
+
+
+/*************************************NEW**************************************/
+
+
+////Includes
+//#include "PhysicsEngine.h"
+//#include <iostream>
+//
+////#define m_numPointMassElements 10000000
+//
+//// Default constructor
+//PhysicsEngine::PhysicsEngine()
+//{
+//	// Collision configuration contains default setup for memory, collision setup
+//	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
+//
+//	// Use the default collision dispatcher
+//	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
+//
+//	// A good general purpose broadphase
+//	btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
+//
+//	// The default constraint solver
+//	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
+//
+//	// The dynamic world
+//	m_collisionWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
+//
+//	// Initialize epsilon
+//	m_epsilon = .5;
+//
+//	count = 0;
+//	delta_t = 0.02;
+//	game_time = 0.0;
+//	prev_game_time = 0.0;
+//	physics_lag_time = 0.0;
+//
+//	// Number of PointMass elements for an object
+//	//m_numPointMassElements = 1000;
+//
+//	// Set the gravity
+//	//m_collisionWorld->setGravity(btVector3(0, -30, 0));
+//
+//	// Initialize all objects to static
+//	//m_isDynamic = false;
+//
+//	// Initialize player object location
+//	//m_playerObject.setZero();
+//
+//	//m_oldForce.setZero();
+//	//m_newForce.setZero();
+//
+//	//std::cout << m_collisionShapes.size() << std::endl;
+//
+//	/*btIDebugDraw tempp;
+//	m_dynamicsWorld->setDebugDrawer(btIDebugDraw::DebugDrawModes::DBG_MAX_DEBUG_DRAW_MODE);
+//	m_dynamicsWorld->deb*/
+//}
+//
+//// De-constructor (not implemented)
+//PhysicsEngine::~PhysicsEngine() {};
+//
+//// Create a static rigid body
+//void PhysicsEngine::CreateStaticRigidBody(Vector3 &pos)
+//{
+//	// Create a new collision object
+//	btCollisionObject* colObject = new btCollisionObject();
+//
+//	// Set origin of collision object
+//	btVector3 temp = btVector3(pos.x, pos.y, pos.z);
+//	colObject->getWorldTransform().setOrigin(temp);
+//
+//	// Create a box shape
+//	btCollisionShape* boxShape;
+//	boxShape = new btBoxShape(btVector3(btScalar(50), btScalar(50), btScalar(50)));
+//
+//	// Set shape to object
+//	colObject->setCollisionShape(boxShape);
+//
+//	// Add object to collision world
+//	m_collisionWorld->addCollisionObject(colObject);
+//
+//	//btCollisionShape* groundShape;
+//	//groundShape = new btBoxShape(btVector3(btScalar(50), btScalar(50), btScalar(50)));
+//	//m_collisionShapes.push_back(groundShape);
+//
+//	//btVector3 temp = btVector3(pos.x, pos.y, pos.z);
+//	//temp.setX(temp.getX() - 3000);
+//	//temp.setZ(temp.getZ() - 50);
+//
+//	// Initialize transform and location
+//	//btTransform groundTransform;
+//	//groundTransform.setIdentity();
+//	//groundTransform.setOrigin(temp);
+//
+//	// Set mass (zero for static)
+//	//m_mass = 0.0;
+//
+//	// Set dynamic objects to objects with mass that is non-zero
+//	//m_isDynamic = (m_mass != 0.0f);
+//
+//	//btVector3 localInertia(0.0, 0.0, 0.0);
+//
+//	//if (m_isDynamic)
+//	//groundShape->calculateLocalInertia(m_mass, localInertia);
+//
+//	//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
+//	//btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
+//	//btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, myMotionState, groundShape, localInertia);
+//	//btRigidBody* body = new btRigidBody(rbInfo);
+//
+//	// Set the index for the type of rigid body that is being created
+//	//body->setUserIndex(PLANE);
+//
+//	// Add the body to the dynamic world
+//	//m_collisionWorld->addRigidBody(body);
+//}
+//
+//// Create a dynamic rigid body
+//void PhysicsEngine::CreateDynamicRigidBody(Vector3 &pos, std::string objType)
+//{
+//	// Does object data already exist
+//	bool objExists = false;
+//
+//	// Create a new collision object
+//	btCollisionObject* colObject = new btCollisionObject();
+//
+//	// Set origin of collision object
+//	btVector3 temp = btVector3(pos.x, pos.y, pos.z);
+//	colObject->getWorldTransform().setOrigin(temp);
+//
+//	// Create box shape
+//	btCollisionShape* boxShape = new btBoxShape(btVector3(btScalar(50), btScalar(50), btScalar(50)));
+//
+//	// Set shape to object
+//	colObject->setCollisionShape(boxShape);
+//
+//	// Search vector of object types to see if object data has already been created
+//	for (int i = 0; i < m_ObjectTypePhysicsData.size(); i++)
+//	{
+//		// If object data already exists, set flag true
+//		if (objType == m_ObjectTypePhysicsData[i]->objType)
+//			objExists = true;
+//	}
+//
+//	// If object data does not exist, create it
+//	if (!objExists)
+//	{
+//		// New object data
+//		ObjectTypePhysicsData* objPhysicsData = new ObjectTypePhysicsData();
+//
+//		// Set type of object
+//		objPhysicsData->objType = objType;
+//
+//		// Mass
+//		m_mass = 5;
+//		//if (objType == "box")
+//		//m_mass = 5000;
+//
+//		// Size of object
+//		Vector3 size = { 100, 100, 100 };
+//
+//		// Make new PointMass data and initialize it
+//		std::vector<PointMass> pointMassData;
+//		InitializePointMass(pointMassData, m_mass, size);
+//
+//		// Calc center of gravity
+//		CalcObjectCenterOfGravity(pointMassData, objPhysicsData);
+//
+//		// Calc relative positions of pointmass data
+//		CalcPointMassRelativePositions(pointMassData, objPhysicsData);
+//
+//		// Calc second moment of mass (inertia)
+//		CalcObjectSecondMoment(objPhysicsData, size);
+//
+//		// Add object data to vector
+//		m_ObjectTypePhysicsData.push_back(objPhysicsData);
+//	}
+//
+//	// Add object to collision world
+//	m_collisionWorld->addCollisionObject(colObject);
+//
+//	// Add object rigid body data to vector
+//	ObjectRigidBodyData* objRigidBodyData = new ObjectRigidBodyData();
+//	objRigidBodyData->objType = objType;
+//
+//	if (objType == "box2")
+//		objRigidBodyData->velBeforeCol.Set(1, -.5);
+//	if (objType == "box")
+//		objRigidBodyData->velBeforeCol.Set(1, -0);
+//	objRigidBodyData->currPos = pos;
+//	m_objectRigidBodyData.push_back(objRigidBodyData);
+//
+//	//// Create box shape and add to shape array
+//	//btCollisionShape* boxShape = new btBoxShape(btVector3(btScalar(50), btScalar(50), btScalar(50)));
+//	//m_collisionShapes.push_back(boxShape);
+//
+//	//// Create a dynamic object
+//	//btTransform startTransform;
+//	//startTransform.setIdentity();
+//
+//	//// Set mass (non-zero for dynamic)
+//	//m_mass = 100.0f;
+//
+//	//// Set dynamic objects to objects with mass that is non-zero
+//	//m_isDynamic = (m_mass != 0.0f);
+//
+//	//btVector3 localInertia(0.0, 0.0, 0.0);
+//
+//	//if (m_isDynamic)
+//	//	boxShape->calculateLocalInertia(m_mass, localInertia);
+//
+//	//// Set origin of body
+//	//startTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
+//
+//	////using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+//	//btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+//	//btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, myMotionState, boxShape, localInertia);
+//	//btRigidBody* body = new btRigidBody(rbInfo);
+//
+//	//// Set the index for the type of rigid body that is being created
+//	//body->setUserIndex(BOX);
+//	//
+//	//// Add the body to the dynamic world
+//	//m_collisionWorld->addRigidBody(body);
+//}
+//
+//// Simulate the dynamic world
+//void PhysicsEngine::Simulate(std::vector<Vector3> &bodyPos, std::vector<Quaternion> &bodyRot)
+//{
+//	// Time step
+//	game_time += 0.1;
+//	physics_lag_time += (game_time - prev_game_time);
+//
+//
+//	// Collision objects that are colliding
+//	btCollisionObject* objA;
+//	btCollisionObject* objB;
+//
+//	// Data of colliding rigid bodies
+//	ObjectRigidBodyData* rbA = m_objectRigidBodyData[0];
+//	ObjectRigidBodyData* rbB = m_objectRigidBodyData[1];
+//
+//	// Data
+//	btVector3 ptA = { 0, 0, 0 };
+//	btVector3 ptB = { 0, 0, 0 };
+//
+//	while (physics_lag_time > delta_t)
+//	{
+//		//m_collisionWorld->stepSimulation(1.f / 60.f, 10);
+//
+//		//// Collision objects that are colliding
+//		//btCollisionObject* objA;
+//		//btCollisionObject* objB;
+//
+//		//// Data of colliding rigid bodies
+//		//ObjectRigidBodyData* rbA = m_objectRigidBodyData[0];
+//		//ObjectRigidBodyData* rbB = m_objectRigidBodyData[1];
+//
+//		//// Data
+//		ptA = { 0, 0, 0 };
+//		ptB = { 0, 0, 0 };
+//
+//		// Check all objects for collision detection, and get number of collisions
+//		m_collisionWorld->performDiscreteCollisionDetection();
+//		int numManifolds = m_collisionWorld->getDispatcher()->getNumManifolds();
+//
+//		for (int i = 0; i < numManifolds; i++)
+//		{
+//			btPersistentManifold* contactManifold = m_collisionWorld->getDispatcher()->getManifoldByIndexInternal(i);
+//			objA = const_cast<btCollisionObject*>(contactManifold->getBody0());
+//			objB = const_cast<btCollisionObject*>(contactManifold->getBody1());
+//			contactManifold->refreshContactPoints(objA->getWorldTransform(), objB->getWorldTransform());
+//
+//			int numContacts = contactManifold->getNumContacts();
+//
+//			count++;
+//			std::cout << "collision " << count << std::endl;
+//			// Get data for colliding objects
+//			for (int j = m_collisionWorld->getNumCollisionObjects() - 1; j >= 0; j--)
+//			{
+//				btCollisionObject* obj = m_collisionWorld->getCollisionObjectArray()[j];
+//
+//				if (obj == objA)
+//					rbA = m_objectRigidBodyData[j];
+//				if (obj == objB)
+//					rbB = m_objectRigidBodyData[j];
+//			}
+//
+//
+//			//For each contact point in that manifold
+//			for (int j = 0; j < numContacts; j++)
+//			{
+//				//Get the contact information
+//				btManifoldPoint& pt = contactManifold->getContactPoint(j);
+//				//ptA += pt.m_localPointA;
+//				//ptB += pt.m_localPointB;
+//				ptA += pt.getPositionWorldOnA();
+//				ptB += pt.getPositionWorldOnB();
+//				double ptdist = pt.getDistance();
+//				pt.m_localPointA;
+//
+//				//std::cout << "COLLISION" << std::endl;
+//				//std::cout << ptA.getX() << " " << ptA.getY() << " " << ptA.getZ() << std::endl;
+//				//std::cout << ptB.getX() << " " << ptB.getY() << " " << ptB.getZ() << std::endl;
+//
+//				// Get pos and vel before collision
+//
+//
+//
+//				//// Find surface normal of collision (check this)
+//				//m_normal = Vector3(ptA.getX(), ptA.getY(), ptA.getZ());
+//				//m_normal = m_normal.Normalized();
+//
+//
+//				//// Calculate impulses (eq 13)
+//				//Vector3 tempA = rbA->velBeforeCol;
+//				//Vector3 tempB = rbB->velBeforeCol;
+//				//m_impulse = m_normal;
+//				//m_impulse = m_impulse * (1 + m_epsilon) * m_ObjectTypePhysicsData[0]->totalMass * m_ObjectTypePhysicsData[0]->totalMass;
+//				//m_impulse = m_impulse * m_normal.Dot(m_normal, tempA - tempB);
+//				//m_impulse = m_impulse / (m_ObjectTypePhysicsData[0]->totalMass + m_ObjectTypePhysicsData[0]->totalMass);
+//
+//				//// Get pos and vel after collision
+//				//rbA->velBeforeCol = rbA->velBeforeCol + (m_impulse / m_ObjectTypePhysicsData[0]->totalMass);
+//				//rbB->velBeforeCol = rbB->velBeforeCol + (m_impulse / m_ObjectTypePhysicsData[0]->totalMass);
+//			}
+//
+//			ptA /= numContacts;
+//			ptB /= numContacts;
+//			Vector3 tempAA = rbA->currPos;
+//			Vector3 tempBB = rbB->currPos;
+//			Vector3 centerAToCol = tempAA - Vector3(ptA.getX(), ptA.getY(), ptA.getZ());
+//			Vector3 centerBToCol = tempBB - Vector3(ptB.getX(), ptB.getY(), ptB.getZ());
+//			// Get pos before collision
+//
+//
+//			// Find surface normal of collision (check this)
+//			Vector3 empty;// = { 1, 2, 1 };
+//						  //m_normal = m_normal.Normal(Vector3(ptA.getX(), ptA.getY(), ptA.getZ()), empty, Vector3(ptB.getX(), ptB.getY(), ptB.getZ()));
+//						  //m_normal = Vector3(ptA.getX(), ptA.getY(), ptA.getZ());
+//						  //m_normal = Vector3(ptA.getX() - ptB.getX(), ptA.getY() - ptB.getY(), ptA.getZ() - ptB.getZ());
+//						  //m_normal = m_normal.Normal(Vector3(ptA.getX(), ptA.getY(), ptA.getZ()) - rbA->currPos, Vector3(ptA.getX(), ptA.getY(), ptA.getZ()), Vector3(ptA.getX(), ptA.getY(), ptA.getZ()) - rbB->currPos);
+//			m_normal = centerAToCol - centerBToCol;
+//			m_normal = m_normal.Normalized();
+//
+//
+//			// Calculate impulses (eq 13)
+//			Vector3 tempA = rbA->velBeforeCol;
+//			Vector3 tempB = rbB->velBeforeCol;
+//			Vector3 tempNormal = m_normal;
+//			Vector3 tempImpulse;
+//			Vector3 tempCalc;
+//			Vector3 tempCalc2;
+//			Vector3 tempDivide;
+//			Vector3 tempFinal;
+//
+//			//tempCalc = (tempA - tempB) * (1 + m_epsilon) * m_ObjectTypePhysicsData[0]->totalMass * m_ObjectTypePhysicsData[1]->totalMass;
+//			////tempCalc2 = tempImpulse * tempCalc;
+//			//tempImpulse = tempImpulse.Dot(tempCalc, tempNormal);
+//			//tempDivide = tempImpulse / (m_ObjectTypePhysicsData[0]->totalMass + m_ObjectTypePhysicsData[1]->totalMass);
+//			//tempDivide * -1;
+//			//tempFinal = tempDivide * tempNormal;
+//			//m_impulse = tempFinal;
+//
+//			tempImpulse = tempImpulse.Dot(tempA - tempB, tempNormal);
+//			tempCalc = (1 + m_epsilon) * m_ObjectTypePhysicsData[0]->totalMass * m_ObjectTypePhysicsData[1]->totalMass;
+//			tempCalc2 = tempImpulse * tempCalc;
+//			tempDivide = tempCalc2 / (m_ObjectTypePhysicsData[0]->totalMass + m_ObjectTypePhysicsData[1]->totalMass);
+//			tempDivide * -1;
+//			tempFinal = tempDivide * tempNormal;
+//			m_impulse = tempFinal;
+//
+//
+//			//m_impulse = m_normal;
+//			//m_impulse = m_impulse * -(1 + m_epsilon) * m_ObjectTypePhysicsData[0]->totalMass * m_ObjectTypePhysicsData[1]->totalMass;
+//			//m_impulse = m_impulse * m_normal.Dot(m_normal, tempA - tempB);
+//			//m_impulse = m_impulse / (m_ObjectTypePhysicsData[0]->totalMass + m_ObjectTypePhysicsData[1]->totalMass);
+//			//m_impulse = m_impulse.Cross(m_impulse, m_normal);
+//
+//			// Get pos and vel after collision (eq 9 and eq 10)
+//			rbA->velBeforeCol = rbA->velBeforeCol + (m_impulse / m_ObjectTypePhysicsData[0]->totalMass);
+//			rbB->velBeforeCol = rbB->velBeforeCol - (m_impulse / m_ObjectTypePhysicsData[1]->totalMass);
+//
+//			//rbA->currPos.Set(1, rbA->currPos.y + 1);
+//
+//			//objB->getWorldTransform().setOrigin(btVector3(rbB->prevPos.x, rbB->prevPos.y, rbB->prevPos.z));
+//		}
+//
+//		/*****************************************************************/
+//		// Update positions of all objects
+//		for (int j = m_collisionWorld->getNumCollisionObjects() - 1; j >= 0; j--)
+//		{
+//			btCollisionObject* obj = m_collisionWorld->getCollisionObjectArray()[j];
+//			btTransform temp = obj->getWorldTransform();
+//			btVector3 temp2 = temp.getOrigin();
+//
+//
+//			//std::cout << temp2.getX() << " " << temp2.getY() << " " << temp2.getZ() << std::endl;
+//			//std::cout << temp2.getX() << " " << temp2.getY() << " " << temp2.getZ() << std::endl;
+//			//if (j == 1)
+//			//{
+//			//std::cout << temp2.getX() << " " << temp2.getY() << " " << temp2.getZ() << std::endl;
+//			//temp2.setY(temp2.getY() + m_objectRigidBodyData[j]->velBeforeCol.y);
+//			temp2.setValue(temp2.getX() + m_objectRigidBodyData[j]->velBeforeCol.x,
+//				temp2.getY() + m_objectRigidBodyData[j]->velBeforeCol.y,
+//				temp2.getZ() + m_objectRigidBodyData[j]->velBeforeCol.z);
+//			temp.setOrigin(temp2);
+//			obj->setWorldTransform(temp);
+//			//}
+//
+//			// Update object positions for drawing
+//			bodyPos[j].Set(0, temp.getOrigin().getX());
+//			bodyPos[j].Set(1, temp.getOrigin().getY());
+//			bodyPos[j].Set(2, temp.getOrigin().getZ());
+//
+//			m_objectRigidBodyData[j]->prevPos.Set(0, m_objectRigidBodyData[j]->currPos.x);
+//			m_objectRigidBodyData[j]->prevPos.Set(1, m_objectRigidBodyData[j]->currPos.y);
+//			m_objectRigidBodyData[j]->prevPos.Set(2, m_objectRigidBodyData[j]->currPos.z);
+//
+//			m_objectRigidBodyData[j]->currPos.Set(0, temp.getOrigin().getX());
+//			m_objectRigidBodyData[j]->currPos.Set(1, temp.getOrigin().getY());
+//			m_objectRigidBodyData[j]->currPos.Set(2, temp.getOrigin().getZ());
+//		}
+//
+//		// Decrease physics lag time
+//		physics_lag_time -= delta_t;
+//	}
+//
+//	prev_game_time = game_time;
+//
+//
+//	// Update object positions and rotations for drawing
+//	//	bodyPos[j].Set(0, trans.getOrigin().getX());
+//	//	bodyPos[j].Set(1, trans.getOrigin().getY());
+//	//	bodyPos[j].Set(2, trans.getOrigin().getZ());
+//
+//	//	/*Quaternion temp = { trans.getRotation().getW(),
+//	//						trans.getRotation().getX(),
+//	//						trans.getRotation().getY(),
+//	//						trans.getRotation().getZ() };
+//
+//	//	temp = temp * bodyRot[j];*/
+//
+//	//	bodyRot[j].Set(0, trans.getRotation().getW());
+//	//	bodyRot[j].Set(1, -trans.getRotation().getX());
+//	//	bodyRot[j].Set(2, -trans.getRotation().getY());
+//	//	bodyRot[j].Set(3, -trans.getRotation().getZ());
+//
+//	//	float angleRad = trans.getRotation().getAngle();
+//	//	btVector3 axisOfRot = trans.getRotation().getAxis();
+//	//	std::cout << bodyRot[j].w << " " << bodyRot[j].x << " " << bodyRot[j].y << " " << bodyRot[j].z << std::endl;
+//	//	
+//
+//	/*bodyRot[j].Set(0, cos(angleRad / 2));
+//	bodyRot[j].Set(1, axisOfRot.getX() * (sin(angleRad/2)));
+//	bodyRot[j].Set(2, axisOfRot.getY() * (sin(angleRad / 2)));
+//	bodyRot[j].Set(3, axisOfRot.getZ() * (sin(angleRad / 2)));
+//
+//	std::cout << bodyRot[j].w << " " << bodyRot[j].x << " " << bodyRot[j].y << " " << bodyRot[j].z << std::endl;*/
+//	//trans.getRotation().getEulerZYX(bodyRot[j].x, bodyRot[j].y, bodyRot[j].z);
+//	//std::cout << bodyRot[j].x << " " << bodyRot[j].y << " " << bodyRot[j].z << std::endl;
+//}
+//
+//// Ensure all objects are activated for physics simulation
+//void PhysicsEngine::ActivateAllObjects()
+//{
+//	// Loop through every rigid body object
+//	for (int j = m_collisionWorld->getNumCollisionObjects() - 1; j >= 0; j--)
+//	{
+//		// Get the next object, and activate it
+//		btCollisionObject* obj = m_collisionWorld->getCollisionObjectArray()[j];
+//		obj->forceActivationState(DISABLE_DEACTIVATION);
+//	}
+//}
+//
+//// Initialize the point mass data for an object
+//void PhysicsEngine::InitializePointMass(std::vector<PointMass> &pointMassVect, btScalar mass, Vector3 size)
+//{
+//	// Data
+//	float currX = 0.5;
+//	float currY = 0.5;
+//	float currZ = 0.5;
+//	float numElements = size.x * size.y * size.z;
+//
+//	PointMass tempPointMass;
+//
+//	// Loop through all PointMass data points
+//	for (int i = 0; i < numElements; i++)
+//	{
+//		// Set mass
+//		tempPointMass.mass = mass / numElements;
+//
+//		// Loop through each axis
+//		if (currX >= size.x)
+//		{
+//			currX = 0.5;
+//			currY += 1;
+//		}
+//		if (currY >= size.y)
+//		{
+//			currZ += 1;
+//			currY = 0.5;
+//		}
+//		if (currZ >= size.z)
+//			currZ = 0.5;
+//
+//		// Set actual position of point mass
+//		tempPointMass.actualPosition = Vector3(currX, currY, currZ);
+//
+//		// Add to vector of pointmass data
+//		pointMassVect.push_back(tempPointMass);
+//
+//		// Increment x pos by 1
+//		currX += 1;
+//	}
+//}
+//
+//// Calculate objects center of gravity and first moment of mass
+//void PhysicsEngine::CalcObjectCenterOfGravity(std::vector<PointMass> &pointMassVect, ObjectTypePhysicsData* &newObject)
+//{
+//	// Counter
+//	int i;
+//
+//	// Data
+//	//ObjectPhysicsData* newObject = new ObjectPhysicsData();
+//	Vector3 firstMoment;
+//	//newObject->totalMass = 0;
+//
+//
+//	// Get total mass for object
+//	for (i = 0; i < pointMassVect.size(); i++)
+//		newObject->totalMass += pointMassVect[i].mass;
+//
+//	// Calculate first moment of mass
+//	for (i = 0; i < pointMassVect.size(); i++)
+//	{
+//		Vector3 actualPos = pointMassVect[i].actualPosition;
+//		float mass = pointMassVect[i].mass;
+//		newObject->firstMoment = newObject->firstMoment + actualPos * mass;
+//	}
+//
+//	// Calculate center of gravity for object
+//	firstMoment = newObject->firstMoment;
+//	newObject->combinedCG = firstMoment / newObject->totalMass;
+//
+//	//return newObject;
+//}
+//
+//// Calculate an objects second moment of mass about the CoG
+//void PhysicsEngine::CalcObjectSecondMoment(ObjectTypePhysicsData* &objectData, Vector3 size)
+//{
+//	float tempX = (1.0 / 12.0)*objectData->totalMass*((size.y * size.y) + (size.z * size.z));
+//	float tempY = (1.0 / 12.0)*objectData->totalMass*((size.x * size.x) + (size.z * size.z));
+//	float tempZ = (1.0 / 12.0)*objectData->totalMass*((size.y * size.y) + (size.x * size.x));
+//	objectData->secondMoment.Set(0, tempX);
+//	objectData->secondMoment.Set(1, tempY);
+//	objectData->secondMoment.Set(2, tempZ);
+//}
+//
+//// Calculate the relative positions of each PointMass data point for an object
+//void PhysicsEngine::CalcPointMassRelativePositions(std::vector<PointMass> &pointMassVect, ObjectTypePhysicsData* &objectData)
+//{
+//	for (int i = 0; i < pointMassVect.size(); i++)
+//	{
+//		Vector3 actualPos = pointMassVect[i].actualPosition;
+//		pointMassVect[i].relativePosition = actualPos - objectData->combinedCG;
+//	}
+//}
+//
+//*/
+/*************************************NEW**************************************/

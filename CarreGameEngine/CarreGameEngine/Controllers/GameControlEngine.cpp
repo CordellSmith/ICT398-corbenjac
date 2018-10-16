@@ -234,6 +234,8 @@ void GameControlEngine::InitializePhysics()
 			std::cout << "Physics Init " << itr->second->GetAssetName() << ": " << itr->second->GetModel()->GetMeshBatch().size() << " and " << itr->second->GetModel()->GetMeshBatch().size() << std::endl;
 
 			/// 15/10/18 CSmith Debug Draw
+			/// 16/10/18		Debug Draw almost working
+			///					Mesh collider with LBLT is working
 			// Important: used to get model matrix for debug draw lines
 			m_physicsWorld->ParseModel(itr->second->GetModel());
 			// Static Triangle mesh of LBLT is created here!

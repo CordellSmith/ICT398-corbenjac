@@ -46,6 +46,11 @@
 * @date 15/10/2018
 * @author Cordell Smith
 * @version 2.1 Adding debug draw functionality for a mesh
+*
+* @date 16/10/2018
+* @author Jack Matters
+* @version 2.2	Adding all my current code for self coded physics. Currently have collision detection working, physics involved in collision partially working.
+*				Commented everything out as not fully ready to implement yet.
 */
 
 #ifndef PHYSICSENGINE_H
@@ -60,6 +65,39 @@
 #include "..\Common\MyMath.h"
 #include "..\AssetFactory\Model.h"
 #include "DebugDraw.h"
+
+
+/*************************************NEW**************************************/
+///  Struct of point mass data for an object (for determining cente of gravity and other info)
+//struct PointMass
+//{
+//	float mass = 0;
+//	Vector3 actualPosition;
+//	Vector3 relativePosition;
+//};
+
+/// Struct containing useful data for physics sim for an object type
+//struct ObjectTypePhysicsData
+//{
+//	string objType = "";
+//	float totalMass = 0;
+//	Vector3 combinedCG;
+//	Vector3 firstMoment;
+//	Vector3 secondMoment;
+//};
+
+/// Struct containing useful data for physics sim for an object type
+//struct ObjectRigidBodyData
+//{
+//	string objType = "";
+//	Vector3 velBeforeCol;
+//	Vector3 velAfterCol;
+//	Vector3 currForce;
+//	Vector3 currPos;
+//	Vector3 prevPos;
+//	Quaternion currRot;
+//};
+/*************************************NEW**************************************/
 
 struct CollisionBody {
 
@@ -218,6 +256,81 @@ class PhysicsEngine
 
 		unsigned int VAO, VBO;
 		
+		/*************************************NEW**************************************/
+		/**
+		* @brief Initialize all PointMass for an object
+		*
+		* Initialize all point mass data points within an object to determine the Cog and inertia of an object
+		*
+		* @param pointMass - Pointer to the PointMass data to initialize
+		* @param mass - Mass of object
+		*
+		* @return void
+		*/
+		//void InitializePointMass(std::vector<PointMass> &pointMassVect, btScalar mass, Vector3 size);
+
+		/**
+		* @brief Calculate center of gravity
+		*
+		* Calculate an objects center of gravity using its PointMass data
+		*
+		* @param pointMass - Pointer to the PointMass data of object
+		* @param numElements - Number of PointMass data points
+		*
+		* @return void
+		*/
+		//void CalcObjectCenterOfGravity(std::vector<PointMass> &pointMassVect, ObjectTypePhysicsData* &newObject);
+
+		/**
+		* @brief Calculate second moment of mass
+		*
+		* Calculate the second moment of mass for an object
+		*
+		* @return void
+		*/
+		//void CalcObjectSecondMoment(ObjectTypePhysicsData* &objectData, Vector3 size);
+
+		/**
+		* @brief Calculate PointMass relative positions
+		*
+		* Calculate the relative positions for each PointMass data point in an object
+		*
+		* @param pointMass - Pointer to the pointMass data of object
+		* @param numElements - Number of PointMass data points
+		*
+		* @return void
+		*/
+		//void CalcPointMassRelativePositions(std::vector<PointMass> &pointMassVect, ObjectTypePhysicsData* &objectData);
+		/*************************************NEW**************************************/
+
+	private:
+		/*************************************NEW**************************************/
+		/*
+		/// Collision world
+		btCollisionWorld* m_collisionWorld;
+
+		/// Coefficient of restitution (conservation/loss of kinetic energy)
+		btScalar m_epsilon;
+
+		/// vector of different object types and physics data associated with them
+		std::vector<ObjectTypePhysicsData*> m_ObjectTypePhysicsData;
+
+		/// Vector of each rigid body being simulated
+		std::vector<ObjectRigidBodyData*> m_objectRigidBodyData;
+
+
+		Vector3 m_normal;
+		Vector3 m_impulse;
+
+		int count;
+
+		float delta_t; // Physics time step, seconds
+		float game_time; // Current game time, seconds
+		float prev_game_time; // Game time at previous frame
+		float physics_lag_time; // Time since last update
+		*/
+		/*************************************NEW**************************************/
+
 	protected:
 
 			/// Determines if shape is dynamic or not

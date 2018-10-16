@@ -210,26 +210,26 @@ void GameControlEngine::GameLoop()
 
 void GameControlEngine::InitializePhysics()
 {
-	// Create camera rigid body to collide with objects
-	btVector3 bt_cameraPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
-	m_physicsWorld->CreatePlayerControlledRigidBody(bt_cameraPos);
-	m_collisionBodies.push_back(new CollisionBody("player", bt_cameraPos));
-
 	// Iterate throgh objects map and add all objects to the collision body list
 	std::multimap<std::string, IGameAsset*>::const_iterator itr;
 	for (itr = m_assetFactory->GetAssets().begin(); itr != m_assetFactory->GetAssets().end(); itr++)
 	{
 		btVector3 objRigidBodyPosition;
+
+		if (itr->second->GetAssetName() == "player")
+		{
+			// Create camera capsule shape to collide with objects
+			btVector3 bt_cameraPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
+			m_physicsWorld->CreatePlayerControlledRigidBody(bt_cameraPos);
+			m_collisionBodies.push_back(new CollisionBody("player", bt_cameraPos));
+			
+			continue;
+		}
 		
 		if (itr->second->GetAssetName() == "lecTheatre")
 		{
 			// Convert from glm::vec3 to Bullets btVector3
 			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
-
-			// Add static floor rigid body in physics world (size set to 1000 x 1000)
-			m_physicsWorld->CreateStaticRigidBody(objRigidBodyPosition);
-			// Add to our array of collision bodies
-			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 
 			std::cout << "Physics Init " << itr->second->GetAssetName() << ": " << itr->second->GetModel()->GetMeshBatch().size() << " and " << itr->second->GetModel()->GetMeshBatch().size() << std::endl;
 
@@ -261,9 +261,6 @@ void GameControlEngine::InitializePhysics()
 
 			continue;
 		}
-
-		if (itr->second->GetAssetName() == "player")
-			continue;
 
 		/// Cordell	03/10/18 -- Start
 		///			09/10/18 -- Only generating box shape rigid objects, removed name specific code

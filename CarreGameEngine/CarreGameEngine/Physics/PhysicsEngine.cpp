@@ -343,56 +343,48 @@ void PhysicsEngine::ActivateAllObjects()
 	}
 }
 
-btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, btVector3 &pos, bool useQuantizedBvhTree, bool collision)
+btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuantizedBvhTree, bool collision)
 {
 	btTriangleMesh* trimesh = new btTriangleMesh();
-	//std::cout << modelIndices.size()  << " and " << modelMesh.size() << std::endl;
 	for (int j = 0; j < modelMesh.size(); j++)
 	{
 		Mesh tempMesh = modelMesh[j];
-		std::vector<unsigned int> tempMeshIndice = tempMesh.GetIndices();
 		std::vector<Vertex3> tempMeshVertex = tempMesh.GetVertices();
 
-		for (int i = 0; i < tempMeshIndice.size(); i += 3)
+		for (int i = 0; i < tempMeshVertex.size(); i+=3)
 		{
-			glm::vec3 x = tempMeshVertex[tempMeshIndice[i]].m_position;
-			glm::vec3 y = tempMeshVertex[tempMeshIndice[i+1]].m_position;
-			glm::vec3 z = tempMeshVertex[tempMeshIndice[i+2]].m_position;
-			/*glm::vec3 x = modelMesh[i].m_position;
-			glm::vec3 y = modelMesh[i + 1].m_position;
-			glm::vec3 z = modelMesh[i + 2].m_position;*/
+			glm::vec3 p1 = tempMeshVertex[i].m_position;
+			glm::vec3 p2 = tempMeshVertex[i+1].m_position;
+			glm::vec3 p3 = tempMeshVertex[i+2].m_position;
 
-			btVector3 p0, p1, p2;
+			btVector3 A, B, C;
 
-			p0 = btVector3(x.x, x.y, x.z);
-			p1 = btVector3(y.x, y.y, y.z);
-			p2 = btVector3(z.x, z.y, z.z);
+			A = btVector3(p1.x, p1.y, p1.z);
+			B = btVector3(p2.x, p2.y, p2.z);
+			C = btVector3(p3.x, p3.y, p3.z);
 
-			trimesh->addTriangle(p0, p1, p2);
-			m_debugLines.push_back(LineValues(p0, p1, p2));
+			trimesh->addTriangle(A, B, C);
+
+			// Add points to debug draw array of btVector3s
+			m_debugLines.push_back(A);
+			m_debugLines.push_back(B);
+			m_debugLines.push_back(C);
 		}
 	}
 
 	btTransform	trans;
 	trans.setIdentity();
-	trans.setOrigin(pos);
 
-	// Scales set to 100
-	btScalar scaleX = 100, scaleY = 100, scaleZ = 100;
+	// Set origin to the position of the object (LBLT)
+	trans.setOrigin(btVector3(modelMesh[0].GetPosition().x, modelMesh[0].GetPosition().y, modelMesh[0].GetPosition().z));
+
 	// Set trimesh scale
-	trimesh->setScaling(btVector3(scaleX, scaleY, scaleZ));
-
-	// Model matrix changes
-	m_modelMatrix = CreateTransformationMatrix(
-		glm::vec3(modelMesh[0].GetPosition().x, modelMesh[0].GetPosition().y, modelMesh[0].GetPosition().z),
-		glm::vec3(0),
-		glm::vec3(scaleX, scaleY, scaleZ));
+	trimesh->setScaling(btVector3(m_scale.x, m_scale.y, m_scale.z));
 
 	btCollisionShape* trimeshShape = new btBvhTriangleMeshShape(trimesh, useQuantizedBvhTree);
 	m_collisionShapes.push_back(trimeshShape);
 
 	btVector3 inertia(0, 0, 0);
-	//trimeshShape->calculateLocalInertia(0, inertia); //gives error
 
 	btDefaultMotionState* motionstate = new btDefaultMotionState(trans);
 	btRigidBody* body = new btRigidBody(0, motionstate, trimeshShape, inertia);
@@ -468,7 +460,7 @@ void PhysicsEngine::DebugDraw()
 	glEnableVertexAttribArray(0);
 
 	// Draw the lines
-	glDrawArrays(GL_TRIANGLES, 0, m_debugLines.size() * 2);
+	glDrawArrays(GL_LINES, 0, sizeof(m_debugLines[0]) * m_debugLines.size());
 
 	// Disable the position attribute
 	glDisableVertexAttribArray(0);
@@ -476,12 +468,21 @@ void PhysicsEngine::DebugDraw()
 	// Unbind the VAO
 	glBindVertexArray(0);
 
-	// Drawn once then cleared
-	//m_debugLines.clear();
-
 	// Disable shader
 	m_debugShader->TurnOff();
 }
+
+void PhysicsEngine::ParseModel(Model* model)
+{
+	// Model matrix changes
+	// Store as member variable
+	m_scale = glm::vec3(model->GetMeshBatch()[0].GetScale().x, model->GetMeshBatch()[0].GetScale().y, model->GetMeshBatch()[0].GetScale().z);
+	m_modelMatrix = CreateTransformationMatrix(
+		glm::vec3(model->GetMeshBatch()[0].GetPosition().x, model->GetMeshBatch()[0].GetPosition().y, model->GetMeshBatch()[0].GetPosition().z),
+		glm::vec3(0),
+		glm::vec3(m_scale.x, m_scale.y, m_scale.z));
+}
+
 
 // Creates all rigid bodies for all game objects
 /*bool PhysicsEngine::CreateAllRigidBodies(Data &objectData)

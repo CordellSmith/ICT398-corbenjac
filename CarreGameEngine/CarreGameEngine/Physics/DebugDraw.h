@@ -1,28 +1,10 @@
 #pragma once
 
-
-#ifndef DEBUGDRAW_H
-#define DEBUGDRAW_H
-
 #include <vector>
 #include "LinearMath\btIDebugDraw.h"
 #include "..\Renderer\Shader.h"
 #include "..\Controllers\Camera.h"
 #include "..\Common\MyMath.h"
-
-struct LineValues {
-	LineValues() { }
-	LineValues(const btVector3& v1, const btVector3& v2, const btVector3& v3)
-	{
-		p1 = v1;
-		p2 = v2;
-		p3 = v3;
-	}
-	btVector3 p1;
-	btVector3 p2;
-	btVector3 p3;
-
-}typedef LineValues;
 
 class DebugDraw : public btIDebugDraw
 {
@@ -116,12 +98,10 @@ public:
 		m_debugShader->TurnOff();
 	}
 
-	virtual void drawContactPoint(const btVector3 &, const btVector3 &, btScalar, int, const btVector3 &) {}
-	virtual void reportErrorWarning(const char *) {}
-	virtual void draw3dText(const btVector3 &, const char *) {}
-	virtual void setDebugMode(int p) {
-		m = p;
-	}
+	virtual void drawContactPoint(const btVector3 &, const btVector3 &, btScalar, int, const btVector3 &) { }
+	virtual void reportErrorWarning(const char *) { }
+	virtual void draw3dText(const btVector3 &, const char *) { }
+	virtual void setDebugMode(int p) { m = p; }
 	int getDebugMode(void) const { return 3; }
 	int m;
 
@@ -132,7 +112,7 @@ public:
 	unsigned int VBO, VAO;
 	
 protected:
-	std::vector<LineValues> m_debugLines;
+	std::vector<btVector3> m_debugLines;
 
 	Shader* m_debugShader;
 
@@ -143,4 +123,3 @@ protected:
 
 	Camera* m_camera;
 };
-#endif

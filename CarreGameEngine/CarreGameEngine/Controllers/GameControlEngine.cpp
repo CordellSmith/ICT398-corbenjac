@@ -233,13 +233,15 @@ void GameControlEngine::InitializePhysics()
 
 			std::cout << "Physics Init " << itr->second->GetAssetName() << ": " << itr->second->GetModel()->GetMeshBatch().size() << " and " << itr->second->GetModel()->GetMeshBatch().size() << std::endl;
 
-			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), objRigidBodyPosition, true, false);
-			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
-			
 			/// 15/10/18 CSmith Debug Draw
+			// Important: used to get model matrix for debug draw lines
+			m_physicsWorld->ParseModel(itr->second->GetModel());
+			// Static Triangle mesh of LBLT is created here!
+			// Debug draw is also used here
+			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, false);
+			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 			// This has to be called after the mesh data is passed in
 			m_physicsWorld->InitDebugDraw();
-			std::cout << "Debug Mesh: " << itr->first << " loaded" << std::endl;
 
 			continue;
 		}
@@ -299,59 +301,3 @@ void GameControlEngine::Destroy()
 		m_camera = nullptr;
 	}
 }
-
-
-//tempModel = player->GetModel();
-//std::vector<Mesh> temp6 = tempModel->GetMeshBatch();
-//Mesh temp7 = temp6[0];
-//std::vector<Vertex3> temp8 = temp7.GetVertices();
-//int size = temp8.size();
-//std::string temp0 = (*itModels).first;
-//std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
-//glm::vec3 temp4 = tempModel->GetPosition();
-//
-//
-//void PhysicsEngine::CreateStaticRigidBody(btVector3 &pos, std::string type)
-//{
-//	btCollisionShape* groundShape;
-//
-//	if (type == "knight")
-//		groundShape = new btBoxShape(btVector3(btScalar(80.0), btScalar(100.0), btScalar(80.0)));
-//	else if (type == "rock")
-//		groundShape = new btBoxShape(btVector3(btScalar(225.0), btScalar(100.0), btScalar(200.0)));
-//	else
-//		groundShape = new btBoxShape(btVector3(btScalar(0.0), btScalar(0.0), btScalar(0.0)));
-//
-//	m_collisionShapes.push_back(groundShape);
-//
-//	btVector3 temp = pos;
-//	//temp.setX(temp.getX() - 3000);
-//	//temp.setZ(temp.getZ() - 50);
-//
-//	// Initialize transform and location
-//	btTransform groundTransform;
-//	groundTransform.setIdentity();
-//	groundTransform.setOrigin(temp);
-//
-//	// Set mass (zero for static)
-//	m_mass = 0.0;
-//
-//	// Set dynamic objects to objects with mass that is non-zero
-//	m_isDynamic = (m_mass != 0.0f);
-//
-//	btVector3 localInertia(0.0, 0.0, 0.0);
-//
-//	if (m_isDynamic)
-//		groundShape->calculateLocalInertia(m_mass, localInertia);
-//
-//	//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
-//	btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
-//	btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, myMotionState, groundShape, localInertia);
-//	btRigidBody* body = new btRigidBody(rbInfo);
-//
-//	// Set the index for the type of rigid body that is being created
-//	body->setUserIndex(PLANE);
-//
-//	// Add the body to the dynamic world
-//	m_dynamicsWorld->addRigidBody(body);
-//}

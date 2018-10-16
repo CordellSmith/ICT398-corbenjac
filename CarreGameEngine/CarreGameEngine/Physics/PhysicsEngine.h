@@ -59,10 +59,7 @@
 #include "..\Common\Vertex3.h"
 #include "..\Common\MyMath.h"
 #include "..\AssetFactory\Model.h"
-#include "..\Physics\DebugDraw.h"
 #include "DebugDraw.h"
-
-class DebugDraw;
 
 struct CollisionBody {
 
@@ -189,25 +186,11 @@ class PhysicsEngine
 			*/
 		void ActivateAllObjects();
 
-		btCollisionObject* TriangleMeshTest(std::vector<Mesh> &modelMesh, btVector3 &pos, bool useQuantizedBvhTree, bool collision);
+		btCollisionObject* TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuantizedBvhTree, bool collision);
 
 		btDiscreteDynamicsWorld* GetDynamicsWorld() { return m_dynamicsWorld; };
 
 		btAlignedObjectArray<btCollisionShape*>& GetCollisionShapes() { return m_collisionShapes; };
-
-		struct LineValues {
-			LineValues() { }
-			LineValues(const btVector3& v1, const btVector3& v2, const btVector3& v3) 
-			{ 
-				p1 = v1;
-				p2 = v2;
-				p3 = v3;
-			}
-			btVector3 p1;
-			btVector3 p2;
-			btVector3 p3;
-
-		}typedef LineValues;
 
 			/**
 			* @brief Initialises the debug draw
@@ -231,8 +214,10 @@ class PhysicsEngine
 
 		void SetCamera(Camera* camera) { m_camera = camera; }
 
-		unsigned int VAO, VBO;
+		void ParseModel(Model* model);
 
+		unsigned int VAO, VBO;
+		
 	protected:
 
 			/// Determines if shape is dynamic or not
@@ -287,14 +272,17 @@ class PhysicsEngine
 		unsigned char *m_terrainData;
 
 			/// Debug draw
-		std::vector<LineValues> m_debugLines;
+		std::vector<btVector3> m_debugLines;
 
 		Shader* m_debugShader;
 
 		// Used to alter the scale, position, rotation of the debug draw (lines)
 		glm::mat4 m_modelMatrix;
+		glm::vec3 m_scale;
 
 		Camera* m_camera;
+
+		//DebugDraw d;
 
 		//btIDebugDraw test;
 };

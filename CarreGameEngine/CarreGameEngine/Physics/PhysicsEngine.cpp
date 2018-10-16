@@ -27,7 +27,7 @@ PhysicsEngine::PhysicsEngine()
 	m_dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
 	// Set the gravity
-	m_dynamicsWorld->setGravity(btVector3(0, -10, 0));
+	m_dynamicsWorld->setGravity(btVector3(0, -200, 0));
 
 	// Initialize all objects to static
 	m_isDynamic = false;
@@ -154,7 +154,7 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos)
 	startTransform.setOrigin(pos);
 
 	// Set mass (non-zero for dynamic)
-	m_mass = 1.0;
+	m_mass = 10.0;
 
 	// Set dynamic objects to objects with mass that is non-zero
 	m_isDynamic = (m_mass != 0.0f);
@@ -163,7 +163,6 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos)
 
 	if (m_isDynamic)
 		boxShape->calculateLocalInertia(m_mass, localInertia);
-
 
 	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
@@ -192,7 +191,7 @@ btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos)
 	startTransform.setOrigin(startPos);
 
 	// Set mass (non-zero for dynamic)
-	m_mass = 1.0;
+	m_mass = 10.0;
 
 	// Set dynamic objects to objects with mass that is non-zero
 	m_isDynamic = (m_mass != 1.0f);
@@ -219,10 +218,10 @@ btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos)
 // Simulate the dynamic world
 void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVector3& playerObj)
 {
-	m_dynamicsWorld->stepSimulation(1.f / 60.f, 10);
+	m_dynamicsWorld->stepSimulation(1.f / 30.0f, 10);
 
 	// Update positions of all dynamic objects
-	for (int j = m_dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
+	for (int j = 0; j < m_dynamicsWorld->getNumCollisionObjects(); j++)
 	{
 		// Get the next object, and activate it
 		btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[j];
@@ -253,9 +252,9 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 		//{
 		//	// TODO: Make this better (Jack)
 		//	// Apply force in direction camera was moved
-		//	m_newForce.setX((playerObj.x() - m_playerObject.x()) * 15000);
-		//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * 10000);
-		//	m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 15000);
+		//	m_newForce.setX((playerObj.x() - m_playerObject.x()) * 1500);
+		//	//m_newForce.setY((playerObj.y() - m_playerObject.y()) * 10000);
+		//	m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 1500);
 
 		//	// Update rigid body location for drawing
 		//	body->applyCentralForce(m_newForce);

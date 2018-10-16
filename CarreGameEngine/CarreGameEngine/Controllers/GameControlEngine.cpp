@@ -87,6 +87,7 @@ void GameControlEngine::Initialize()
 
 	// Initialize physics engine
 	m_physicsWorld = new PhysicsEngine();
+	m_physicsWorld->SetCamera(m_camera);
 
 	/*
 		When creating .raw files in Gimp. Make sure the file is Grey-scale when creating and when exporting, 
@@ -104,8 +105,6 @@ void GameControlEngine::Initialize()
 	// Asset xyz scale and pos
 	float assetScaleXYZ[3];
 	float assetPosXYZ[3];
-
-	Model* tempModel;
 
 	// Get iterator to start of models map
 	std::unordered_map<std::string, ModelsData>::iterator itModels = m_allModelsData.begin();
@@ -131,6 +130,8 @@ void GameControlEngine::Initialize()
 			// Create name asset data and add to asset map
 			modelAsset = m_assetFactory->CreateAsset(ASS_OBJECT, (*itModels).first);
 			modelAsset->LoadFromFilePath((*itModels).second.filePath);
+
+			// Not sure why this is here
 			if ((*itModels).first != "lecTheatre")
 			{
 				modelAsset->AddTexutre(TextureManager::Instance().GetTextureID((*itModels).second.texFilePath), (*itModels).second.texFilePath);
@@ -219,30 +220,32 @@ void GameControlEngine::InitializePhysics()
 	for (itr = m_assetFactory->GetAssets().begin(); itr != m_assetFactory->GetAssets().end(); itr++)
 	{
 		btVector3 objRigidBodyPosition;
-		//float tempX, tempY, tempZ;
 		
 		if (itr->second->GetAssetName() == "lecTheatre")
 		{
-				// Have to convert from glm::vec3 to Bullets btVector3
-				objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
+			// Convert from glm::vec3 to Bullets btVector3
+			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 
-				// Add static floor rigid body in physics world (size set to 1000 x 1000)
-				m_physicsWorld->CreateStaticRigidBody(objRigidBodyPosition);
-				// Add to our array of collision bodies
-				//m_collisionBodyPos.push_back(objRigidBodyPosition);
-				m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
+			// Add static floor rigid body in physics world (size set to 1000 x 1000)
+			m_physicsWorld->CreateStaticRigidBody(objRigidBodyPosition);
+			// Add to our array of collision bodies
+			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 
-				//tempX = itr->second->GetPosition().x;
-				//tempZ = itr->second->GetPosition().z;
-				//tempY = itr->second->GetPosition().y;
+			std::cout << "Physics Init " << itr->second->GetAssetName() << ": " << itr->second->GetModel()->GetMeshBatch().size() << " and " << itr->second->GetModel()->GetMeshBatch().size() << std::endl;
 
-				//randomPos = btVector3(tempX, tempY, tempZ);
-				//std::cout << "Physics Init " << itr->second->GetAssetName() << ": " << m_lecTheatreModel.size() << " and " << m_lecTheatreIndice.size() << std::endl;
+			/// 15/10/18 CSmith Debug Draw
+			/// 16/10/18		Debug Draw almost working
+			///					Mesh collider with LBLT is working
+			// Important: used to get model matrix for debug draw lines
+			m_physicsWorld->ParseModel(itr->second->GetModel());
+			// Static Triangle mesh of LBLT is created here!
+			// Debug draw is also used here
+			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, false);
+			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
+			// This has to be called after the mesh data is passed in
+			m_physicsWorld->InitDebugDraw();
 
-				////m_physicsWorld->CreateStaticRigidBody(randomPos, "rock");
-				//m_physicsWorld->TriangleMeshTest(m_modelMeshData, randomPos, true, false);
-				//m_collisionBodyPos.push_back(randomPos);
-				continue;
+			continue;
 		}
 
 		if (itr->second->GetAssetName() == "ball")
@@ -255,11 +258,15 @@ void GameControlEngine::InitializePhysics()
 			// Add to our array of collision bodies
 			//m_collisionBodyPos.push_back(objRigidBodyPosition);
 			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
+
 			continue;
 		}
 
-		// Cordell	03/10/18 -- Start
-		//			09/10/18 -- Only generating box shape rigid objects, removed name specific code
+		if (itr->second->GetAssetName() == "player")
+			continue;
+
+		/// Cordell	03/10/18 -- Start
+		///			09/10/18 -- Only generating box shape rigid objects, removed name specific code
 		objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 		// Add crates dynamic rigid body in physics world (size set to 100 x 100 x 100)
 		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition);
@@ -296,59 +303,3 @@ void GameControlEngine::Destroy()
 		m_camera = nullptr;
 	}
 }
-
-
-//tempModel = player->GetModel();
-//std::vector<Mesh> temp6 = tempModel->GetMeshBatch();
-//Mesh temp7 = temp6[0];
-//std::vector<Vertex3> temp8 = temp7.GetVertices();
-//int size = temp8.size();
-//std::string temp0 = (*itModels).first;
-//std::cout << temp0 << ": " << size << "\n\n\n\n" << std::endl;
-//glm::vec3 temp4 = tempModel->GetPosition();
-//
-//
-//void PhysicsEngine::CreateStaticRigidBody(btVector3 &pos, std::string type)
-//{
-//	btCollisionShape* groundShape;
-//
-//	if (type == "knight")
-//		groundShape = new btBoxShape(btVector3(btScalar(80.0), btScalar(100.0), btScalar(80.0)));
-//	else if (type == "rock")
-//		groundShape = new btBoxShape(btVector3(btScalar(225.0), btScalar(100.0), btScalar(200.0)));
-//	else
-//		groundShape = new btBoxShape(btVector3(btScalar(0.0), btScalar(0.0), btScalar(0.0)));
-//
-//	m_collisionShapes.push_back(groundShape);
-//
-//	btVector3 temp = pos;
-//	//temp.setX(temp.getX() - 3000);
-//	//temp.setZ(temp.getZ() - 50);
-//
-//	// Initialize transform and location
-//	btTransform groundTransform;
-//	groundTransform.setIdentity();
-//	groundTransform.setOrigin(temp);
-//
-//	// Set mass (zero for static)
-//	m_mass = 0.0;
-//
-//	// Set dynamic objects to objects with mass that is non-zero
-//	m_isDynamic = (m_mass != 0.0f);
-//
-//	btVector3 localInertia(0.0, 0.0, 0.0);
-//
-//	if (m_isDynamic)
-//		groundShape->calculateLocalInertia(m_mass, localInertia);
-//
-//	//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
-//	btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
-//	btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, myMotionState, groundShape, localInertia);
-//	btRigidBody* body = new btRigidBody(rbInfo);
-//
-//	// Set the index for the type of rigid body that is being created
-//	body->setUserIndex(PLANE);
-//
-//	// Add the body to the dynamic world
-//	m_dynamicsWorld->addRigidBody(body);
-//}

@@ -38,6 +38,12 @@ PhysicsEngine::PhysicsEngine()
 	m_oldForce.setZero();
 	m_newForce.setZero();
 
+	// Debug draw shader init
+	m_debugShader = new Shader();
+
+	// Camera object for MVP matrix
+	m_camera = new Camera();
+
 	/*btIDebugDraw tempp;
 	m_dynamicsWorld->setDebugDrawer(btIDebugDraw::DebugDrawModes::DBG_MAX_DEBUG_DRAW_MODE);
 	m_dynamicsWorld->deb*/
@@ -50,7 +56,7 @@ PhysicsEngine::~PhysicsEngine(){};
 void PhysicsEngine::CreateStaticRigidBody(btVector3 &pos)
 {
 	btCollisionShape* groundShape;
-	groundShape = new btBoxShape(btVector3(btScalar(100000), btScalar(200), btScalar(100000)));
+	groundShape = new btBoxShape(btVector3(btScalar(10000), btScalar(200), btScalar(10000)));
 
 	m_collisionShapes.push_back(groundShape);
 
@@ -243,20 +249,20 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 		}
 		
 		// Check to see if player object
-		if (body->getUserIndex() == CAMERA)
-		{
-			// TODO: Make this better (Jack)
-			// Apply force in direction camera was moved
-			m_newForce.setX((playerObj.x() - m_playerObject.x()) * 15000);
-			m_newForce.setY((playerObj.y() - m_playerObject.y()) * 10000);
-			m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 15000);
+		//if (body->getUserIndex() == CAMERA)
+		//{
+		//	// TODO: Make this better (Jack)
+		//	// Apply force in direction camera was moved
+		//	m_newForce.setX((playerObj.x() - m_playerObject.x()) * 15000);
+		//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * 10000);
+		//	m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 15000);
 
-			// Update rigid body location for drawing
-			body->applyCentralForce(m_newForce);
-			m_playerObject = trans.getOrigin();
-			playerObj = m_playerObject;
-		}
-		else
+		//	// Update rigid body location for drawing
+		//	body->applyCentralForce(m_newForce);
+		//	m_playerObject = trans.getOrigin();
+		//	playerObj = m_playerObject;
+		//}
+		//else
 		{
 			// Update object positions for drawing
 			collisionBodies[j]->m_position.setX(trans.getOrigin().getX());
@@ -337,59 +343,51 @@ void PhysicsEngine::ActivateAllObjects()
 	}
 }
 
-btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, btVector3 &pos, bool useQuantizedBvhTree, bool collision)
+btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuantizedBvhTree, bool collision)
 {
 	btTriangleMesh* trimesh = new btTriangleMesh();
-	//std::cout << modelIndices.size()  << " and " << modelMesh.size() << std::endl;
 	for (int j = 0; j < modelMesh.size(); j++)
 	{
 		Mesh tempMesh = modelMesh[j];
-		std::vector<unsigned int> tempMeshIndice = tempMesh.GetIndices();
 		std::vector<Vertex3> tempMeshVertex = tempMesh.GetVertices();
 
-		for (int i = 0; i < tempMeshIndice.size(); i += 3)
+		for (int i = 0; i < tempMeshVertex.size(); i+=3)
 		{
-			glm::vec3 x = tempMeshVertex[tempMeshIndice[i]].m_position;
-			glm::vec3 y = tempMeshVertex[tempMeshIndice[i+1]].m_position;
-			glm::vec3 z = tempMeshVertex[tempMeshIndice[i+2]].m_position;
-			/*glm::vec3 x = modelMesh[i].m_position;
-			glm::vec3 y = modelMesh[i + 1].m_position;
-			glm::vec3 z = modelMesh[i + 2].m_position;*/
+			glm::vec3 p1 = tempMeshVertex[i].m_position;
+			glm::vec3 p2 = tempMeshVertex[i+1].m_position;
+			glm::vec3 p3 = tempMeshVertex[i+2].m_position;
 
-			btVector3 p0, p1, p2;
+			btVector3 A, B, C;
 
-			p0.setX(x.x);
-			p0.setY(x.y);
-			p0.setZ(x.z);
-			p1.setX(y.x);
-			p1.setY(y.y);
-			p1.setZ(y.z);
-			p2.setX(z.x);
-			p2.setY(z.y);
-			p2.setZ(z.z);
+			A = btVector3(p1.x, p1.y, p1.z);
+			B = btVector3(p2.x, p2.y, p2.z);
+			C = btVector3(p3.x, p3.y, p3.z);
 
-			trimesh->addTriangle(p0, p1, p2);
+			trimesh->addTriangle(A, B, C);
+
+			// Add points to debug draw array of btVector3s
+			m_debugLines.push_back(A);
+			m_debugLines.push_back(B);
+			m_debugLines.push_back(C);
 		}
 	}
 
-	
-
 	btTransform	trans;
 	trans.setIdentity();
-	trans.setOrigin(pos);
 
-	trimesh->setScaling(btVector3(100, 100, 100));
+	// Set origin to the position of the object (LBLT)
+	trans.setOrigin(btVector3(modelMesh[0].GetPosition().x, modelMesh[0].GetPosition().y, modelMesh[0].GetPosition().z));
+
+	// Set trimesh scale
+	trimesh->setScaling(btVector3(m_scale.x, m_scale.y, m_scale.z));
 
 	btCollisionShape* trimeshShape = new btBvhTriangleMeshShape(trimesh, useQuantizedBvhTree);
 	m_collisionShapes.push_back(trimeshShape);
 
 	btVector3 inertia(0, 0, 0);
-	//trimeshShape->calculateLocalInertia(0, inertia); //gives error
 
 	btDefaultMotionState* motionstate = new btDefaultMotionState(trans);
 	btRigidBody* body = new btRigidBody(0, motionstate, trimeshShape, inertia);
-
-
 
 	//m_trianglemeshs.push_back(trimesh);
 	//m_triangleMeshBodies.push_back(body);
@@ -404,14 +402,86 @@ btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh,
 
 	//if (collision)
 		
-
 	//return m_triangleMeshBodies.size() - 1;
+	
+
 	return body;
 }
 
+void PhysicsEngine::InitDebugDraw()
+{
+	// Create a debug shader source (vertext and fragment shader)
+	ShaderSource debugShaderSource = ParseShaders("Resources/shaders/DebugDraw.shader");
 
+	// Initialise the shader program for the physics engine
+	GetDebugShader()->Initialize(debugShaderSource.VertexSource, debugShaderSource.FragmentSource);
 
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
 
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(m_debugLines[0]) * m_debugLines.size(), &m_debugLines[0], GL_STATIC_DRAW);
+
+	// load the vertex data info
+	glVertexAttribPointer(1,  // the handle for the inPos shader attrib should be at pos 0
+		3,	// there are 3 values xyz
+		GL_FLOAT, // float value
+		GL_FALSE, // don't need to be normalised
+		4 * sizeof(float),  // how many floats to the next one (btVector3 uses 4 floats)
+		(GLvoid*)&m_debugLines[0]  // where do they start as an index); // use 3 values, but add stride each time to get to the next
+	);
+
+	glBindVertexArray(0);
+}
+
+void PhysicsEngine::DebugDraw()
+{
+	// Enable shader
+	m_debugShader->TurnOn();
+
+	glm::mat4 projectionMatrix = m_camera->GetProjectionMatrix();
+	//glm::mat4 modelMatrix = CreateTransformationMatrix(m_debugMesh->GetPosition(), m_debugMesh->GetRotation(), m_debugMesh->GetScale());
+	glm::mat4 viewMatrix = CreateViewMatrix(m_camera);
+
+	GLint modelMatrixId = m_debugShader->GetVariable("model");
+	GLint viewMatrixId = m_debugShader->GetVariable("view");
+	GLint projectionMatrixId = m_debugShader->GetVariable("projection");
+
+	m_debugShader->SetMatrix4(modelMatrixId, 1, false, &m_modelMatrix[0][0]);
+	m_debugShader->SetMatrix4(viewMatrixId, 1, false, &viewMatrix[0][0]);
+	m_debugShader->SetMatrix4(projectionMatrixId, 1, false, &projectionMatrix[0][0]);
+
+	// Bind the VAO
+	glBindVertexArray(VAO);
+
+	// Enable the position attribute
+	glEnableVertexAttribArray(0);
+
+	// Draw the lines
+	glDrawArrays(GL_LINES, 0, sizeof(m_debugLines[0]) * m_debugLines.size());
+
+	// Disable the position attribute
+	glDisableVertexAttribArray(0);
+	
+	// Unbind the VAO
+	glBindVertexArray(0);
+
+	// Disable shader
+	m_debugShader->TurnOff();
+}
+
+void PhysicsEngine::ParseModel(Model* model)
+{
+	// Model matrix changes
+	// Store as member variable
+	m_scale = glm::vec3(model->GetMeshBatch()[0].GetScale().x, model->GetMeshBatch()[0].GetScale().y, model->GetMeshBatch()[0].GetScale().z);
+	m_modelMatrix = CreateTransformationMatrix(
+		glm::vec3(model->GetMeshBatch()[0].GetPosition().x, model->GetMeshBatch()[0].GetPosition().y, model->GetMeshBatch()[0].GetPosition().z),
+		glm::vec3(0),
+		glm::vec3(m_scale.x, m_scale.y, m_scale.z));
+}
 
 
 // Creates all rigid bodies for all game objects

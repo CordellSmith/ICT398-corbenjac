@@ -54,6 +54,7 @@
     <ClInclude Include="Controllers\GLFWManager.h" />
     <ClInclude Include="Controllers\TimeManager.h" />
     <ClInclude Include="Controllers\IWindowManager.h" />
+    <ClInclude Include="Physics\DebugDraw.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\scripts\ModelInit.lua" />
@@ -64,5 +65,6 @@
     <None Include="Resources\scripts\WindowInit.lua" />
     <None Include="Resources\shaders\Default.shader" />
     <None Include="Resources\shaders\Terrain.shader" />
+    <None Include="Resources\shaders\DebugDraw.shader" />
   </ItemGroup>
 </Project>

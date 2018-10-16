@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="Resources\scripts\CameraInit.lua" />
+    <None Include="Resources\shaders\DebugDraw.shader" />
     <None Include="res\scripts\ModelInit.lua" />
     <None Include="Resources\scripts\ModelsInit.lua" />
     <None Include="Resources\scripts\TerrainsInit.lua" />
@@ -157,6 +158,7 @@
     <ClInclude Include="Controllers\GameWorld.h" />
     <ClInclude Include="Controllers\GLFWManager.h" />
     <ClInclude Include="Input\InputManager.h" />
+    <ClInclude Include="Physics\DebugDraw.h" />
     <ClInclude Include="Physics\PhysicsEngine.h" />
     <ClInclude Include="Scripting\ScriptManager.h" />
     <ClInclude Include="Renderer\Shader.h" />

@@ -41,19 +41,25 @@
 *
 * @date 31/05/2018
 * @version 2.0	Final version for submission.
+*
+*
+* @date 15/10/2018
+* @author Cordell Smith
+* @version 2.1 Adding debug draw functionality for a mesh
 */
 
 #ifndef PHYSICSENGINE_H
 #define PHYSICSENGINE_H
 
 // Includes
-#include "btBulletDynamicsCommon.h"
-#include "BulletCollision\CollisionShapes\btHeightfieldTerrainShape.h"
 #include <vector>
 #include <fstream>	// Used for testing of heightfield terrain shape (will be removed later)
-#include "LinearMath\btIDebugDraw.h"
+#include "btBulletDynamicsCommon.h"
+#include "BulletCollision\CollisionShapes\btHeightfieldTerrainShape.h"
 #include "..\Common\Vertex3.h"
+#include "..\Common\MyMath.h"
 #include "..\AssetFactory\Model.h"
+#include "DebugDraw.h"
 
 struct CollisionBody {
 
@@ -69,7 +75,6 @@ struct CollisionBody {
 class PhysicsEngine
 {
 	public:
-
 			/**
 			* @brief Enum for the different types of rigid bodies created.
 			*
@@ -181,12 +186,38 @@ class PhysicsEngine
 			*/
 		void ActivateAllObjects();
 
-		btCollisionObject* TriangleMeshTest(std::vector<Mesh> &modelMesh, btVector3 &pos, bool useQuantizedBvhTree, bool collision);
+		btCollisionObject* TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuantizedBvhTree, bool collision);
 
 		btDiscreteDynamicsWorld* GetDynamicsWorld() { return m_dynamicsWorld; };
 
 		btAlignedObjectArray<btCollisionShape*>& GetCollisionShapes() { return m_collisionShapes; };
 
+			/**
+			* @brief Initialises the debug draw
+			*
+			*
+			*
+			* @return void
+			*/
+		void InitDebugDraw();
+
+			/**
+			* @brief Sets up the debug draw lines to be rendered
+			*
+			* 
+			*
+			* @return void
+			*/
+		void DebugDraw();
+
+		Shader* GetDebugShader() { return m_debugShader; };
+
+		void SetCamera(Camera* camera) { m_camera = camera; }
+
+		void ParseModel(Model* model);
+
+		unsigned int VAO, VBO;
+		
 	protected:
 
 			/// Determines if shape is dynamic or not
@@ -239,6 +270,19 @@ class PhysicsEngine
 
 			/// Holds all heightfield data (used for testing)
 		unsigned char *m_terrainData;
+
+			/// Debug draw
+		std::vector<btVector3> m_debugLines;
+
+		Shader* m_debugShader;
+
+		// Used to alter the scale, position, rotation of the debug draw (lines)
+		glm::mat4 m_modelMatrix;
+		glm::vec3 m_scale;
+
+		Camera* m_camera;
+
+		//DebugDraw d;
 
 		//btIDebugDraw test;
 };

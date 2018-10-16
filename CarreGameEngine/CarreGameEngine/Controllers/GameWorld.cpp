@@ -19,8 +19,6 @@ void GameWorld::Init(Player* player, std::multimap<std::string, IGameAsset*> gam
 	float horizontalDistance = m_camera->CalculateHorizontalDistance();
 	float verticalDistance = m_camera->CalculateVerticalDistance();
 	m_camera->CalculateCameraPosition(horizontalDistance, verticalDistance);
-
-	m_camera->SetPosition(glm::vec3(glm::vec3(14100, 500, 10100)));
 	
 	// Prepare terrains
 	for each (Bruteforce* terrain in m_terrains)
@@ -58,6 +56,9 @@ void GameWorld::Update()
 
 	// Render player
 	m_glRenderer.Render(m_player->GetModel());
+
+	/// Debug draw
+	m_physicsWorld->DebugDraw();
 
 	// Update all physics body locations *** All asset rendering is done through here for now because I dont want to have to call asset render twice ***
 	UpdatePhysics();

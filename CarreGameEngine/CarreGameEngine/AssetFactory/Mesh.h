@@ -68,14 +68,32 @@ public:
 	void SetPosition(glm::vec3 position) { m_position = position; }
 
 		/**
+		* @brief Gets the position
+		*
+		* Gets the position of the mesh.
+		*
+		* @return glm::vec3 position
+		*/
+	const glm::vec3& GetPosition() { return m_position; }
+
+		/**
 		* @brief Sets the rotation
 		*
 		* Sets the rotation of the mesh to the 3 component vector parsed in.
 		*
-		* @param glm::vec3 rotation
+		* @param const glm::vec3 rotation
 		* @return void
 		*/
 	void SetRotation(glm::vec3 rotation) { m_rotation = rotation; }
+
+		/**
+		* @brief Gets the rotation
+		*
+		* Gets the rotation of the mesh.
+		*
+		* @return const glm::vec3 rotation
+		*/
+	const glm::vec3& GetRotation() { return m_rotation; }
 
 		/**
 		* @brief Sets the scale
@@ -86,6 +104,15 @@ public:
 		* @return void
 		*/
 	void SetScale(glm::vec3 scale) { m_scale = scale; }
+
+		/**
+		* @brief Gets the scale
+		*
+		* Gets the scale of the mesh.
+		*
+		* @return const glm::vec3 scale
+		*/
+	const glm::vec3& GetScale() { return m_scale; }
 
 		/**
 		* @brief Gets the vertices of the mesh

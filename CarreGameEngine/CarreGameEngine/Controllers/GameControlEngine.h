@@ -17,6 +17,7 @@
 #include "..\AssetFactory\GameAssetFactory.h"
 #include "..\AssetFactory\Player.h"
 #include "..\Renderer\OpenGl.h"
+
 //#include "..\headers\ComputerAI.h"
 
 	/*

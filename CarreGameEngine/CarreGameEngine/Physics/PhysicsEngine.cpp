@@ -218,7 +218,17 @@ btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos)
 // Simulate the dynamic world
 void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVector3& playerObj)
 {
-	m_dynamicsWorld->stepSimulation(1.f / 30.0f, 10);
+	m_dynamicsWorld->stepSimulation(1.f / 60.0f, 10);
+
+	btVector3 btFrom(playerObj.getX(), playerObj.getY(), playerObj.getZ());
+	btVector3 btTo(playerObj.getX(), -5000.0f, playerObj.getZ());
+	btCollisionWorld::ClosestRayResultCallback res(btFrom, btTo);
+
+	m_dynamicsWorld->rayTest(btFrom, btTo, res); // m_btWorld is btDiscreteDynamicsWorld
+
+	// Messing with terrain tracking
+
+	printf("Collision at: <%.2f>\n", res.m_hitPointWorld.getY());
 
 	// Update positions of all dynamic objects
 	for (int j = 0; j < m_dynamicsWorld->getNumCollisionObjects(); j++)
@@ -256,29 +266,36 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 			//m_newForce.setY((playerObj.y() - m_playerObject.y()) * 10000);
 			m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 1500);
 
+			if (res.hasHit())
+			{	
+				std::cout << "m_height: " << m_height << std::endl;
+				btScalar cap = m_newForce.getY() + 300;
+				std::cout << "cap: " << cap << std::endl;
+
+				if (res.m_hitPointWorld.getY() > m_height)
+				{
+					std::cout << "Greater True" << std::endl;
+					m_newForce.setY(1000);
+					m_height = res.m_hitPointWorld.getY();
+				}
+
+				if (m_newForce.getY() > cap)
+				{
+					std::cout << "Cap Break True" << std::endl;
+					m_newForce.setY(0);
+					m_height = res.m_hitPointWorld.getY();
+				}
+
+
+				std::cout << "Player Height: " << m_playerObject.y() << std::endl;
+			}
+
 			// Update rigid body location for drawing
 			body->applyCentralForce(m_newForce);
 			m_playerObject = trans.getOrigin();
 			playerObj = m_playerObject;
 
-			btVector3 btFrom(playerObj.getX(), playerObj.getY(), playerObj.getZ());
-			btVector3 btTo(playerObj.getX(), -5000.0f, playerObj.getZ());
-			btCollisionWorld::ClosestRayResultCallback res(btFrom, btTo);
 
-			m_dynamicsWorld->rayTest(btFrom, btTo, res); // m_btWorld is btDiscreteDynamicsWorld
-
-			// Messing with terrain tracking
-			float stepValue = res.m_hitPointWorld.getY();
-
-			if (res.hasHit() && res.m_hitPointWorld.getY() > stepValue) 
-			{
-				m_newForce.setY((playerObj.y() - m_playerObject.y()) + 225);
-			}
-			else if (res.hasHit() && res.m_hitPointWorld.getY() < stepValue)
-			{
-				m_newForce.setY((playerObj.y() - m_playerObject.y()) + 225);
-			}
-			printf("Collision at: <%.2f, %.2f, %.2f>\n", res.m_hitPointWorld.getX(), res.m_hitPointWorld.getY(), res.m_hitPointWorld.getZ());
 		}
 		else
 		{
@@ -435,6 +452,7 @@ void PhysicsEngine::InitDebugDraw()
 	GetDebugShader()->Initialize(debugShaderSource.VertexSource, debugShaderSource.FragmentSource);
 
 	glGenVertexArrays(1, &VAO);
+	std::cout << VAO << std::endl;
 	glGenBuffers(1, &VBO);
 
 	glBindVertexArray(VAO);

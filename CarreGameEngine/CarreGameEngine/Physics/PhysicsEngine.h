@@ -395,6 +395,9 @@ class PhysicsEngine
 
 		Camera* m_camera;
 
+			/// Player height controller
+		btScalar m_height = 0.0f;
+
 		//DebugDraw d;
 
 		//btIDebugDraw test;

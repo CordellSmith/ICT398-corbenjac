@@ -221,14 +221,14 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 	m_dynamicsWorld->stepSimulation(1.f / 60.0f, 10);
 
 	btVector3 btFrom(playerObj.getX(), playerObj.getY(), playerObj.getZ());
-	btVector3 btTo(playerObj.getX(), -5000.0f, playerObj.getZ());
+	btVector3 btTo(playerObj.getX(), -3000.0f, playerObj.getZ());
 	btCollisionWorld::ClosestRayResultCallback res(btFrom, btTo);
 
 	m_dynamicsWorld->rayTest(btFrom, btTo, res); // m_btWorld is btDiscreteDynamicsWorld
 
 	// Messing with terrain tracking
 
-	printf("Collision at: <%.2f>\n", res.m_hitPointWorld.getY());
+	//printf("Collision at: <%.2f>\n", res.m_hitPointWorld.getY());
 
 	// Update positions of all dynamic objects
 	for (int j = 0; j < m_dynamicsWorld->getNumCollisionObjects(); j++)
@@ -262,40 +262,58 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 		{
 			// TODO: Make this better (Jack)
 			// Apply force in direction camera was moved
-			m_newForce.setX((playerObj.x() - m_playerObject.x()) * 1500);
-			//m_newForce.setY((playerObj.y() - m_playerObject.y()) * 10000);
-			m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 1500);
+			m_newForce.setX((playerObj.x() - m_playerObject.x()) * 3000);
+			//m_newForce.setY((playerObj.y() - m_playerObject.y()) * 3000);
+			m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 3000);
 
-			if (res.hasHit())
-			{	
-				std::cout << "m_height: " << m_height << std::endl;
-				btScalar cap = m_newForce.getY() + 300;
-				std::cout << "cap: " << cap << std::endl;
 
-				if (res.m_hitPointWorld.getY() > m_height)
+			/// Terrain checking needs to be fixed csmith 17/10/18
+			// If floor height gets higher
+			if (res.m_hitPointWorld.getY() > m_floorHeight)
+			{
+				std::cout << "Up" << std::endl;
+				std::cout << res.m_hitPointWorld.getY() << std::endl;
+
+				// Move player position up
+				m_newForce.setY((playerObj.y() - m_playerObject.y()) * 3000);
+				// New floor height is set to current ray hit value
+
+				std::cout << "new force " << m_newForce.getY() << std::endl;
+
+				if (m_newForce.getY() >= 6000)
 				{
-					std::cout << "Greater True" << std::endl;
-					m_newForce.setY(1000);
-					m_height = res.m_hitPointWorld.getY();
-				}
-
-				if (m_newForce.getY() > cap)
-				{
-					std::cout << "Cap Break True" << std::endl;
 					m_newForce.setY(0);
-					m_height = res.m_hitPointWorld.getY();
+					m_floorHeight = res.m_hitPointWorld.getY();
 				}
-
-
-				std::cout << "Player Height: " << m_playerObject.y() << std::endl;
 			}
+			
+			// If floor height gets lower
+			//if (res.m_hitPointWorld.getY() < m_floorHeight)
+			//{
+			//	std::cout << "Down" << std::endl;
+			//	std::cout << res.m_hitPointWorld.getY() << std::endl;
+
+			//	// Move player position down
+			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * (-3000));
+			//	// New floor height is set to current ray hit value
+			//	m_floorHeight = res.m_hitPointWorld.getY();
+			//}
+
+			//if (res.m_hitPointWorld.getY() < m_stepHeight)
+			//{
+			//	std::cout << "Moving Down" << std::endl;
+			//	btScalar stepDown = collisionBodies[j]->m_position.getY() - 300;
+			//	std::cout << "Step Down: " << stepDown << std::endl;
+			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * -stepDown);
+			//	m_stepHeight = res.m_hitPointWorld.getY();
+			//}
+
+			//std::cout << "Player Height: " << m_playerObject.y() << std::endl;
 
 			// Update rigid body location for drawing
 			body->applyCentralForce(m_newForce);
 			m_playerObject = trans.getOrigin();
 			playerObj = m_playerObject;
-
-
 		}
 		else
 		{

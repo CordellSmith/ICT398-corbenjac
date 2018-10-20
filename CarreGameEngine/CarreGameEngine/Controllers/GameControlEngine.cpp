@@ -137,6 +137,7 @@ void GameControlEngine::Initialize()
 				modelAsset->AddTexutre(TextureManager::Instance().GetTextureID((*itModels).second.texFilePath), (*itModels).second.texFilePath);
 			}
 			modelAsset->SetScale(glm::vec3(assetScaleXYZ[0], assetScaleXYZ[1], assetScaleXYZ[2]));
+			modelAsset->ScaleDimensions();
 			modelAsset->SetPosition(glm::vec3(assetPosXYZ[0], assetPosXYZ[1], assetPosXYZ[2]));
 
 			// If AI model, make AI for it
@@ -243,7 +244,7 @@ void GameControlEngine::InitializePhysics()
 			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, false);
 			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 			// This has to be called after the mesh data is passed in
-			m_physicsWorld->InitDebugDraw();
+			//m_physicsWorld->InitDebugDraw();
 
 			continue;
 		}
@@ -253,8 +254,7 @@ void GameControlEngine::InitializePhysics()
 			// Have to convert from glm::vec3 to Bullets btVector3
 			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 
-			// Add static floor rigid body in physics world (size set to 1000 x 1000)
-			m_physicsWorld->AddSphere(100.0, objRigidBodyPosition);
+			m_physicsWorld->AddSphere(110.0, objRigidBodyPosition);
 			// Add to our array of collision bodies
 			//m_collisionBodyPos.push_back(objRigidBodyPosition);
 			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));

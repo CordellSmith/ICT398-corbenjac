@@ -218,6 +218,16 @@ public:
 		*/
 	virtual ComputerAI* GetAI() = 0;
 
+		/**
+		* @brief Scales the dimensions
+		*
+		* Virtual function to scale the dimensions of the model for
+		* physics bounding box creation.
+		*
+		* @return void
+		*/
+	virtual void ScaleDimensions() = 0;
+
 protected:
 	/// Defines the nature of the asset
 	ASS_TYPE m_assetType;

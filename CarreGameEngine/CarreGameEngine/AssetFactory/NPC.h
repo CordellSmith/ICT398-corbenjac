@@ -104,6 +104,16 @@ public:
 	void SetAI(ComputerAI* compAI) { m_model->SetAI(compAI); }
 
 	ComputerAI* GetAI() { return m_model->GetAI(); }
+
+		/**
+		* @brief Scales the dimensions
+		*
+		* Virtual function to scale the dimensions of the model for
+		* physics bounding box creation.
+		*
+		* @return void
+		*/
+	virtual void ScaleDimensions() { m_model->ScaleDimensions(); }
 		
 protected:
 	/// Stores the file path containing the data

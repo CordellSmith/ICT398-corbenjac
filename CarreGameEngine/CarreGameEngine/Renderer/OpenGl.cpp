@@ -8,7 +8,7 @@ void OpenGl::Prepare(Model* model, std::string vertShader, std::string fragShade
 	for (int i = 0; i < meshBatchSize; i++)
 	{
 		glGenVertexArrays(1, &model->GetMeshBatch()[i].VAO);
-		std::cout << model->GetMeshBatch()[i].VAO << std::endl;
+		//std::cout << model->GetMeshBatch()[i].VAO << std::endl;
 		glGenBuffers(1, &model->GetMeshBatch()[i].VBO);
 		glGenBuffers(1, &model->GetMeshBatch()[i].EBO);
 

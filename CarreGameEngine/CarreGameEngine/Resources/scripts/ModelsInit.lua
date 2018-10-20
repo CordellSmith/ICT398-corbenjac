@@ -92,4 +92,18 @@ AllModels=
 			AI = false
 		},
 	},
+	person=
+	{
+		{
+			filePath = "Resources/ai/Person.obj", 
+			texFilePath = "",
+			scaleX = 10.0, 
+			scaleY = 10.0, 
+			scaleZ = 10.0,
+			posX = 14000.0, 
+			posY = -1000.0, 
+			posZ = 10100.0, 
+			AI = false
+		},
+	},
 }

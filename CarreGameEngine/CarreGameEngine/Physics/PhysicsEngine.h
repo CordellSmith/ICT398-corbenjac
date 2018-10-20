@@ -124,7 +124,8 @@ class PhysicsEngine
 			BOX = 2,			/**< Box shape rigid body */
 			SPHERE = 3,			/**< Sphere shape rigid body */
 			HEIGHTFIELD = 4,	/**< Heightfield terrain shape rigid body */
-			PLANE = 5			/**< Plane shape rigid body */
+			PLANE = 5,			/**< Plane shape rigid body */
+			MESH = 6			/**< Mesh collider */
 		}RIGID_BODY_TYPE;
 
 			/**

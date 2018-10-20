@@ -261,6 +261,28 @@ void GameControlEngine::InitializePhysics()
 			continue;
 		}
 
+		if (itr->second->GetAssetName() == "chair")
+		{
+			// Creates 5 chairs (testing)
+			for (int i = 0; i < 5; i++)
+			{
+				objRigidBodyPosition = btVector3(
+					itr->second->GetPosition().x + 100 * i, 
+					itr->second->GetPosition().y + 100 * i, 
+					itr->second->GetPosition().z + 100 * i
+				);
+				m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons());
+				m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
+			}
+			continue;
+		}
+		
+		// Adjust rotation for table, orientation is not correct
+		if (itr->first == "table")
+		{
+			itr->second->SetRotation(glm::vec3(0.0, 20.0, 45.0));
+		}
+
 		/// CSmith	
 		///			03/10/18 -- Start
 		///			09/10/18 -- Only generating box shape rigid objects, removed name specific code

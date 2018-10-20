@@ -151,7 +151,7 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions
 	startTransform.setIdentity();
 	// Set origin of body
 	startTransform.setOrigin(pos);
-
+	
 	// Set mass (non-zero for dynamic)
 	m_mass = 10.0;
 

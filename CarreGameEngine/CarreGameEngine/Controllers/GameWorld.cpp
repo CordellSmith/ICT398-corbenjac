@@ -55,7 +55,7 @@ void GameWorld::Update()
 	glClearColor(0.0, 0.0, 0.5, 1.0);
 
 	// Render player
-	m_glRenderer.Render(m_player->GetModel());
+	//m_glRenderer.Render(m_player->GetModel());
 
 	/// Debug draw
 	//m_physicsWorld->DebugDraw();

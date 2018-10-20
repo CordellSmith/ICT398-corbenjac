@@ -58,8 +58,6 @@ void PhysicsEngine::CreateStaticRigidBody(btVector3 &pos)
 	btCollisionShape* groundShape;
 	groundShape = new btBoxShape(btVector3(btScalar(10000), btScalar(200), btScalar(10000)));
 
-	m_collisionShapes.push_back(groundShape);
-
 	btVector3 temp = pos;
 	//temp.setX(temp.getX() - 3000);
 	//temp.setZ(temp.getZ() - 50);
@@ -98,8 +96,6 @@ void PhysicsEngine::CreatePlayerControlledRigidBody(btVector3 &playerObj)
 	// Create box shape and add to shape array
 	//btCollisionShape* camShape = new btBoxShape(btVector3(btScalar(30), btScalar(20), btScalar(50)));
 	btCollisionShape* camShape = new btCapsuleShape(100, 200);
-	//btCollisionShape* camShape = new btSphereShape(10);
-	//m_collisionShapes.push_back(camShape);
 
 	// Create a dynamic object
 	btTransform startTransform;
@@ -141,11 +137,14 @@ void PhysicsEngine::CreatePlayerControlledRigidBody(btVector3 &playerObj)
 }
 
 // Create a dynamic rigid body
-void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos)
+void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions)
 {
-	// Create box shape and add to shape array
-	btCollisionShape* boxShape = new btBoxShape(btVector3(btScalar(400), btScalar(400), btScalar(400)));
-	//m_collisionShapes.push_back(boxShape);
+	// Create box shape size of the dimensions of the object
+	btCollisionShape* boxShape = new btBoxShape(btVector3(
+		btScalar(dimensions.x / 2), 
+		btScalar(dimensions.y / 2), 
+		btScalar(dimensions.z / 2))
+	);
 
 	// Create a dynamic object
 	btTransform startTransform;
@@ -182,7 +181,6 @@ btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos)
 {
 	// Create box shape and add to shape array
 	btCollisionShape* sphereShape = new btSphereShape(radius);
-	//m_collisionShapes.push_back(sphereShape);
 
 	// Create a dynamic object
 	btTransform startTransform;

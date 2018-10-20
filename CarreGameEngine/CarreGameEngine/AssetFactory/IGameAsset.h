@@ -219,14 +219,24 @@ public:
 	virtual ComputerAI* GetAI() = 0;
 
 		/**
-		* @brief Scales the dimensions
+		* @brief Calculates the dimensions
 		*
-		* Virtual function to scale the dimensions of the model for
-		* physics bounding box creation.
+		* Virtual function to calculate the dimensions of the model for
+		* physics bounding box creation. This includes scaling.
 		*
 		* @return void
 		*/
-	virtual void ScaleDimensions() = 0;
+	virtual void CalculateDimensions() = 0;
+
+		/**
+		* @brief Gets the dimensions
+		*
+		* Virtual function to return the dimensions of the game asset
+		* model.
+		*
+		* @return glm::vec3
+		*/
+	virtual glm::vec3 GetDimensons() = 0;
 
 protected:
 	/// Defines the nature of the asset

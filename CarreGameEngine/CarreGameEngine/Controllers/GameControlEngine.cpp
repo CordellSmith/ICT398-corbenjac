@@ -137,8 +137,10 @@ void GameControlEngine::Initialize()
 				modelAsset->AddTexutre(TextureManager::Instance().GetTextureID((*itModels).second.texFilePath), (*itModels).second.texFilePath);
 			}
 			modelAsset->SetScale(glm::vec3(assetScaleXYZ[0], assetScaleXYZ[1], assetScaleXYZ[2]));
-			modelAsset->ScaleDimensions();
 			modelAsset->SetPosition(glm::vec3(assetPosXYZ[0], assetPosXYZ[1], assetPosXYZ[2]));
+			/// CSmith 
+			///	20/10/18 Dimensions of models calculated here for bouding box
+			modelAsset->CalculateDimensions();
 
 			// If AI model, make AI for it
 			if ((*itModels).second.isAI[k])
@@ -222,8 +224,7 @@ void GameControlEngine::InitializePhysics()
 			// Create camera capsule shape to collide with objects
 			btVector3 bt_cameraPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
 			m_physicsWorld->CreatePlayerControlledRigidBody(bt_cameraPos);
-			m_collisionBodies.push_back(new CollisionBody("player", bt_cameraPos));
-			
+			m_collisionBodies.push_back(new CollisionBody("player", bt_cameraPos));		
 			continue;
 		}
 		
@@ -245,7 +246,6 @@ void GameControlEngine::InitializePhysics()
 			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 			// This has to be called after the mesh data is passed in
 			//m_physicsWorld->InitDebugDraw();
-
 			continue;
 		}
 
@@ -258,17 +258,15 @@ void GameControlEngine::InitializePhysics()
 			// Add to our array of collision bodies
 			//m_collisionBodyPos.push_back(objRigidBodyPosition);
 			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
-
 			continue;
 		}
 
-		/// Cordell	03/10/18 -- Start
+		/// CSmith	
+		///			03/10/18 -- Start
 		///			09/10/18 -- Only generating box shape rigid objects, removed name specific code
+		///			20/10/18 -- CreateDynamicRigidBody() now takes the models dimensions to create a more accurate size bounding box
 		objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
-		// Add crates dynamic rigid body in physics world (size set to 100 x 100 x 100)
-		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition);
-		// Add to our array of collision bodies
-		//m_collisionBodyPos.push_back(objRigidBodyPosition);
+		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons());
 		m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 	}
 

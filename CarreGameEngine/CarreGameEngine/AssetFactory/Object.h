@@ -108,14 +108,16 @@ public:
 	ComputerAI* GetAI() { return m_model->GetAI(); }
 
 		/**
-		* @brief Scales the dimensions
+		* @brief Calculates the dimensions
 		*
-		* Virtual function to scale the dimensions of the model for
-		* physics bounding box creation.
+		* Virtual function to calculate the dimensions of the model for
+		* physics bounding box creation. This includes scaling.
 		*
 		* @return void
 		*/
-	virtual void ScaleDimensions() { m_model->ScaleDimensions(); }
+	virtual void CalculateDimensions() { m_model->CalculateDimensions(); }
+
+	virtual glm::vec3 GetDimensons() { return m_model->GetDimensions(); }
 
 protected:
 	/// Stores the file path containing the data

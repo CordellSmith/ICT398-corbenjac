@@ -165,10 +165,11 @@ class PhysicsEngine
 			* This is a test function that creates dynamic rigid bodies for testing purposes
 			*
 			* @param pos - Position to create dynamic body
+			* @param dimensions - Dimensions of the bounding shape to be created
 			*
 			* @return void
 			*/
-		void CreateDynamicRigidBody(btVector3 &pos);
+		void CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions);
 
 			/**
 			* @brief Creates dynamic rigid body for a player controlled object

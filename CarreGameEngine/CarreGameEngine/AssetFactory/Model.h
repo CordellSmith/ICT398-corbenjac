@@ -246,8 +246,11 @@ public:
 
 	unsigned int VAO;
 
-	void CalculateMinMaxDimensions(glm::vec3 vertex);
-	void ScaleDimensions();
+	const void CalculateDimensions();
+	const void ScaleDimensions();
+	const void ReadDimensions(glm::vec3 vertex);
+
+	glm::vec3& GetDimensions() { return m_dimensions; }
 
 protected:
 	std::vector<Mesh> m_meshBatch;
@@ -263,11 +266,15 @@ protected:
 	
 	ComputerAI* m_compAI;
 
+	/// The dimensions of the model (width, height, depth)
+	glm::vec3 m_dimensions;
+
 	// Min and max for X, Y, Z dimensions of the model (used for bounding boxes)
 	// Order is (min, max)
 	glm::vec2 m_Xdim;
 	glm::vec2 m_Ydim;
 	glm::vec2 m_Zdim;
+
 	bool m_firstVertex = true;
 };
 

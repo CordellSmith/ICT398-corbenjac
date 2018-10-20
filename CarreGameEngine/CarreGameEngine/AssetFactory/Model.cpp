@@ -115,7 +115,7 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene)
 			//	vertex.m_biTangent = biTangent;
 			//}
 
-			CalculateMinMaxDimensions(vertexPos);
+			ReadDimensions(vertexPos);
 
 			vertices.push_back(vertex);
 			indices.push_back(face.mIndices[j]);
@@ -174,7 +174,24 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType 
 	return textures;
 }
 
-void Model::CalculateMinMaxDimensions(glm::vec3 vertexPos)
+const void Model::CalculateDimensions()
+{
+	ScaleDimensions();
+
+	// The dimension is calculated as the max - min of each dimensions (width, height, depth)
+	m_dimensions.x = fabs(m_Xdim.y - m_Xdim.x);
+	m_dimensions.y = fabs(m_Ydim.y - m_Ydim.x);
+	m_dimensions.z = fabs(m_Zdim.y - m_Zdim.x);
+}
+
+const void Model::ScaleDimensions()
+{
+	m_Xdim *= m_scale.x;
+	m_Ydim *= m_scale.y;
+	m_Zdim *= m_scale.z;
+}
+
+const void Model::ReadDimensions(glm::vec3 vertexPos)
 {
 	// First vertex gets made the initial values of dimensions to be compared to
 	if (m_firstVertex)
@@ -214,13 +231,6 @@ void Model::CalculateMinMaxDimensions(glm::vec3 vertexPos)
 			m_Zdim.y = vertexPos.z;
 		}
 	}
-}
-
-void Model::ScaleDimensions()
-{
-	m_Xdim *= m_scale.x;
-	m_Ydim *= m_scale.y;
-	m_Zdim *= m_scale.z;
 }
 
 void Model::Destroy()

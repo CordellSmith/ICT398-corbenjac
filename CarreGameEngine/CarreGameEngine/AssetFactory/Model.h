@@ -245,7 +245,13 @@ public:
 	ComputerAI* GetAI() { return m_compAI; }
 
 	unsigned int VAO;
-	
+
+	const void CalculateDimensions();
+	const void ScaleDimensions();
+	const void ReadDimensions(glm::vec3 vertex);
+
+	glm::vec3& GetDimensions() { return m_dimensions; }
+
 protected:
 	std::vector<Mesh> m_meshBatch;
 	std::vector<Texture> m_texturesLoaded;
@@ -257,7 +263,19 @@ protected:
 	glm::vec3 m_position;
 	glm::vec3 m_rotation;
 	glm::vec3 m_scale;
-
-
+	
 	ComputerAI* m_compAI;
+
+	/// The dimensions of the model (width, height, depth)
+	glm::vec3 m_dimensions;
+
+	// Min and max for X, Y, Z dimensions of the model (used for bounding boxes)
+	// Order is (min, max)
+	glm::vec2 m_Xdim;
+	glm::vec2 m_Ydim;
+	glm::vec2 m_Zdim;
+
+	bool m_firstVertex = true;
 };
+
+

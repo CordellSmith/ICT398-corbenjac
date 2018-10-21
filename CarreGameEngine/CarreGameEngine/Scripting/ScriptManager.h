@@ -28,6 +28,10 @@
 *
 * @date 31/05/2018
 * @version 2.0	Final version for submission.
+*
+* @date 21/10/2018
+* @author CSmith
+* @version 2.1	Adding function to read in affordance script for lookup table of base affordances.
 */
 
 #ifndef SCRIPTMANAGER_H
@@ -124,6 +128,16 @@ class ScriptManager
 			* @return bool - True if load success, else false
 			*/
 		bool LoadHeightmapsInitLua(std::unordered_map<std::string, HeightmapsData> &allHeightmapData, HeightmapsData &heightmapsData);
+
+			/**
+			* @brief Load all affordances
+			*
+			* Loads the base values of each affordance type, currently only 3:
+			* canSit, canStand, canKick of each object type
+			*
+			* @return bool - True if load success, else false
+			*/
+		bool LoadAffordanceTable(std::unordered_map<std::string, std::vector<std::pair<std::string, float>>>& m_affordanceTable);
 
 	private:
 

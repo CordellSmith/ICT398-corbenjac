@@ -19,7 +19,8 @@ AllModels=
 			posX = 7000.0, 
 			posY = 0.0, 
 			posZ = 5200.0, 
-			AI = false
+			AI = false,
+			Affordance= "building"
 		},
 	},
 	table=
@@ -33,7 +34,8 @@ AllModels=
 			posX = 9880.0, 
 			posY = 1000.0, 
 			posZ = 10100.0, 
-			AI = false
+			AI = false,
+			Affordance= "table"
 		},
 	},
 	chair=
@@ -47,7 +49,8 @@ AllModels=
 			posX = 9600.0, 
 			posY = 1000.0, 
 			posZ = 10100.0, 
-			AI = false
+			AI = false,
+			Affordance= "chair"
 		},
 	},
 	player=
@@ -61,7 +64,8 @@ AllModels=
 			posX = 14000.0, 
 			posY = 900.0, 
 			posZ = 10100.0, 
-			AI = false
+			AI = false,
+			Affordance= "player"
 		},
 	},
 	crate=
@@ -75,7 +79,8 @@ AllModels=
 			posX = 14000.0, 
 			posY = 900.0, 
 			posZ = 10100.0, 
-			AI = false
+			AI = false,
+			Affordance= "crate"
 		},
 	},
 	ball=
@@ -89,7 +94,23 @@ AllModels=
 			posX = 14000.0, 
 			posY = 1500.0, 
 			posZ = 10100.0, 
-			AI = false
+			AI = false,
+			Affordance= "ball"
+		},
+	},
+	person=
+	{
+		{
+			filePath = "Resources/ai/Person.obj", 
+			texFilePath = "",
+			scaleX = 10.0, 
+			scaleY = 10.0, 
+			scaleZ = 10.0,
+			posX = 14000.0, 
+			posY = -1000.0, 
+			posZ = 10100.0, 
+			AI = false,
+			Affordance= "person"
 		},
 	},
 }

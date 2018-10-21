@@ -58,8 +58,6 @@ void PhysicsEngine::CreateStaticRigidBody(btVector3 &pos)
 	btCollisionShape* groundShape;
 	groundShape = new btBoxShape(btVector3(btScalar(10000), btScalar(200), btScalar(10000)));
 
-	m_collisionShapes.push_back(groundShape);
-
 	btVector3 temp = pos;
 	//temp.setX(temp.getX() - 3000);
 	//temp.setZ(temp.getZ() - 50);
@@ -98,8 +96,6 @@ void PhysicsEngine::CreatePlayerControlledRigidBody(btVector3 &playerObj)
 	// Create box shape and add to shape array
 	//btCollisionShape* camShape = new btBoxShape(btVector3(btScalar(30), btScalar(20), btScalar(50)));
 	btCollisionShape* camShape = new btCapsuleShape(100, 200);
-	//btCollisionShape* camShape = new btSphereShape(10);
-	//m_collisionShapes.push_back(camShape);
 
 	// Create a dynamic object
 	btTransform startTransform;
@@ -141,18 +137,21 @@ void PhysicsEngine::CreatePlayerControlledRigidBody(btVector3 &playerObj)
 }
 
 // Create a dynamic rigid body
-void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos)
+void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions)
 {
-	// Create box shape and add to shape array
-	btCollisionShape* boxShape = new btBoxShape(btVector3(btScalar(400), btScalar(400), btScalar(400)));
-	//m_collisionShapes.push_back(boxShape);
+	// Create box shape size of the dimensions of the object
+	btCollisionShape* boxShape = new btBoxShape(btVector3(
+		btScalar(dimensions.x / 2), 
+		btScalar(dimensions.y / 2), 
+		btScalar(dimensions.z / 2))
+	);
 
 	// Create a dynamic object
 	btTransform startTransform;
 	startTransform.setIdentity();
 	// Set origin of body
 	startTransform.setOrigin(pos);
-
+	
 	// Set mass (non-zero for dynamic)
 	m_mass = 10.0;
 
@@ -182,7 +181,6 @@ btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos)
 {
 	// Create box shape and add to shape array
 	btCollisionShape* sphereShape = new btSphereShape(radius);
-	//m_collisionShapes.push_back(sphereShape);
 
 	// Create a dynamic object
 	btTransform startTransform;
@@ -218,7 +216,17 @@ btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos)
 // Simulate the dynamic world
 void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVector3& playerObj)
 {
-	m_dynamicsWorld->stepSimulation(1.f / 30.0f, 10);
+	m_dynamicsWorld->stepSimulation(1.f / 60.0f, 10);
+
+	btVector3 btFrom(playerObj.getX(), playerObj.getY(), playerObj.getZ());
+	btVector3 btTo(playerObj.getX(), -3000.0f, playerObj.getZ());
+	btCollisionWorld::ClosestRayResultCallback res(btFrom, btTo);
+
+	m_dynamicsWorld->rayTest(btFrom, btTo, res); // m_btWorld is btDiscreteDynamicsWorld
+
+	// Messing with terrain tracking
+
+	//printf("Collision at: <%.2f>\n", res.m_hitPointWorld.getY());
 
 	// Update positions of all dynamic objects
 	for (int j = 0; j < m_dynamicsWorld->getNumCollisionObjects(); j++)
@@ -246,22 +254,66 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 		{
 			trans = obj->getWorldTransform();
 		}
-		
+	
 		// Check to see if player object
-		//if (body->getUserIndex() == CAMERA)
-		//{
-		//	// TODO: Make this better (Jack)
-		//	// Apply force in direction camera was moved
-		//	m_newForce.setX((playerObj.x() - m_playerObject.x()) * 1500);
-		//	//m_newForce.setY((playerObj.y() - m_playerObject.y()) * 10000);
-		//	m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 1500);
+		if (body->getUserIndex() == CAMERA)
+		{
+			// TODO: Make this better (Jack)
+			// Apply force in direction camera was moved
+			m_newForce.setX((playerObj.x() - m_playerObject.x()) * 3000);
+			//m_newForce.setY((playerObj.y() - m_playerObject.y()) * 3000);
+			m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 3000);
 
-		//	// Update rigid body location for drawing
-		//	body->applyCentralForce(m_newForce);
-		//	m_playerObject = trans.getOrigin();
-		//	playerObj = m_playerObject;
-		//}
-		//else
+
+			/// Terrain checking needs to be fixed csmith 17/10/18
+			// If floor height gets higher
+			//if (res.m_hitPointWorld.getY() > m_floorHeight)
+			//{
+			//	std::cout << "Up" << std::endl;
+			//	std::cout << res.m_hitPointWorld.getY() << std::endl;
+
+			//	// Move player position up
+			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * 3000);
+			//	// New floor height is set to current ray hit value
+
+			//	std::cout << "new force " << m_newForce.getY() << std::endl;
+
+			//	if (m_newForce.getY() >= 6000)
+			//	{
+			//		m_newForce.setY(0);
+			//		m_floorHeight = res.m_hitPointWorld.getY();
+			//	}
+			//}
+			
+			// If floor height gets lower
+			//if (res.m_hitPointWorld.getY() < m_floorHeight)
+			//{
+			//	std::cout << "Down" << std::endl;
+			//	std::cout << res.m_hitPointWorld.getY() << std::endl;
+
+			//	// Move player position down
+			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * (-3000));
+			//	// New floor height is set to current ray hit value
+			//	m_floorHeight = res.m_hitPointWorld.getY();
+			//}
+
+			//if (res.m_hitPointWorld.getY() < m_stepHeight)
+			//{
+			//	std::cout << "Moving Down" << std::endl;
+			//	btScalar stepDown = collisionBodies[j]->m_position.getY() - 300;
+			//	std::cout << "Step Down: " << stepDown << std::endl;
+			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * -stepDown);
+			//	m_stepHeight = res.m_hitPointWorld.getY();
+			//}
+
+			//std::cout << "Player Height: " << m_playerObject.y() << std::endl;
+
+			// Update rigid body location for drawing
+			body->applyCentralForce(m_newForce);
+			m_playerObject = trans.getOrigin();
+			playerObj = m_playerObject;
+		}
+		else
 		{
 			// Update object positions for drawing
 			collisionBodies[j]->m_position.setX(trans.getOrigin().getX());
@@ -365,16 +417,16 @@ btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh,
 			trimesh->addTriangle(A, B, C);
 
 			// Add points to debug draw array of btVector3s
-			m_debugLines.push_back(A);
-			m_debugLines.push_back(B);
-			m_debugLines.push_back(C);
+			//m_debugLines.push_back(A);
+			//m_debugLines.push_back(B);
+			//m_debugLines.push_back(C);
 		}
 	}
 
 	btTransform	trans;
 	trans.setIdentity();
 
-	// Set origin to the position of the object (LBLT)
+	// Set origin to the position of the object (whatever object is being passed in)
 	trans.setOrigin(btVector3(modelMesh[0].GetPosition().x, modelMesh[0].GetPosition().y, modelMesh[0].GetPosition().z));
 
 	// Set trimesh scale
@@ -390,7 +442,7 @@ btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh,
 
 	//m_trianglemeshs.push_back(trimesh);
 	//m_triangleMeshBodies.push_back(body);
-	body->setUserIndex(SPHERE);
+	body->setUserIndex(MESH);
 	//body->setContactProcessingThreshold(BT_LARGE_FLOAT);
 	m_dynamicsWorld->addRigidBody(body);
 	//std::vector< btVector3* > tmp;
@@ -416,6 +468,7 @@ void PhysicsEngine::InitDebugDraw()
 	GetDebugShader()->Initialize(debugShaderSource.VertexSource, debugShaderSource.FragmentSource);
 
 	glGenVertexArrays(1, &VAO);
+	std::cout << VAO << std::endl;
 	glGenBuffers(1, &VBO);
 
 	glBindVertexArray(VAO);

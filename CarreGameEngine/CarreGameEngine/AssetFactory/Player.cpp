@@ -74,7 +74,7 @@ void Player::ThrowBall(float time, Camera* cam)
 	glm::vec3 look = m_playerModel->GetCamera()->GetView() * 1000.0f;
 	
 	// Add crates sphere shape rigid body
-	btRigidBody* sphere = m_physicsWorld->AddSphere(150.0, camPos);
+	btRigidBody* sphere = m_physicsWorld->AddSphere(110.0, camPos);
 	// Add linear velocity to the sphere
 	sphere->setLinearVelocity(btVector3(look.x, look.y, look.z));
 

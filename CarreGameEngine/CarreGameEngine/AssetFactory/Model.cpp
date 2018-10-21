@@ -115,6 +115,8 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene *scene)
 			//	vertex.m_biTangent = biTangent;
 			//}
 
+			ReadDimensions(vertexPos);
+
 			vertices.push_back(vertex);
 			indices.push_back(face.mIndices[j]);
 		}
@@ -170,6 +172,65 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType 
 		}
 	}
 	return textures;
+}
+
+const void Model::CalculateDimensions()
+{
+	ScaleDimensions();
+
+	// The dimension is calculated as the max - min of each dimensions (width, height, depth)
+	m_dimensions.x = fabs(m_Xdim.y - m_Xdim.x);
+	m_dimensions.y = fabs(m_Ydim.y - m_Ydim.x);
+	m_dimensions.z = fabs(m_Zdim.y - m_Zdim.x);
+}
+
+const void Model::ScaleDimensions()
+{
+	m_Xdim *= m_scale.x;
+	m_Ydim *= m_scale.y;
+	m_Zdim *= m_scale.z;
+}
+
+const void Model::ReadDimensions(glm::vec3 vertexPos)
+{
+	// First vertex gets made the initial values of dimensions to be compared to
+	if (m_firstVertex)
+	{
+		m_Xdim = glm::vec2(vertexPos.x, vertexPos.x);
+		m_Ydim = glm::vec2(vertexPos.y, vertexPos.y);
+		m_Zdim = glm::vec2(vertexPos.z, vertexPos.z);
+		// After initial values are set, the rest of the models vertexs can be compared to find min, max
+		m_firstVertex = false;
+	}
+	// Read and compare the vertex
+	else
+	{
+		// Compare for X
+		if (vertexPos.x < m_Xdim.x) {
+			// x is min
+			m_Xdim.x = vertexPos.x;
+		}
+		if (vertexPos.x > m_Xdim.y) {
+			// y is max
+			m_Xdim.y = vertexPos.x;
+		}
+
+		// Compare for Y
+		if (vertexPos.y < m_Ydim.x) {
+			m_Ydim.y = vertexPos.y;
+		}
+		if (vertexPos.x > m_Ydim.y) {
+			m_Ydim.y = vertexPos.y;
+		}
+
+		// Compare for Z
+		if (vertexPos.z < m_Zdim.x) {
+			m_Zdim.x = vertexPos.z;
+		}
+		if (vertexPos.z > m_Zdim.y) {
+			m_Zdim.y = vertexPos.z;
+		}
+	}
 }
 
 void Model::Destroy()

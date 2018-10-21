@@ -124,7 +124,8 @@ class PhysicsEngine
 			BOX = 2,			/**< Box shape rigid body */
 			SPHERE = 3,			/**< Sphere shape rigid body */
 			HEIGHTFIELD = 4,	/**< Heightfield terrain shape rigid body */
-			PLANE = 5			/**< Plane shape rigid body */
+			PLANE = 5,			/**< Plane shape rigid body */
+			MESH = 6			/**< Mesh collider */
 		}RIGID_BODY_TYPE;
 
 			/**
@@ -164,10 +165,11 @@ class PhysicsEngine
 			* This is a test function that creates dynamic rigid bodies for testing purposes
 			*
 			* @param pos - Position to create dynamic body
+			* @param dimensions - Dimensions of the bounding shape to be created
 			*
 			* @return void
 			*/
-		void CreateDynamicRigidBody(btVector3 &pos);
+		void CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions);
 
 			/**
 			* @brief Creates dynamic rigid body for a player controlled object
@@ -394,6 +396,10 @@ class PhysicsEngine
 		glm::vec3 m_scale;
 
 		Camera* m_camera;
+
+			/// Player height controller
+		btScalar m_floorHeight = 10.0f;
+		btScalar m_cap;
 
 		//DebugDraw d;
 

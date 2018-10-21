@@ -177,6 +177,9 @@ void GameControlEngine::Initialize()
 	/********************Loading of all models at once*******************/
 	m_windowManager->GetInputManager()->SetPlayer(m_player);
 
+	/// 21/10/18 CSmith Affordance Script Read-in
+	ScriptManager::Instance().LoadAffordanceTable(m_affordanceTable);
+
 	/********************AI Testing*******************/
 	/*ComputerAI* p = new ComputerAI();
 	for (int i = 0; i < 1000; i++)

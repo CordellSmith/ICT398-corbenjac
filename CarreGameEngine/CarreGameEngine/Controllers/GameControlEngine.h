@@ -198,4 +198,8 @@ protected:
 
 	/// Player object
 	Player* m_player;
+
+	/// Affordance lookup table
+	/// Look to Typedef this lol
+	std::unordered_map<std::string, std::vector<std::pair<std::string, float>>> m_affordanceTable;
 };

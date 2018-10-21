@@ -260,6 +260,41 @@ class PhysicsEngine
 		
 		/*************************************NEW**************************************/
 		/**
+		* @brief Creates static rigid body
+		*
+		* This is a test function that is used to create a static body (as of now, it creates a floor)
+		*
+		* @param pos - Position to create body
+		*
+		* @return void
+		*/
+		//void CreateStaticRigidBody(glm::vec3 &pos);
+
+		/**
+		* @brief Creates dynamic rigid body
+		*
+		* This is a test function that creates dynamic rigid bodies for testing purposes
+		*
+		* @param pos - Position to create dynamic body
+		*
+		* @return void
+		*/
+		//void CreateDynamicRigidBody(glm::vec3 &pos, std::string objType);
+
+
+		/**
+		* @brief Simulate the dynamic world
+		*
+		* This function simulates the dynamic world by handling all physics calculations each step
+		*
+		* @param bodyPos - Update all rigid body positions for drawing
+		* @param playerObj - Sets new player object position
+		*
+		* @return void
+		*/
+		//void Simulate(std::vector<glm::vec3> &bodyPos, std::vector<Quaternion> &bodyRot);
+		
+		/**
 		* @brief Initialize all PointMass for an object
 		*
 		* Initialize all point mass data points within an object to determine the Cog and inertia of an object
@@ -269,7 +304,7 @@ class PhysicsEngine
 		*
 		* @return void
 		*/
-		//void InitializePointMass(std::vector<PointMass> &pointMassVect, btScalar mass, Vector3 size);
+		//void InitializePointMass(std::vector<PointMass> &pointMassVect, btScalar mass, glm::vec3 size);
 
 		/**
 		* @brief Calculate center of gravity
@@ -290,7 +325,7 @@ class PhysicsEngine
 		*
 		* @return void
 		*/
-		//void CalcObjectSecondMoment(ObjectTypePhysicsData* &objectData, Vector3 size);
+		//void CalcObjectSecondMoment(ObjectTypePhysicsData* &objectData, glm::vec3 size);
 
 		/**
 		* @brief Calculate PointMass relative positions
@@ -321,8 +356,11 @@ class PhysicsEngine
 		std::vector<ObjectRigidBodyData*> m_objectRigidBodyData;
 
 
-		Vector3 m_normal;
-		Vector3 m_impulse;
+			/// Normal vector at collision point
+		glm::vec3 m_normal;
+
+			/// Linear impulse of collision
+		glm::vec3 m_impulse;
 
 		int count;
 
@@ -330,7 +368,30 @@ class PhysicsEngine
 		float game_time; // Current game time, seconds
 		float prev_game_time; // Game time at previous frame
 		float physics_lag_time; // Time since last update
+
+		/**
+		* @brief Normalize a vec3
+		*
+		* Normalize the values of a glm::vec3
+		*
+		* @param vec - The vec3 to normalize
+		*
+		* @return glm::vec3
 		*/
+		//glm::vec3 Normalize(glm::vec3 vec);
+
+		/**
+		* @brief Dot product of two vec3
+		*
+		* Calculate the dot product of two glm::vec3
+		*
+		* @param one - The first vec3
+		* @param two - The second vec3
+		*
+		* @return btScalar
+		*/
+		//btScalar DotProduct(glm::vec3 one, glm::vec3 two);
+		
 		/*************************************NEW**************************************/
 
 	protected:

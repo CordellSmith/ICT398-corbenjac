@@ -65,38 +65,50 @@
 #include "..\Common\MyMath.h"
 #include "..\AssetFactory\Model.h"
 #include "DebugDraw.h"
+#include <cmath>
+#include "../../Dependencies/GLM/include/GLM/vec3.hpp"
 
 
 /*************************************NEW**************************************/
 ///  Struct of point mass data for an object (for determining cente of gravity and other info)
-//struct PointMass
-//{
-//	float mass = 0;
-//	Vector3 actualPosition;
-//	Vector3 relativePosition;
-//};
+struct PointMass
+{
+	float mass = 0;
+	glm::vec3 actualPosition;
+	glm::vec3 relativePosition;
+};
 
 /// Struct containing useful data for physics sim for an object type
-//struct ObjectTypePhysicsData
-//{
-//	string objType = "";
-//	float totalMass = 0;
-//	Vector3 combinedCG;
-//	Vector3 firstMoment;
-//	Vector3 secondMoment;
-//};
+struct ObjectTypePhysicsData
+{
+	std::string objType = "";
+	float totalMass = 0;
+	glm::vec3 combinedCG;
+	glm::vec3 firstMoment;
+	glm::vec3 secondMoment; // Inertia
+};
 
 /// Struct containing useful data for physics sim for an object type
-//struct ObjectRigidBodyData
-//{
-//	string objType = "";
-//	Vector3 velBeforeCol;
-//	Vector3 velAfterCol;
-//	Vector3 currForce;
-//	Vector3 currPos;
-//	Vector3 prevPos;
-//	Quaternion currRot;
-//};
+struct ObjectRigidBodyData
+{
+	std::string objType = "";
+	glm::vec3 currLinearVel;
+	glm::vec3 prevLinearVel;
+	glm::vec3 currAngularVel;
+	glm::vec3 prevAngularVel;
+	glm::vec3 currForce;
+	glm::vec3 prevForce;
+	glm::vec3 currPos;
+	glm::vec3 prevPos;
+	Quaternion currRot;
+	Quaternion prevRot;
+	glm::vec3 currDerivs;
+	glm::vec3 prevDerivs;
+	glm::vec3 torque;
+	glm::vec3 angle;
+	glm::vec3 accel;
+	glm::vec3 angularMomentum;
+};
 /*************************************NEW**************************************/
 
 struct CollisionBody {
@@ -158,6 +170,7 @@ class PhysicsEngine
 			* @return void
 			*/
 		void CreateStaticRigidBody(btVector3 &pos);
+		//void CreateStaticRigidBody(glm::vec3 &pos);
 
 			/**
 			* @brief Creates dynamic rigid body
@@ -170,7 +183,7 @@ class PhysicsEngine
 			* @return void
 			*/
 		void CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions);
-
+		//void CreateDynamicRigidBody(glm::vec3 &pos, std::string objType);
 			/**
 			* @brief Creates dynamic rigid body for a player controlled object
 			*
@@ -193,6 +206,7 @@ class PhysicsEngine
 			* @return void
 			*/
 		void Simulate(std::vector<CollisionBody*>& collisionBodies, btVector3 &playerObj);
+		//void Simulate(std::vector<glm::vec3> &bodyPos, std::vector<Quaternion> &bodyRot);
 
 			/*
 			* @brief Public function that calls different private functions for creation of rigid bodies
@@ -259,41 +273,6 @@ class PhysicsEngine
 		unsigned int VAO, VBO;
 		
 		/*************************************NEW**************************************/
-		/**
-		* @brief Creates static rigid body
-		*
-		* This is a test function that is used to create a static body (as of now, it creates a floor)
-		*
-		* @param pos - Position to create body
-		*
-		* @return void
-		*/
-		//void CreateStaticRigidBody(glm::vec3 &pos);
-
-		/**
-		* @brief Creates dynamic rigid body
-		*
-		* This is a test function that creates dynamic rigid bodies for testing purposes
-		*
-		* @param pos - Position to create dynamic body
-		*
-		* @return void
-		*/
-		//void CreateDynamicRigidBody(glm::vec3 &pos, std::string objType);
-
-
-		/**
-		* @brief Simulate the dynamic world
-		*
-		* This function simulates the dynamic world by handling all physics calculations each step
-		*
-		* @param bodyPos - Update all rigid body positions for drawing
-		* @param playerObj - Sets new player object position
-		*
-		* @return void
-		*/
-		//void Simulate(std::vector<glm::vec3> &bodyPos, std::vector<Quaternion> &bodyRot);
-		
 		/**
 		* @brief Initialize all PointMass for an object
 		*
@@ -370,14 +349,14 @@ class PhysicsEngine
 		float physics_lag_time; // Time since last update
 
 		/**
-		* @brief Normalize a vec3
-		*
-		* Normalize the values of a glm::vec3
-		*
-		* @param vec - The vec3 to normalize
-		*
-		* @return glm::vec3
-		*/
+			* @brief Normalize a vec3
+			*
+			* Normalize the values of a glm::vec3
+			*
+			* @param vec - The vec3 to normalize
+			*
+			* @return glm::vec3
+			*/
 		//glm::vec3 Normalize(glm::vec3 vec);
 
 		/**
@@ -391,6 +370,8 @@ class PhysicsEngine
 		* @return btScalar
 		*/
 		//btScalar DotProduct(glm::vec3 one, glm::vec3 two);
+
+		//glm::vec3 CrossProduct(glm::vec3 first, glm::vec3 second);
 		
 		/*************************************NEW**************************************/
 

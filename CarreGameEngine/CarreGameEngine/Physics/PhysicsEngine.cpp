@@ -720,7 +720,6 @@ void PhysicsEngine::ParseModel(Model* model)
 
 /*************************************NEW**************************************/
 
-////Includes
 //#include "PhysicsEngine.h"
 //#include <iostream>
 //
@@ -843,9 +842,9 @@ void PhysicsEngine::ParseModel(Model* model)
 //	objRigidBodyData->objType = objType;
 //
 //	if (objType == "box2")
-//		objRigidBodyData->velBeforeCol.y = -0.5;
+//		objRigidBodyData->currLinearVel.y = -.5;
 //	if (objType == "box")
-//		objRigidBodyData->velBeforeCol.y = 0.0;
+//		objRigidBodyData->currLinearVel.y = 0.0;
 //	objRigidBodyData->currPos = pos;
 //	m_objectRigidBodyData.push_back(objRigidBodyData);
 //}
@@ -939,14 +938,14 @@ void PhysicsEngine::ParseModel(Model* model)
 //			// Calculate linear impulse
 //			btScalar tempImpulse;
 //
-//			tempImpulse = DotProduct(rbA->velBeforeCol - rbB->velBeforeCol, m_normal);
+//			tempImpulse = DotProduct(rbA->currLinearVel - rbB->currLinearVel, m_normal);
 //			tempImpulse *= -(1 + m_epsilon) * pdA->totalMass * pdB->totalMass;
 //			tempImpulse /= (pdA->totalMass + pdB->totalMass);
 //			m_impulse = tempImpulse * m_normal;
 //
 //			// Calculate object velocities after collision
-//			rbA->velBeforeCol = rbA->velBeforeCol + (m_impulse / pdA->totalMass);
-//			rbB->velBeforeCol = rbB->velBeforeCol - (m_impulse / pdB->totalMass);
+//			rbA->currLinearVel = rbA->currLinearVel + (m_impulse / pdA->totalMass);
+//			rbB->currLinearVel = rbB->currLinearVel - (m_impulse / pdB->totalMass)
 //		}
 //
 //		/*****************************************************************/
@@ -959,9 +958,9 @@ void PhysicsEngine::ParseModel(Model* model)
 //
 //
 //			// Set new location of object
-//			temp2.setValue(temp2.getX() + m_objectRigidBodyData[j]->velBeforeCol.x,
-//				temp2.getY() + m_objectRigidBodyData[j]->velBeforeCol.y,
-//				temp2.getZ() + m_objectRigidBodyData[j]->velBeforeCol.z);
+//			temp2.setValue(temp2.getX() + m_objectRigidBodyData[j]->currLinearVel.x,
+//				temp2.getY() + m_objectRigidBodyData[j]->currLinearVel.y,
+//				temp2.getZ() + m_objectRigidBodyData[j]->currLinearVel.z);
 //			temp.setOrigin(temp2);
 //			obj->setWorldTransform(temp);
 //
@@ -977,12 +976,10 @@ void PhysicsEngine::ParseModel(Model* model)
 //			m_objectRigidBodyData[j]->currPos.x = temp.getOrigin().getX();
 //			m_objectRigidBodyData[j]->currPos.y = temp.getOrigin().getY();
 //			m_objectRigidBodyData[j]->currPos.z = temp.getOrigin().getZ();
-//		}
-//
+//			}
 //		// Decrease physics lag time
 //		physics_lag_time -= delta_t;
 //	}
-//
 //	prev_game_time = game_time;
 //
 //}
@@ -1107,3 +1104,9 @@ void PhysicsEngine::ParseModel(Model* model)
 //{
 //	return one.x*two.x + one.y*two.y + one.z *two.z;
 //}
+//
+//glm::vec3 PhysicsEngine::CrossProduct(glm::vec3 first, glm::vec3 second)
+//{
+//	return glm::vec3(first.y*second.z - first.z*second.y, first.z*second.x - first.x*second.z, first.x*second.y - first.y*second.x);
+//}
+//

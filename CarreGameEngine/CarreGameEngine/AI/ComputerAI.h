@@ -8,6 +8,10 @@
 *
 * @date 31/05/2018
 * @version 2.0	Final version for submission.
+*
+* @date 23/10/2018
+* @author Cordell Smith
+* @version 2.1	Emotion Engine / Personality and Traits
 */
 
 #ifndef COMPUTERAI_H
@@ -20,6 +24,57 @@
 #include <vector>
 #include <time.h>
 
+struct Trait
+{
+	std::string m_name;
+	float energy = 0.0f, speed = 0.0f, strength = 0.0f;
+
+	void ApplyTrait(ComputerAI& AI)
+	{
+		AI.GetEnergy() += energy;
+		AI.GetSpeed() += speed;
+		AI.GetStrength() += strength;
+	}
+};
+
+struct Personality
+{
+	std::vector<Trait> m_traits;
+
+	void InitTraits(ComputerAI& AI)
+	{
+		for (int i = 0; i < m_traits.size(); i++)
+		{
+			m_traits[i].ApplyTrait(AI);
+		}
+	}
+};
+
+// Will need to be changed to a class
+struct Emotions
+{
+	// range [1-100]
+	float m_joy = 1.0f;
+	float m_sad = 1.0f;
+	float m_anger = 1.0f;
+	float m_fear = 1.0f;
+	float m_trust = 1.0f;
+	float m_disgust = 1.0f;
+
+	bool isJoy, isSad;
+	bool isAnger, isFear;
+	bool isTrust, isDisgusted;
+
+	/*
+		Emotions values change
+		Rules should determine what state the AI is in (read from script)
+			Change state
+			eg. If m_joy > 70 && m_sad < 10
+					change state -> happy;
+
+			Happy state -> AI moves around much faster ie. AIspeed * 2
+	*/
+};
 
 class ComputerAI
 {
@@ -159,8 +214,11 @@ class ComputerAI
 
 		//std::vector<Vector2> MakeWaypoints();
 
-	private:
+		float& GetEnergy() { return m_energy; }
+		float& GetSpeed() { return m_speed; }
+		float& GetStrength() { return m_strength; }
 
+	private:
 		/// Return an instance of the current FSM state
 		StateMachine<ComputerAI>* m_computerAIFSM;
 
@@ -182,6 +240,21 @@ class ComputerAI
 		/// Vector of waypoints
 		std::vector<Vector2> m_waypoints;
 
-		
+	protected:
+		/// CSmith 23/10/18 Emotion Engine / Personality and Traits
+		/// Personality
+		Personality m_personality;
+
+		/// Emotions
+		Emotions m_emotions;
+
+		/// Energy
+		float m_energy;
+
+		/// Movement Speed
+		float m_speed;
+
+		/// Strength
+		float m_strength;
 };
 #endif

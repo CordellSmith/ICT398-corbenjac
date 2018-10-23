@@ -149,7 +149,7 @@ void GameControlEngine::Initialize()
 				modelAI = new ComputerAI(glm::vec3((*itModels).second.modelPositions[k][0], (*itModels).second.modelPositions[k][1], (*itModels).second.modelPositions[k][2]));
 				m_allAI.push_back(modelAI);
 				modelAsset->SetAI(modelAI);
-				std::cout << "Model loaded" << std::endl;
+				std::cout << "Model AI loaded" << std::endl;
 			}
 
 			m_assetFactory->AddAsset(modelAsset);

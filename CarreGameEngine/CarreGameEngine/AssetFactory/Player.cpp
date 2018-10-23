@@ -70,13 +70,14 @@ void Player::TurnAntiClock(float time)
 void Player::ThrowBall(float time, Camera* cam)
 {
 	// Get camera position and lookAt vector
-	btVector3 camPos = btVector3(m_playerModel->GetPosition().x, m_playerModel->GetPosition().y, m_playerModel->GetPosition().z);
+	glm::vec3 camPos = glm::vec3(m_playerModel->GetPosition().x, m_playerModel->GetPosition().y, m_playerModel->GetPosition().z);
 	glm::vec3 look = m_playerModel->GetCamera()->GetView() * 1000.0f;
 	
 	// Add crates sphere shape rigid body
-	btRigidBody* sphere = m_physicsWorld->AddSphere(110.0, camPos);
+	//btRigidBody* sphere = m_physicsWorld->AddSphere(110.0, camPos, "ball");
+	m_physicsWorld->AddSphere(110.0, camPos, "ball");
 	// Add linear velocity to the sphere
-	sphere->setLinearVelocity(btVector3(look.x, look.y, look.z));
+	//sphere->setLinearVelocity(btVector3(look.x, look.y, look.z));
 
 	// Add to our array of collision bodies
 	m_collisionBodies->push_back(new CollisionBody("ball", camPos));

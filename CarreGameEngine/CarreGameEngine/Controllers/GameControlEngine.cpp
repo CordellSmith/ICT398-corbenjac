@@ -220,23 +220,23 @@ void GameControlEngine::InitializePhysics()
 	std::multimap<std::string, IGameAsset*>::const_iterator itr;
 	for (itr = m_assetFactory->GetAssets().begin(); itr != m_assetFactory->GetAssets().end(); itr++)
 	{
-		btVector3 objRigidBodyPosition;
+		glm::vec3 objRigidBodyPosition;
 
-		if (itr->second->GetAssetName() == "player")
-		{
-			// Create camera capsule shape to collide with objects
-			btVector3 bt_cameraPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
-			m_physicsWorld->CreatePlayerControlledRigidBody(bt_cameraPos);
-			m_collisionBodies.push_back(new CollisionBody("player", bt_cameraPos));		
-			continue;
-		}
+		//if (itr->second->GetAssetName() == "player")
+		//{
+		//	// Create camera capsule shape to collide with objects
+		//	glm::vec3 bt_cameraPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
+		//	m_physicsWorld->CreatePlayerControlledRigidBody(bt_cameraPos);
+		//	m_collisionBodies.push_back(new CollisionBody("player", bt_cameraPos));		
+		//	continue;
+		//}
 		
 		if (itr->second->GetAssetName() == "lecTheatre")
 		{
 			// Convert from glm::vec3 to Bullets btVector3
-			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
+			objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 
-			std::cout << "Physics Init " << itr->second->GetAssetName() << ": " << itr->second->GetModel()->GetMeshBatch().size() << " and " << itr->second->GetModel()->GetMeshBatch().size() << std::endl;
+			std::cout << "	 " << itr->second->GetAssetName() << ": " << itr->second->GetModel()->GetMeshBatch().size() << " and " << itr->second->GetModel()->GetMeshBatch().size() << std::endl;
 
 			/// 15/10/18 CSmith Debug Draw
 			/// 16/10/18		Debug Draw almost working
@@ -245,7 +245,7 @@ void GameControlEngine::InitializePhysics()
 			m_physicsWorld->ParseModel(itr->second->GetModel());
 			// Static Triangle mesh of LBLT is created here!
 			// Debug draw is also used here
-			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, false);
+			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, false, "lecTheatre");
 			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 			// This has to be called after the mesh data is passed in
 			//m_physicsWorld->InitDebugDraw();
@@ -255,9 +255,9 @@ void GameControlEngine::InitializePhysics()
 		if (itr->second->GetAssetName() == "ball")
 		{
 			// Have to convert from glm::vec3 to Bullets btVector3
-			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
+			objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 
-			m_physicsWorld->AddSphere(110.0, objRigidBodyPosition);
+			m_physicsWorld->AddSphere(110.0, objRigidBodyPosition, "ball");
 			// Add to our array of collision bodies
 			//m_collisionBodyPos.push_back(objRigidBodyPosition);
 			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
@@ -269,12 +269,12 @@ void GameControlEngine::InitializePhysics()
 			// Creates 5 chairs (testing)
 			for (int i = 0; i < 5; i++)
 			{
-				objRigidBodyPosition = btVector3(
+				objRigidBodyPosition = glm::vec3(
 					itr->second->GetPosition().x + 100 * i, 
 					itr->second->GetPosition().y + 100 * i, 
 					itr->second->GetPosition().z + 100 * i
 				);
-				m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons());
+				m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), "chair");
 				m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 			}
 			continue;
@@ -290,8 +290,8 @@ void GameControlEngine::InitializePhysics()
 		///			03/10/18 -- Start
 		///			09/10/18 -- Only generating box shape rigid objects, removed name specific code
 		///			20/10/18 -- CreateDynamicRigidBody() now takes the models dimensions to create a more accurate size bounding box
-		objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
-		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons());
+		objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
+		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), "table");
 		m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 	}
 
@@ -299,7 +299,7 @@ void GameControlEngine::InitializePhysics()
 	m_player->ParsePhysics(*m_physicsWorld, m_collisionBodies);
 
 	// Activate all rigid body objects
-	m_physicsWorld->ActivateAllObjects();
+	//m_physicsWorld->ActivateAllObjects();
 }
 
 void GameControlEngine::Destroy()

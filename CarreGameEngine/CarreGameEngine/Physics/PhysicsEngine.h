@@ -51,6 +51,9 @@
 * @author Jack Matters
 * @version 2.2	Adding all my current code for self coded physics. Currently have collision detection working, physics involved in collision partially working.
 *				Commented everything out as not fully ready to implement yet.
+*
+* @date 24/10/2018
+* @version 2.3	Swapping out bullet physics for the physics I coded. Spent many hours working on rotations to not much success. Going to do this instead so we at least have something.
 */
 
 #ifndef PHYSICSENGINE_H
@@ -106,20 +109,20 @@ struct ObjectRigidBodyData
 	glm::vec3 prevDerivs;
 	glm::vec3 torque;
 	glm::vec3 angle;
-	glm::vec3 accel;
+	glm::vec3 angularAccel;
 	glm::vec3 angularMomentum;
 };
 /*************************************NEW**************************************/
 
 struct CollisionBody {
 
-	CollisionBody(std::string name, const btVector3& position) 
+	CollisionBody(std::string name, const glm::vec3& position) 
 	{ 
 		m_name = name;
 		m_position = position;
 	};
 	std::string m_name;
-	btVector3 m_position;
+	glm::vec3 m_position;
 };
 
 class PhysicsEngine
@@ -169,8 +172,8 @@ class PhysicsEngine
 			*
 			* @return void
 			*/
-		void CreateStaticRigidBody(btVector3 &pos);
-		//void CreateStaticRigidBody(glm::vec3 &pos);
+		//void CreateStaticRigidBody(btVector3 &pos);
+		void CreateStaticRigidBody(glm::vec3 &pos);
 
 			/**
 			* @brief Creates dynamic rigid body
@@ -182,8 +185,7 @@ class PhysicsEngine
 			*
 			* @return void
 			*/
-		void CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions);
-		//void CreateDynamicRigidBody(glm::vec3 &pos, std::string objType);
+		void CreateDynamicRigidBody(glm::vec3 &pos, glm::vec3& dimensions, std::string objType);
 			/**
 			* @brief Creates dynamic rigid body for a player controlled object
 			*
@@ -193,7 +195,7 @@ class PhysicsEngine
 			*
 			* @return void
 			*/
-		void CreatePlayerControlledRigidBody(btVector3 &playerObj);
+		void CreatePlayerControlledRigidBody(glm::vec3 &playerObj);
 
 			/**
 			* @brief Simulate the dynamic world
@@ -205,7 +207,7 @@ class PhysicsEngine
 			*
 			* @return void
 			*/
-		void Simulate(std::vector<CollisionBody*>& collisionBodies, btVector3 &playerObj);
+		void Simulate(std::vector<CollisionBody*>& collisionBodies, std::vector<Quaternion> &bodyRot, glm::vec3 &playerObj);
 		//void Simulate(std::vector<glm::vec3> &bodyPos, std::vector<Quaternion> &bodyRot);
 
 			/*
@@ -220,7 +222,7 @@ class PhysicsEngine
 			* @param 
 			* @return 
 			*/
-		btRigidBody* AddSphere(float radius, btVector3 &startPos);
+		void AddSphere(float radius, glm::vec3 &startPos, std::string objType);
 
 			/**
 			* @brief Create a heightfield terrain shape
@@ -240,7 +242,7 @@ class PhysicsEngine
 			*/
 		void ActivateAllObjects();
 
-		btCollisionObject* TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuantizedBvhTree, bool collision);
+		void TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuantizedBvhTree, bool collision, std::string objType);
 
 		btDiscreteDynamicsWorld* GetDynamicsWorld() { return m_dynamicsWorld; };
 
@@ -283,7 +285,7 @@ class PhysicsEngine
 		*
 		* @return void
 		*/
-		//void InitializePointMass(std::vector<PointMass> &pointMassVect, btScalar mass, glm::vec3 size);
+		void InitializePointMass(std::vector<PointMass> &pointMassVect, btScalar mass, glm::vec3 size);
 
 		/**
 		* @brief Calculate center of gravity
@@ -295,7 +297,7 @@ class PhysicsEngine
 		*
 		* @return void
 		*/
-		//void CalcObjectCenterOfGravity(std::vector<PointMass> &pointMassVect, ObjectTypePhysicsData* &newObject);
+		void CalcObjectCenterOfGravity(std::vector<PointMass> &pointMassVect, ObjectTypePhysicsData* &newObject);
 
 		/**
 		* @brief Calculate second moment of mass
@@ -304,7 +306,7 @@ class PhysicsEngine
 		*
 		* @return void
 		*/
-		//void CalcObjectSecondMoment(ObjectTypePhysicsData* &objectData, glm::vec3 size);
+		void CalcObjectSecondMoment(ObjectTypePhysicsData* &objectData, glm::vec3 size);
 
 		/**
 		* @brief Calculate PointMass relative positions
@@ -316,15 +318,15 @@ class PhysicsEngine
 		*
 		* @return void
 		*/
-		//void CalcPointMassRelativePositions(std::vector<PointMass> &pointMassVect, ObjectTypePhysicsData* &objectData);
+		void CalcPointMassRelativePositions(std::vector<PointMass> &pointMassVect, ObjectTypePhysicsData* &objectData);
 		/*************************************NEW**************************************/
 
 	private:
 		/*************************************NEW**************************************/
-		/*
+		
 		/// Collision world
 		btCollisionWorld* m_collisionWorld;
-
+		
 		/// Coefficient of restitution (conservation/loss of kinetic energy)
 		btScalar m_epsilon;
 
@@ -348,7 +350,7 @@ class PhysicsEngine
 		float prev_game_time; // Game time at previous frame
 		float physics_lag_time; // Time since last update
 
-		/**
+			/**
 			* @brief Normalize a vec3
 			*
 			* Normalize the values of a glm::vec3
@@ -357,7 +359,7 @@ class PhysicsEngine
 			*
 			* @return glm::vec3
 			*/
-		//glm::vec3 Normalize(glm::vec3 vec);
+		glm::vec3 Normalize(glm::vec3 vec);
 
 		/**
 		* @brief Dot product of two vec3
@@ -369,9 +371,18 @@ class PhysicsEngine
 		*
 		* @return btScalar
 		*/
-		//btScalar DotProduct(glm::vec3 one, glm::vec3 two);
+		btScalar DotProduct(glm::vec3 one, glm::vec3 two);
 
-		//glm::vec3 CrossProduct(glm::vec3 first, glm::vec3 second);
+		glm::vec3 CrossProduct(glm::vec3 first, glm::vec3 second);
+
+		std::vector<glm::vec3> m_currState;
+		std::vector<glm::vec3> m_prevState;
+		std::vector<glm::vec3> m_derivState;
+
+		// linearVel
+		// pos
+		// angularVel
+		// angularMomentum
 		
 		/*************************************NEW**************************************/
 
@@ -390,13 +401,13 @@ class PhysicsEngine
 		btScalar m_mass;
 
 			/// Holds last known player controlled object location
-		btVector3 m_playerObject;
+		glm::vec3 m_playerObject;
 
 			/// Old force applied to player controlled object (don't think this is needed)
-		btVector3 m_oldForce;
+		glm::vec3 m_oldForce;
 
 			/// New force applied to player controlled object (don't think this is needed)
-		btVector3 m_newForce;
+		glm::vec3 m_newForce;
 
 			/*
 			* @brief Creates a rigid body for the camera
@@ -429,7 +440,7 @@ class PhysicsEngine
 		unsigned char *m_terrainData;
 
 			/// Debug draw
-		std::vector<btVector3> m_debugLines;
+		std::vector<glm::vec3> m_debugLines;
 
 		Shader* m_debugShader;
 

@@ -89,12 +89,12 @@ void GameWorld::UpdatePhysics()
 	// Update physicsWorld
 	// TODO: Make this better (Jack)
 	
-	btVector3 bt_playerPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
+	glm::vec3 bt_playerPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
 	
 	// Set updated camera location
 	//m_camera->SetPosition(glm::vec3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z));
-		
-	m_physicsWorld->Simulate(GetCollisionBodies(), bt_playerPos);
+	std::vector<Quaternion> tempQuat;
+	m_physicsWorld->Simulate(GetCollisionBodies(), tempQuat, bt_playerPos);
 	// Draw each object at the updated positions based on physics simulation
 	std::multimap<std::string, IGameAsset*>::iterator itr = m_gameAssets.begin();
 	ComputerAI* compAI;
@@ -103,9 +103,9 @@ void GameWorld::UpdatePhysics()
 	for (int i = 0; i < GetCollisionBodies().size(); i++)
 	{
 		glm::vec3 updPosition = glm::vec3(
-			GetCollisionBodies()[i]->m_position.x(),
-			GetCollisionBodies()[i]->m_position.y(),
-			GetCollisionBodies()[i]->m_position.z());
+			GetCollisionBodies()[i]->m_position.x,
+			GetCollisionBodies()[i]->m_position.y,
+			GetCollisionBodies()[i]->m_position.z);
 
 		// Search through map using find. If found, update that objects position
 		m_gameAssets.find(GetCollisionBodies()[i]->m_name)->second->GetModel()->SetPosition(updPosition);
@@ -115,8 +115,8 @@ void GameWorld::UpdatePhysics()
 
 	// Ray casting
 	glm::vec3 camDirection = m_camera->GetView() * 10000.0f;
-	btCollisionWorld::ClosestRayResultCallback rayCallback(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z));
-	m_physicsWorld->GetDynamicsWorld()->rayTest(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z), rayCallback);
+	//btCollisionWorld::ClosestRayResultCallback rayCallback(glm::vec3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), glm::vec3(camDirection.x, camDirection.y, camDirection.z));
+	//m_physicsWorld->GetDynamicsWorld()->rayTest(glm::vec3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), glm::vec3(camDirection.x, camDirection.y, camDirection.z), rayCallback);
 
 	//if (rayCallback.hasHit())
 	//{
@@ -124,6 +124,6 @@ void GameWorld::UpdatePhysics()
 	//		std::cout << "HIT Object: " << rayCallback.m_collisionObject->getCollisionShape()->getShapeType() << std::endl;
 	//}
 
-	m_player->SetPosition(glm::vec3(bt_playerPos.getX(), bt_playerPos.getY(), bt_playerPos.getZ()));
+	m_player->SetPosition(glm::vec3(bt_playerPos.x, bt_playerPos.y, bt_playerPos.z));
 	//std::cout << m_player->GetPosition().x << " " << m_player->GetPosition().y << " " << m_player->GetPosition().z << std::endl;
 }

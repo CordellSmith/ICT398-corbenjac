@@ -248,7 +248,7 @@ void GameControlEngine::InitializePhysics()
 			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, false);
 			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 			// This has to be called after the mesh data is passed in
-			//m_physicsWorld->InitDebugDraw();
+			m_physicsWorld->InitDebugDraw();
 			continue;
 		}
 
@@ -281,10 +281,10 @@ void GameControlEngine::InitializePhysics()
 		}
 		
 		// Adjust rotation for table, orientation is not correct
-		if (itr->first == "table")
-		{
-			itr->second->SetRotation(glm::vec3(0.0, 20.0, 45.0));
-		}
+		//if (itr->first == "table")
+		//{
+		//	itr->second->SetRotation(glm::vec3(0.0, 20.0, 45.0));
+		//}
 
 		/// CSmith	
 		///			03/10/18 -- Start

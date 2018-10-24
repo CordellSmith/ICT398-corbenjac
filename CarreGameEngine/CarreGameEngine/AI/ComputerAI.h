@@ -14,6 +14,8 @@
 * @version 2.1	Emotion Engine / Personality and Traits
 */
 
+class ComputerAI;
+
 #ifndef COMPUTERAI_H
 #define COMPUTERAI_H
 
@@ -29,12 +31,12 @@ struct Trait
 	std::string m_name;
 	float energy = 0.0f, speed = 0.0f, strength = 0.0f;
 
-	void ApplyTrait(ComputerAI& AI)
-	{
-		AI.GetEnergy() += energy;
-		AI.GetSpeed() += speed;
-		AI.GetStrength() += strength;
-	}
+	//void ApplyTrait(ComputerAI& AI)
+	//{
+	//	AI.GetEnergy() += energy;
+	//	AI.GetSpeed() += speed;
+	//	AI.GetStrength() += strength;
+	//}
 };
 
 struct Personality
@@ -43,9 +45,14 @@ struct Personality
 
 	void InitTraits(ComputerAI& AI)
 	{
-		for (int i = 0; i < m_traits.size(); i++)
+		if (m_traits.size() == 0)
+			std::cout << "AI has no Traits" << std::endl;
+		else
 		{
-			m_traits[i].ApplyTrait(AI);
+			for (int i = 0; i < m_traits.size(); i++)
+			{
+				//m_traits[i].ApplyTrait(AI);
+			}
 		}
 	}
 };

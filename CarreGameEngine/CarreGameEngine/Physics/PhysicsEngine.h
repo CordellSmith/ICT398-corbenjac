@@ -440,8 +440,7 @@ class PhysicsEngine
 		Camera* m_camera;
 
 			/// Player height controller
-		btScalar m_floorHeight = 10.0f;
-		btScalar m_cap;
+		btScalar m_floorHeight = 0.0f;
 
 		//DebugDraw d;
 

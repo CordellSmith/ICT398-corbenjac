@@ -240,7 +240,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 		if (body->getUserIndex() == CAMERA)
 		{
 			//body->clearForces();
-			btVector3 tempVel = body->getLinearVelocity();
+			//btVector3 tempVel = body->getLinearVelocity();
 			//body->setLinearVelocity(btVector3(0,-2,0));
 			body->setLinearVelocity(btVector3(0, 0, 0));
 		}
@@ -267,46 +267,30 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 
 			/// Terrain checking needs to be fixed csmith 17/10/18
 			// If floor height gets higher
-			//if (res.m_hitPointWorld.getY() > m_floorHeight)
-			//{
-			//	std::cout << "Up" << std::endl;
-			//	std::cout << res.m_hitPointWorld.getY() << std::endl;
+			if (res.m_hitPointWorld.getY() > m_floorHeight && res.m_collisionObject->getCollisionShape()->getName())
+			{
+				// New floor height is set to current ray hit value
+				m_floorHeight = res.m_hitPointWorld.getY();
+				std::cout << "Up" << std::endl;
+				std::cout << res.m_hitPointWorld.getY() << std::endl;
 
-			//	// Move player position up
-			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * 3000);
-			//	// New floor height is set to current ray hit value
+				// Move player position up
+				m_newForce.setY((playerObj.y() - m_playerObject.y()) * -1000);
+			}
 
-			//	std::cout << "new force " << m_newForce.getY() << std::endl;
-
-			//	if (m_newForce.getY() >= 6000)
-			//	{
-			//		m_newForce.setY(0);
-			//		m_floorHeight = res.m_hitPointWorld.getY();
-			//	}
-			//}
-			
-			// If floor height gets lower
+			//// If floor height gets lower
 			//if (res.m_hitPointWorld.getY() < m_floorHeight)
 			//{
+			//	// New floor height is set to current ray hit value
+			//	m_floorHeight = res.m_hitPointWorld.getY();
 			//	std::cout << "Down" << std::endl;
 			//	std::cout << res.m_hitPointWorld.getY() << std::endl;
 
 			//	// Move player position down
-			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * (-3000));
-			//	// New floor height is set to current ray hit value
-			//	m_floorHeight = res.m_hitPointWorld.getY();
+			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * 100000);
 			//}
 
-			//if (res.m_hitPointWorld.getY() < m_stepHeight)
-			//{
-			//	std::cout << "Moving Down" << std::endl;
-			//	btScalar stepDown = collisionBodies[j]->m_position.getY() - 300;
-			//	std::cout << "Step Down: " << stepDown << std::endl;
-			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * -stepDown);
-			//	m_stepHeight = res.m_hitPointWorld.getY();
-			//}
-
-			//std::cout << "Player Height: " << m_playerObject.y() << std::endl;
+			std::cout << "Player Height: " << m_playerObject.y() << std::endl;
 
 			// Update rigid body location for drawing
 			body->applyCentralForce(m_newForce);
@@ -417,9 +401,9 @@ btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh,
 			trimesh->addTriangle(A, B, C);
 
 			// Add points to debug draw array of btVector3s
-			//m_debugLines.push_back(A);
-			//m_debugLines.push_back(B);
-			//m_debugLines.push_back(C);
+			m_debugLines.push_back(A);
+			m_debugLines.push_back(B);
+			m_debugLines.push_back(C);
 		}
 	}
 
@@ -512,7 +496,7 @@ void PhysicsEngine::DebugDraw()
 	glEnableVertexAttribArray(0);
 
 	// Draw the lines
-	//glDrawArrays(GL_LINES, 0, sizeof(m_debugLines[0]) * m_debugLines.size());
+	glDrawArrays(GL_LINES, 0, sizeof(m_debugLines[0]) * m_debugLines.size());
 
 	// Disable the position attribute
 	glDisableVertexAttribArray(0);

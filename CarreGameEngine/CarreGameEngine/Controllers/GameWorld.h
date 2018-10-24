@@ -165,8 +165,6 @@ public:
 		*/
 	void SetAI(std::vector<ComputerAI*> allAI) { m_allAI = allAI; }
 
-	std::vector<CollisionBody*>& GetCollisionBodies() { return *m_collisionBodies; }
-
 protected:
 	/// Shader sources
 	ShaderSource m_assimpShaderSource, m_shaderSource1, m_shaderSource2, m_testShaderSource;

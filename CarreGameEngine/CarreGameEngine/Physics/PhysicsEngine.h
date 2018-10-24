@@ -113,15 +113,17 @@ struct ObjectRigidBodyData
 
 struct CollisionBody {
 
-	CollisionBody(std::string name, std::string modelName, const btVector3& position)
+	CollisionBody(std::string name, std::string modelName, const btVector3& position, ComputerAI* AI = NULL)
 	{ 
 		m_name = name;
 		m_modelName = modelName;
 		m_position = position;
+		m_AI = AI;
 	};
 	std::string m_name;
 	std::string m_modelName;
 	btVector3 m_position;
+	ComputerAI* m_AI;
 };
 
 class PhysicsEngine

@@ -97,12 +97,12 @@ AllModels=
 		{
 			filePath = "Resources/ai/Person.obj", 
 			texFilePath = "",
-			scaleX = 10.0, 
-			scaleY = 10.0, 
-			scaleZ = 10.0,
+			scaleX = 300.0, 
+			scaleY = 400.0, 
+			scaleZ = 300.0,
 			posX = 14000.0, 
-			posY = 100.0, 
-			posZ = 10100.0,
+			posY = 0.0, 
+			posZ = 10000.0,
 			Affordance = "person"
 		},
 	},

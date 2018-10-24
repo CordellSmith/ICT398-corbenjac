@@ -92,7 +92,7 @@ void GameWorld::UpdatePhysics()
 	std::multimap<std::string, IGameAsset*>::iterator itr;
 	ComputerAI* compAI;
 
-	// Loop through all the rigid bodies
+	// Loop through all the rigid bodies to update their position
 	for (size_t i = 0; i < m_collisionBodies->size(); i++)
 	{
 		glm::vec3 updPosition = glm::vec3(

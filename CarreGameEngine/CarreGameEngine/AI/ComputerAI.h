@@ -218,18 +218,15 @@ class ComputerAI
 		StateMachine<ComputerAI>* GetFSM() const { return m_computerAIFSM; }
 
 		std::vector<glm::vec3> MakeWaypoints();
+		std::vector<glm::vec3> GetWaypoints() { return m_waypoints; }
 
-		//std::vector<glm::vec3> MakeWaypoints();
+		float GetEnergy() { return m_energy; }
 
-		float& GetEnergy() { return m_energy; }
-		float& GetSpeed() { return m_speed; }
-		float& GetStrength() { return m_strength; }
-
-	private:
+	protected:
 		/// Return an instance of the current FSM state
 		StateMachine<ComputerAI>* m_computerAIFSM;
 
-		/// Current XZ position
+		/// Current XYZ position
 		glm::vec3 m_currPos;
 
 		/// Current velocity
@@ -247,7 +244,6 @@ class ComputerAI
 		/// Vector of waypoints
 		std::vector<glm::vec3> m_waypoints;
 
-	protected:
 		/// CSmith 23/10/18 Emotion Engine / Personality and Traits
 		/// Personality
 		Personality m_personality;

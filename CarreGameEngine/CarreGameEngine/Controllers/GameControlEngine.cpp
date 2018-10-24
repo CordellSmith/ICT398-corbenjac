@@ -270,25 +270,26 @@ void GameControlEngine::InitializePhysics()
 
 		if (itr->second->GetAssetName() == "person")
 		{
+			// 3 Agents
 			for (size_t i = 0; i < 3; i++)
 			{
-					// Create a new AI
-					ComputerAI* tempAI = new ComputerAI();
+					objRigidBodyPosition = btVector3(itr->second->GetPosition().x + (i * 100), itr->second->GetPosition().y, itr->second->GetPosition().z + (i * 100));
+
+					// Create a new AI with position
+					ComputerAI* AI = new ComputerAI(itr->second->GetPosition());
 					// Give it to person
-					itr->second->SetAI(tempAI);
-					// Set Position
-					objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z) * (i+10);
+					itr->second->SetAI(AI);
 
 					// Create new dynamic rigid body
 					m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons());
 
 					// Add to collision bodies vector with UNIQUE NAME
 					std::string uniqueName = "AI " + std::to_string(i + 1);
-					m_collisionBodies.push_back(new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition));
+					m_collisionBodies.push_back(new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, AI));
 					// Add to all AI
-					m_agents.push_back(tempAI);
+					m_agents.push_back(AI);
 
-					std::cout << "AI[" << i+1 << "] Loaded" << std::endl;
+					std::cout << uniqueName << " Loaded" << std::endl;
 			}
 			continue;
 		}

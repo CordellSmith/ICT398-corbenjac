@@ -23,10 +23,10 @@ ComputerAI::ComputerAI()
 	this->m_maxHealth = 100;
 	this->m_isDead = false;
 
-	//MakeWaypoints();
+	MakeWaypoints();
 }
 
-// Default constructor
+// Parameter constructor
 ComputerAI::ComputerAI(glm::vec3 pos)
 {
 	this->m_computerAIFSM = new StateMachine<ComputerAI>(this);
@@ -42,7 +42,7 @@ ComputerAI::ComputerAI(glm::vec3 pos)
 	this->m_maxHealth = 100;
 	this->m_isDead = false;
 
-	//MakeWaypoints();
+	MakeWaypoints();
 }
 
 // De-constructor
@@ -177,23 +177,14 @@ std::vector<glm::vec3> ComputerAI::MakeWaypoints()
 {
 	glm::vec3 waypoint;
 
-	//srand(time(NULL));
+	waypoint = glm::vec3(14120, 100, 7337);
+	this->m_waypoints.push_back(waypoint);
+	waypoint = glm::vec3(14120, 100, 12839);
+	this->m_waypoints.push_back(waypoint);
+	waypoint = glm::vec3(11664, 100, 12839);
+	this->m_waypoints.push_back(waypoint);
+	waypoint = glm::vec3(11664, 100, 7337);
+	this->m_waypoints.push_back(waypoint);
 
-	//for (int i = 0; i < 5; i++)
-	//{
-	//	waypoint = glm::vec3(rand() % 2000 + -1000, rand() % 2000 + -1000);
-	//	this->m_waypoints.push_back(waypoint);
-
-	//	//std::cout << waypoint << std::endl;
-	//}
-
-	waypoint = glm::vec3(5387, 0, 4262);
-	this->m_waypoints.push_back(waypoint);
-	waypoint = glm::vec3(8018, 0, 4262);
-	this->m_waypoints.push_back(waypoint);
-	waypoint = glm::vec3(8018, 0, 7155);
-	this->m_waypoints.push_back(waypoint);
-	waypoint = glm::vec3(5387, 0, 7155);
-	this->m_waypoints.push_back(waypoint);
 	return this->m_waypoints;
 }

@@ -25,7 +25,7 @@ class ComputerAI;
 
 /*****************************************Class Separator******************************************/
 
-class MoveState:public State<ComputerAI>
+class MoveState : public State<ComputerAI>
 {
 public:
 	void Enter(ComputerAI* compAI);
@@ -39,7 +39,7 @@ public:
 
 /*****************************************Class Separator******************************************/
 
-class GlobalState :public State<ComputerAI>
+class GlobalState : public State<ComputerAI>
 {
 public:
 	void Enter(ComputerAI* compAI) { std::cout << "Entering Global state!" << std::endl; };
@@ -49,7 +49,7 @@ public:
 
 /*****************************************Class Separator******************************************/
 
-class StartState :public State<ComputerAI>
+class StartState : public State<ComputerAI>
 {
 public:
 	void Enter(ComputerAI* compAI) {};
@@ -59,7 +59,7 @@ public:
 
 /*****************************************Class Separator******************************************/
 
-class IdleState :public State<ComputerAI>
+class IdleState : public State<ComputerAI>
 {
 public:
 	void Enter(ComputerAI* compAI);

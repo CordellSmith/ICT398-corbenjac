@@ -14,7 +14,7 @@ void MoveState::Enter(ComputerAI* compAI)
 	std::cout << "Entering 'Enter' state!" << std::endl;
 
 	isMoving = false;
-	m_waypoints = compAI->MakeWaypoints();
+	m_waypoints = compAI->GetWaypoints();
 	currTargetPos = m_waypoints[0];
 }
 
@@ -24,7 +24,7 @@ void MoveState::Execute(ComputerAI* compAI)
 	glm::vec3 tempVel = compAI->GetVelocity();
 	if (tempVel.x == 0 && tempVel.z == 0)
 	{
-		compAI->SetVelocity(glm::vec3(2, 0, 0));
+		compAI->SetVelocity(glm::vec3(50, 0, 0));
 
 		//srand(time(NULL));
 		int pos = rand() % m_waypoints.size();

@@ -34,13 +34,6 @@ void GameWorld::Init(Player* player, std::multimap<std::string, IGameAsset*> gam
 		itr->second->SetCamera(m_camera);
 		m_glRenderer.Prepare(itr->second->GetModel(), mainShader.VertexSource, mainShader.FragmentSource);
 	}
-
-	// AI Testing
-	//ComputerAI p;
-	//for (int i = 0; i < 1000; i++)
-	//	p.Update();
-	//getchar();
-	
 }
 
 void GameWorld::Update()
@@ -94,35 +87,40 @@ void GameWorld::UpdatePhysics()
 	// Set updated camera location
 	//m_camera->SetPosition(glm::vec3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z));
 		
-	m_physicsWorld->Simulate(GetCollisionBodies(), bt_playerPos);
+	m_physicsWorld->Simulate(*m_collisionBodies, bt_playerPos);
 	// Draw each object at the updated positions based on physics simulation
-	std::multimap<std::string, IGameAsset*>::iterator itr = m_gameAssets.begin();
+	std::multimap<std::string, IGameAsset*>::iterator itr;
 	ComputerAI* compAI;
 
-	// Loop through all the rigid bodies
-	for (int i = 0; i < GetCollisionBodies().size(); i++)
+	// Loop through all the rigid bodies to update their position
+	for (size_t i = 0; i < m_collisionBodies->size(); i++)
 	{
 		glm::vec3 updPosition = glm::vec3(
-			GetCollisionBodies()[i]->m_position.x(),
-			GetCollisionBodies()[i]->m_position.y(),
-			GetCollisionBodies()[i]->m_position.z());
+			m_collisionBodies->at(i)->m_position.x(),
+			m_collisionBodies->at(i)->m_position.y(),
+			m_collisionBodies->at(i)->m_position.z());
 
 		// Search through map using find. If found, update that objects position
-		m_gameAssets.find(GetCollisionBodies()[i]->m_name)->second->GetModel()->SetPosition(updPosition);
+		m_gameAssets.find(m_collisionBodies->at(i)->m_modelName)->second->GetModel()->SetPosition(updPosition);
 		// Search through map using find. If found, render the object
-		m_glRenderer.Render(m_gameAssets.find(GetCollisionBodies()[i]->m_name)->second->GetModel());
+		m_glRenderer.Render(m_gameAssets.find(m_collisionBodies->at(i)->m_modelName)->second->GetModel());
 	}
 
 	// Ray casting
 	glm::vec3 camDirection = m_camera->GetView() * 10000.0f;
-	btCollisionWorld::ClosestRayResultCallback rayCallback(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z));
+	btCollisionWorld::ClosestRayResultCallback rayCallback(btVector3(
+		m_camera->GetPosition().x, 
+		m_camera->GetPosition().y, 
+		m_camera->GetPosition().z), 
+		btVector3(camDirection.x, 
+			camDirection.y, 
+			camDirection.z));
 	m_physicsWorld->GetDynamicsWorld()->rayTest(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z), rayCallback);
 
-	//if (rayCallback.hasHit())
-	//{
-	//	if (rayCallback.m_collisionObject->getUserIndex() != 5)
-	//		std::cout << "HIT Object: " << rayCallback.m_collisionObject->getCollisionShape()->getShapeType() << std::endl;
-	//}
+	if (rayCallback.hasHit())
+	{
+		//std::cout << "HIT Object: " << rayCallback.m_collisionObject->getCollisionShape()->getName() << std::endl;
+	}
 
 	m_player->SetPosition(glm::vec3(bt_playerPos.getX(), bt_playerPos.getY(), bt_playerPos.getZ()));
 	//std::cout << m_player->GetPosition().x << " " << m_player->GetPosition().y << " " << m_player->GetPosition().z << std::endl;

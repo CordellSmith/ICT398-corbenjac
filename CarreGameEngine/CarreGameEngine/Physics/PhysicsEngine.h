@@ -113,13 +113,17 @@ struct ObjectRigidBodyData
 
 struct CollisionBody {
 
-	CollisionBody(std::string name, const btVector3& position) 
+	CollisionBody(std::string name, std::string modelName, const btVector3& position, ComputerAI* AI = NULL)
 	{ 
 		m_name = name;
+		m_modelName = modelName;
 		m_position = position;
+		m_AI = AI;
 	};
 	std::string m_name;
+	std::string m_modelName;
 	btVector3 m_position;
+	ComputerAI* m_AI;
 };
 
 class PhysicsEngine
@@ -440,8 +444,7 @@ class PhysicsEngine
 		Camera* m_camera;
 
 			/// Player height controller
-		btScalar m_floorHeight = 10.0f;
-		btScalar m_cap;
+		btScalar m_floorHeight = 0.0f;
 
 		//DebugDraw d;
 

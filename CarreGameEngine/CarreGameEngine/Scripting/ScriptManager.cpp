@@ -214,7 +214,7 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 	std::string texFilePath;
 
 	// Different types of data being read in
-	std::string values[9];
+	std::string values[8];
 	values[0] = "filePath";
 	values[1] = "texFilePath";
 	values[2] = "scaleX";
@@ -223,14 +223,12 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 	values[5] = "posX";
 	values[6] = "posY";
 	values[7] = "posZ";
-	values[8] = "AI";
 
 	//temp values
 	std::string temp;
 	std::vector<float> tempData;
 	glm::vec3 tempPos;
 	glm::vec3 tempScale;
-	bool isAI = false;
 
 	// Push to first table
 	lua_pushnil(Environment);
@@ -267,8 +265,6 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 					tempPos.y = lua_tonumber(Environment, -1);
 				if (temp.compare(values[7]) == 0)
 					tempPos.z = lua_tonumber(Environment, -1);
-				if (temp.compare(values[8]) == 0)
-					isAI = lua_toboolean(Environment, -1);
 
 				// Pop out of current table
 				lua_pop(Environment, 1);
@@ -295,9 +291,6 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 			// Clear for next batch of data
 			tempData.clear();
 
-			// Pass in if AI or not
-			modelData.isAI.push_back(isAI);
-
 			// Pop out of current table
 			lua_pop(Environment, 1);
 		}
@@ -308,7 +301,6 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 		modelData.modelPositions.clear();
 		modelData.modelScales.clear();
 		modelData.filePath = "";
-		modelData.isAI.clear();
 
 		// Pop out of current table
 		lua_pop(Environment, 1);

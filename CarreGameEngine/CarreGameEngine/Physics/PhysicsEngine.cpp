@@ -235,12 +235,13 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 		btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[j];
 		btRigidBody* body = btRigidBody::upcast(obj);
 		btTransform trans;
+		ComputerAI* compAI;
 
 		// Reset forces on player object prior to next step simulation
 		if (body->getUserIndex() == CAMERA)
 		{
 			//body->clearForces();
-			btVector3 tempVel = body->getLinearVelocity();
+			//btVector3 tempVel = body->getLinearVelocity();
 			//body->setLinearVelocity(btVector3(0,-2,0));
 			body->setLinearVelocity(btVector3(0, 0, 0));
 		}
@@ -254,7 +255,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 		{
 			trans = obj->getWorldTransform();
 		}
-	
+
 		// Check to see if player object
 		if (body->getUserIndex() == CAMERA)
 		{
@@ -267,43 +268,27 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 
 			/// Terrain checking needs to be fixed csmith 17/10/18
 			// If floor height gets higher
-			//if (res.m_hitPointWorld.getY() > m_floorHeight)
+			//if (res.m_hitPointWorld.getY() > m_floorHeight && res.m_collisionObject->getCollisionShape()->getName())
 			//{
+			//	// New floor height is set to current ray hit value
+			//	m_floorHeight = res.m_hitPointWorld.getY();
 			//	std::cout << "Up" << std::endl;
 			//	std::cout << res.m_hitPointWorld.getY() << std::endl;
 
 			//	// Move player position up
-			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * 3000);
-			//	// New floor height is set to current ray hit value
-
-			//	std::cout << "new force " << m_newForce.getY() << std::endl;
-
-			//	if (m_newForce.getY() >= 6000)
-			//	{
-			//		m_newForce.setY(0);
-			//		m_floorHeight = res.m_hitPointWorld.getY();
-			//	}
+			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * -1000);
 			//}
-			
-			// If floor height gets lower
+
+			//// If floor height gets lower
 			//if (res.m_hitPointWorld.getY() < m_floorHeight)
 			//{
+			//	// New floor height is set to current ray hit value
+			//	m_floorHeight = res.m_hitPointWorld.getY();
 			//	std::cout << "Down" << std::endl;
 			//	std::cout << res.m_hitPointWorld.getY() << std::endl;
 
 			//	// Move player position down
-			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * (-3000));
-			//	// New floor height is set to current ray hit value
-			//	m_floorHeight = res.m_hitPointWorld.getY();
-			//}
-
-			//if (res.m_hitPointWorld.getY() < m_stepHeight)
-			//{
-			//	std::cout << "Moving Down" << std::endl;
-			//	btScalar stepDown = collisionBodies[j]->m_position.getY() - 300;
-			//	std::cout << "Step Down: " << stepDown << std::endl;
-			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * -stepDown);
-			//	m_stepHeight = res.m_hitPointWorld.getY();
+			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * 100000);
 			//}
 
 			//std::cout << "Player Height: " << m_playerObject.y() << std::endl;
@@ -315,11 +300,32 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 		}
 		else
 		{
-			// Update object positions for drawing
-			collisionBodies[j]->m_position.setX(trans.getOrigin().getX());
-			collisionBodies[j]->m_position.setY(trans.getOrigin().getY());
-			collisionBodies[j]->m_position.setZ(trans.getOrigin().getZ());
-		}	
+			// Collision body has AI
+			if (collisionBodies[j]->m_AI != NULL)
+			{
+				// Update state
+				collisionBodies[j]->m_AI->Update();
+
+				// Update the physics collision object position
+				trans.getOrigin().setX(collisionBodies[j]->m_AI->GetPosition().x);
+				trans.getOrigin().setY(collisionBodies[j]->m_AI->GetPosition().y);
+				trans.getOrigin().setZ(collisionBodies[j]->m_AI->GetPosition().z);
+
+				// Update the object positions for drawing
+				collisionBodies[j]->m_position.setX(collisionBodies[j]->m_AI->GetPosition().x);
+				collisionBodies[j]->m_position.setY(collisionBodies[j]->m_AI->GetPosition().y);
+				collisionBodies[j]->m_position.setZ(collisionBodies[j]->m_AI->GetPosition().z);
+
+				obj->setWorldTransform(trans);
+			}
+			else
+			{
+				// Update non AI object positions for drawing
+				collisionBodies[j]->m_position.setX(trans.getOrigin().getX());
+				collisionBodies[j]->m_position.setY(trans.getOrigin().getY());
+				collisionBodies[j]->m_position.setZ(trans.getOrigin().getZ());
+			}
+		}
 	}
 	//std::cout << "/n/n/n/n/n" << std::endl;
 }
@@ -417,9 +423,9 @@ btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh,
 			trimesh->addTriangle(A, B, C);
 
 			// Add points to debug draw array of btVector3s
-			//m_debugLines.push_back(A);
-			//m_debugLines.push_back(B);
-			//m_debugLines.push_back(C);
+			m_debugLines.push_back(A);
+			m_debugLines.push_back(B);
+			m_debugLines.push_back(C);
 		}
 	}
 
@@ -512,7 +518,7 @@ void PhysicsEngine::DebugDraw()
 	glEnableVertexAttribArray(0);
 
 	// Draw the lines
-	//glDrawArrays(GL_LINES, 0, sizeof(m_debugLines[0]) * m_debugLines.size());
+	glDrawArrays(GL_LINES, 0, sizeof(m_debugLines[0]) * m_debugLines.size());
 
 	// Disable the position attribute
 	glDisableVertexAttribArray(0);

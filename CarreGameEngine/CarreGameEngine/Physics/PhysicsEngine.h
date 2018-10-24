@@ -113,12 +113,14 @@ struct ObjectRigidBodyData
 
 struct CollisionBody {
 
-	CollisionBody(std::string name, const btVector3& position) 
+	CollisionBody(std::string name, std::string modelName, const btVector3& position)
 	{ 
 		m_name = name;
+		m_modelName = modelName;
 		m_position = position;
 	};
 	std::string m_name;
+	std::string m_modelName;
 	btVector3 m_position;
 };
 

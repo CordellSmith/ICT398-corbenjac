@@ -1,14 +1,15 @@
 #include "NPC.h"
 
-NPC::NPC(std::string filePath) : m_filePath(filePath)
+NPC::NPC(std::string assetName)
 {
 	m_assetType = ASS_NPC;
-	LoadFromFilePath(filePath);
+	m_assetName = assetName;
+	m_model = new Model();
 }
 
 void NPC::LoadFromFilePath(std::string filePath)
 {
-	//m_model->LoadModel(filePath);
+	m_model->LoadModel(filePath);
 }
 
 const void NPC::Destroy()

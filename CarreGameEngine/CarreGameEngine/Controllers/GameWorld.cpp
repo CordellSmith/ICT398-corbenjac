@@ -34,13 +34,6 @@ void GameWorld::Init(Player* player, std::multimap<std::string, IGameAsset*> gam
 		itr->second->SetCamera(m_camera);
 		m_glRenderer.Prepare(itr->second->GetModel(), mainShader.VertexSource, mainShader.FragmentSource);
 	}
-
-	// AI Testing
-	//ComputerAI p;
-	//for (int i = 0; i < 1000; i++)
-	//	p.Update();
-	//getchar();
-	
 }
 
 void GameWorld::Update()
@@ -96,7 +89,7 @@ void GameWorld::UpdatePhysics()
 		
 	m_physicsWorld->Simulate(*m_collisionBodies, bt_playerPos);
 	// Draw each object at the updated positions based on physics simulation
-	std::multimap<std::string, IGameAsset*>::iterator itr = m_gameAssets.begin();
+	std::multimap<std::string, IGameAsset*>::iterator itr;
 	ComputerAI* compAI;
 
 	// Loop through all the rigid bodies
@@ -108,9 +101,9 @@ void GameWorld::UpdatePhysics()
 			m_collisionBodies->at(i)->m_position.z());
 
 		// Search through map using find. If found, update that objects position
-		m_gameAssets.find(m_collisionBodies->at(i)->m_name)->second->GetModel()->SetPosition(updPosition);
+		m_gameAssets.find(m_collisionBodies->at(i)->m_modelName)->second->GetModel()->SetPosition(updPosition);
 		// Search through map using find. If found, render the object
-		m_glRenderer.Render(m_gameAssets.find(m_collisionBodies->at(i)->m_name)->second->GetModel());
+		m_glRenderer.Render(m_gameAssets.find(m_collisionBodies->at(i)->m_modelName)->second->GetModel());
 	}
 
 	// Ray casting

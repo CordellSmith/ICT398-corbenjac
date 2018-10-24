@@ -21,10 +21,10 @@ void MoveState::Enter(ComputerAI* compAI)
 void MoveState::Execute(ComputerAI* compAI)
 {
 	// If no velocity, set to walking and pick a waypoint
-	Vector2 tempVel = compAI->GetVelocity();
+	glm::vec3 tempVel = compAI->GetVelocity();
 	if (tempVel.x == 0 && tempVel.z == 0)
 	{
-		compAI->SetVelocity(Vector2(2, 0));
+		compAI->SetVelocity(glm::vec3(2, 0, 0));
 
 		//srand(time(NULL));
 		int pos = rand() % m_waypoints.size();
@@ -64,7 +64,7 @@ void StartState::Execute(ComputerAI* compAI)
 
 void IdleState::Enter(ComputerAI* compAI)
 {
-	compAI->SetVelocity(0.0);
+	compAI->SetVelocity(glm::vec3(0));
 }
 
 void IdleState::Execute(ComputerAI* compAI)

@@ -163,7 +163,7 @@ public:
 		* @param std::vector<ComputerAI*> allAI
 		* @return void
 		*/
-	void SetAI(std::vector<ComputerAI*> allAI) { m_allAI = allAI; }
+	void SetAI(std::vector<ComputerAI*> allAI) { m_agents = allAI; }
 
 protected:
 	/// Shader sources
@@ -182,7 +182,7 @@ protected:
 
 	std::vector<Bruteforce*> m_terrains;
 
-	std::vector<ComputerAI*> m_allAI;
+	std::vector<ComputerAI*> m_agents;
 
 	Player* m_player;
 	float s = 0.01;

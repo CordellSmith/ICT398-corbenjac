@@ -33,8 +33,8 @@ public:
 	void Exit(ComputerAI* compAI);
 
 	bool isMoving;
-	std::vector<Vector2> m_waypoints;
-	Vector2 currTargetPos;
+	std::vector<glm::vec3> m_waypoints;
+	glm::vec3 currTargetPos;
 };
 
 /*****************************************Class Separator******************************************/
@@ -67,8 +67,8 @@ public:
 	void Exit(ComputerAI* compAI) {};
 
 	bool isMoving;
-	std::vector<Vector2> m_waypoints;
-	Vector2 currTargetPos;
+	std::vector<glm::vec3> m_waypoints;
+	glm::vec3 currTargetPos;
 };
 
 /*****************************************Class Separator******************************************/

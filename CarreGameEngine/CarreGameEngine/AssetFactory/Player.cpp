@@ -79,9 +79,5 @@ void Player::ThrowBall(float time, Camera* cam)
 	sphere->setLinearVelocity(btVector3(look.x, look.y, look.z));
 
 	// Add to our array of collision bodies
-	m_collisionBodies->push_back(new CollisionBody("ball", camPos));
-
-	// Testing
-	std::cout << "THROW" << std::endl;
-	//std::cout << "Collision Body Pos Size: " << m_collisionBodies->size() << std::endl;
+	m_collisionBodies->push_back(new CollisionBody("projectile", "ball", camPos));
 }

@@ -166,16 +166,16 @@ class ComputerAI
 			*
 			* @return void
 			*/
-		void SetVelocity(Vector2 vel);
+		void SetVelocity(glm::vec3 vel);
 		
 			/**
 			* @brief Return velocity
 			*
 			* Returns the current velocity
 			*
-			* @return Vector2 - m_currVel
+			* @return glm::vec3 - m_currVel
 			*/
-		Vector2 GetVelocity();
+		glm::vec3 GetVelocity();
 
 			/**
 			* @brief Set position
@@ -186,7 +186,7 @@ class ComputerAI
 			*
 			* @return void
 			*/
-		void SetPosition(Vector2 pos);
+		void SetPosition(glm::vec3 pos);
 		
 			/**
 			* @brief Return position
@@ -195,7 +195,7 @@ class ComputerAI
 			*
 			* @return Vector2 - m_currPos
 			*/
-		Vector2 GetPosition();
+		glm::vec3 GetPosition();
 
 			/**
 			* @brief Move to a location
@@ -206,7 +206,7 @@ class ComputerAI
 			*
 			* @return bool - True if at position, false otherwise
 			*/
-		bool MoveTo(ComputerAI* compAI, Vector2 targetPos);
+		bool MoveTo(ComputerAI* compAI, glm::vec3 targetPos);
 
 			/**
 			* @brief Return FSM
@@ -217,9 +217,9 @@ class ComputerAI
 			*/
 		StateMachine<ComputerAI>* GetFSM() const { return m_computerAIFSM; }
 
-		std::vector<Vector2> MakeWaypoints();
+		std::vector<glm::vec3> MakeWaypoints();
 
-		//std::vector<Vector2> MakeWaypoints();
+		//std::vector<glm::vec3> MakeWaypoints();
 
 		float& GetEnergy() { return m_energy; }
 		float& GetSpeed() { return m_speed; }
@@ -230,10 +230,10 @@ class ComputerAI
 		StateMachine<ComputerAI>* m_computerAIFSM;
 
 		/// Current XZ position
-		Vector2 m_currPos;
+		glm::vec3 m_currPos;
 
 		/// Current velocity
-		Vector2 m_currVel;
+		glm::vec3 m_currVel;
 
 		/// Current health points
 		int m_health;
@@ -245,7 +245,7 @@ class ComputerAI
 		bool m_isDead;
 
 		/// Vector of waypoints
-		std::vector<Vector2> m_waypoints;
+		std::vector<glm::vec3> m_waypoints;
 
 	protected:
 		/// CSmith 23/10/18 Emotion Engine / Personality and Traits

@@ -127,30 +127,34 @@ void GameControlEngine::Initialize()
 				assetPosXYZ[j] = (*itModels).second.modelPositions[k][j];
 			}
 
-			// Create name asset data and add to asset map
-			modelAsset = m_assetFactory->CreateAsset(ASS_OBJECT, (*itModels).first);
-			modelAsset->LoadFromFilePath((*itModels).second.filePath);
-
-			// Not sure why this is here
-			if ((*itModels).first != "lecTheatre")
+			
+			if ((*itModels).first != "person")
 			{
-				modelAsset->AddTexutre(TextureManager::Instance().GetTextureID((*itModels).second.texFilePath), (*itModels).second.texFilePath);
+				// Create name asset data and add to asset map
+				modelAsset = m_assetFactory->CreateAsset(ASS_OBJECT, (*itModels).first);
+				modelAsset->LoadFromFilePath((*itModels).second.filePath);
+
+				// Not sure why this is here
+				if ((*itModels).first != "lecTheatre")
+				{
+					modelAsset->AddTexutre(TextureManager::Instance().GetTextureID((*itModels).second.texFilePath), (*itModels).second.texFilePath);
+				}
+				modelAsset->SetScale(glm::vec3(assetScaleXYZ[0], assetScaleXYZ[1], assetScaleXYZ[2]));
+				modelAsset->SetPosition(glm::vec3(assetPosXYZ[0], assetPosXYZ[1], assetPosXYZ[2]));
 			}
-			modelAsset->SetScale(glm::vec3(assetScaleXYZ[0], assetScaleXYZ[1], assetScaleXYZ[2]));
-			modelAsset->SetPosition(glm::vec3(assetPosXYZ[0], assetPosXYZ[1], assetPosXYZ[2]));
+			else
+			{
+				// Creates NPC object for person
+				modelAsset = m_assetFactory->CreateAsset(ASS_NPC, (*itModels).first);
+				modelAsset->LoadFromFilePath((*itModels).second.filePath);
+				modelAsset->AddTexutre(TextureManager::Instance().GetTextureID((*itModels).second.texFilePath), (*itModels).second.texFilePath);
+				modelAsset->SetScale(glm::vec3(assetScaleXYZ[0], assetScaleXYZ[1], assetScaleXYZ[2]));
+				modelAsset->SetPosition(glm::vec3(assetPosXYZ[0], assetPosXYZ[1], assetPosXYZ[2]));
+			}
+
 			/// CSmith 
 			///	20/10/18 Dimensions of models calculated here for bouding box
 			modelAsset->CalculateDimensions();
-
-			// If AI model, make AI for it
-			if ((*itModels).second.isAI[k])
-			{
-				// Create new computerAI and push to vector storing them
-				modelAI = new ComputerAI(glm::vec3((*itModels).second.modelPositions[k][0], (*itModels).second.modelPositions[k][1], (*itModels).second.modelPositions[k][2]));
-				m_allAI.push_back(modelAI);
-				modelAsset->SetAI(modelAI);
-				std::cout << "Model AI loaded" << std::endl;
-			}
 
 			m_assetFactory->AddAsset(modelAsset);
 		}
@@ -193,7 +197,7 @@ void GameControlEngine::Initialize()
 	// Initialize the game world, pass in terrain, assets and physics engine *** Can be reworked *** 
 	m_gameWorld->Init(m_player, m_assetFactory->GetAssets());
 	m_gameWorld->SetTerrains(m_terrains);
-	m_gameWorld->SetAI(m_allAI);
+	m_gameWorld->SetAI(m_agents);
 	m_gameWorld->SetPhysicsWorld(m_physicsWorld, m_collisionBodies);
 }
 
@@ -227,7 +231,7 @@ void GameControlEngine::InitializePhysics()
 			// Create camera capsule shape to collide with objects
 			btVector3 bt_cameraPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
 			m_physicsWorld->CreatePlayerControlledRigidBody(bt_cameraPos);
-			m_collisionBodies.push_back(new CollisionBody("player", bt_cameraPos));		
+			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), bt_cameraPos));
 			continue;
 		}
 		
@@ -246,7 +250,7 @@ void GameControlEngine::InitializePhysics()
 			// Static Triangle mesh of LBLT is created here!
 			// Debug draw is also used here
 			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, false);
-			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
+			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition));
 			// This has to be called after the mesh data is passed in
 			m_physicsWorld->InitDebugDraw();
 			continue;
@@ -260,26 +264,34 @@ void GameControlEngine::InitializePhysics()
 			m_physicsWorld->AddSphere(110.0, objRigidBodyPosition);
 			// Add to our array of collision bodies
 			//m_collisionBodyPos.push_back(objRigidBodyPosition);
-			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
+			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition));
 			continue;
 		}
 
-		if (itr->second->GetAssetName() == "chair")
+		if (itr->second->GetAssetName() == "person")
 		{
-			// Creates 5 chairs (testing)
-			for (int i = 0; i < 5; i++)
+			for (size_t i = 0; i < 3; i++)
 			{
-				objRigidBodyPosition = btVector3(
-					itr->second->GetPosition().x + 100 * i, 
-					itr->second->GetPosition().y + 100 * i, 
-					itr->second->GetPosition().z + 100 * i
-				);
-				m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons());
-				m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
+					// Create a new AI
+					ComputerAI* tempAI = new ComputerAI();
+					// Give it to person
+					itr->second->SetAI(tempAI);
+					// Set Position
+					objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z) * (i+10);
+
+					// Create new dynamic rigid body
+					m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons());
+
+					// Add to collision bodies vector with UNIQUE NAME
+					std::string uniqueName = "AI " + std::to_string(i + 1);
+					m_collisionBodies.push_back(new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition));
+					// Add to all AI
+					m_agents.push_back(tempAI);
+
+					std::cout << "AI[" << i+1 << "] Loaded" << std::endl;
 			}
 			continue;
 		}
-		
 		// Adjust rotation for table, orientation is not correct
 		//if (itr->first == "table")
 		//{
@@ -292,7 +304,7 @@ void GameControlEngine::InitializePhysics()
 		///			20/10/18 -- CreateDynamicRigidBody() now takes the models dimensions to create a more accurate size bounding box
 		objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons());
-		m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
+		m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition));
 	}
 
 	// Parse physics data to player

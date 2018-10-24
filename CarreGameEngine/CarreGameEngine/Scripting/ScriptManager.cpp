@@ -245,6 +245,7 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 		lua_pushnil(Environment);
 		while (lua_next(Environment, -2) != 0)
 		{
+			std::cout << "loop" << std::endl;
 			// Push to next table
 			lua_pushnil(Environment);
 			while (lua_next(Environment, -2) != 0)
@@ -307,7 +308,8 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 		// Clear vectors of any data before adding more, and reset string
 		modelData.modelPositions.clear();
 		modelData.modelScales.clear();
-		modelData.filePath = "";
+		modelData.filePath.clear();
+		modelData.texFilePath.clear();
 		modelData.isAI.clear();
 
 		// Pop out of current table

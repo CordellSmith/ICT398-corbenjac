@@ -142,6 +142,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\Affordance\Affordance.h" />
+    <ClInclude Include="AI\Emotions\Emotion.h" />
+    <ClInclude Include="AI\Emotions\EmotionalState.h" />
     <ClInclude Include="AssetFactory\Bruteforce.h" />
     <ClInclude Include="AssetFactory\GameAssetFactory.h" />
     <ClInclude Include="AssetFactory\Mesh.h" />
@@ -175,6 +177,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AI\Affordance\Affordance.cpp" />
+    <ClCompile Include="AI\Emotions\Emotion.cpp" />
+    <ClCompile Include="AI\Emotions\EmotionalState.cpp" />
     <ClCompile Include="AssetFactory\Bruteforce.cpp" />
     <ClCompile Include="AssetFactory\Entity.cpp" />
     <ClCompile Include="AssetFactory\GameAssetFactory.cpp" />

@@ -60,27 +60,7 @@ struct Personality
 // Will need to be changed to a class
 struct Emotions
 {
-	// range [1-100]
-	float m_joy = 1.0f;
-	float m_sad = 1.0f;
-	float m_anger = 1.0f;
-	float m_fear = 1.0f;
-	float m_trust = 1.0f;
-	float m_disgust = 1.0f;
-
-	bool isJoy, isSad;
-	bool isAnger, isFear;
-	bool isTrust, isDisgusted;
-
-	/*
-		Emotions values change
-		Rules should determine what state the AI is in (read from script)
-			Change state
-			eg. If m_joy > 70 && m_sad < 10
-					change state -> happy;
-
-			Happy state -> AI moves around much faster ie. AIspeed * 2
-	*/
+	
 };
 
 class ComputerAI

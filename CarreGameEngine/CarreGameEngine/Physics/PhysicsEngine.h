@@ -41,35 +41,94 @@
 *
 * @date 31/05/2018
 * @version 2.0	Final version for submission.
+*
+*
+* @date 15/10/2018
+* @author Cordell Smith
+* @version 2.1 Adding debug draw functionality for a mesh
+*
+* @date 16/10/2018
+* @author Jack Matters
+* @version 2.2	Adding all my current code for self coded physics. Currently have collision detection working, physics involved in collision partially working.
+*				Commented everything out as not fully ready to implement yet.
 */
 
 #ifndef PHYSICSENGINE_H
 #define PHYSICSENGINE_H
 
 // Includes
-#include "btBulletDynamicsCommon.h"
-#include "BulletCollision\CollisionShapes\btHeightfieldTerrainShape.h"
 #include <vector>
 #include <fstream>	// Used for testing of heightfield terrain shape (will be removed later)
-#include "LinearMath\btIDebugDraw.h"
+#include "btBulletDynamicsCommon.h"
+#include "BulletCollision\CollisionShapes\btHeightfieldTerrainShape.h"
 #include "..\Common\Vertex3.h"
+#include "..\Common\MyMath.h"
 #include "..\AssetFactory\Model.h"
+#include "DebugDraw.h"
+#include <cmath>
+#include "../../Dependencies/GLM/include/GLM/vec3.hpp"
+
+
+/*************************************NEW**************************************/
+///  Struct of point mass data for an object (for determining cente of gravity and other info)
+struct PointMass
+{
+	float mass = 0;
+	glm::vec3 actualPosition;
+	glm::vec3 relativePosition;
+};
+
+/// Struct containing useful data for physics sim for an object type
+struct ObjectTypePhysicsData
+{
+	std::string objType = "";
+	float totalMass = 0;
+	glm::vec3 combinedCG;
+	glm::vec3 firstMoment;
+	glm::vec3 secondMoment; // Inertia
+};
+
+/// Struct containing useful data for physics sim for an object type
+struct ObjectRigidBodyData
+{
+	std::string objType = "";
+	glm::vec3 currLinearVel;
+	glm::vec3 prevLinearVel;
+	glm::vec3 currAngularVel;
+	glm::vec3 prevAngularVel;
+	glm::vec3 currForce;
+	glm::vec3 prevForce;
+	glm::vec3 currPos;
+	glm::vec3 prevPos;
+	Quaternion currRot;
+	Quaternion prevRot;
+	glm::vec3 currDerivs;
+	glm::vec3 prevDerivs;
+	glm::vec3 torque;
+	glm::vec3 angle;
+	glm::vec3 accel;
+	glm::vec3 angularMomentum;
+};
+/*************************************NEW**************************************/
 
 struct CollisionBody {
 
-	CollisionBody(std::string name, const btVector3& position) 
+	CollisionBody(std::string name, std::string modelName, const btVector3& position, ComputerAI* AI = NULL)
 	{ 
 		m_name = name;
+		m_modelName = modelName;
 		m_position = position;
+		m_AI = AI;
 	};
 	std::string m_name;
+	std::string m_modelName;
 	btVector3 m_position;
+	ComputerAI* m_AI;
 };
 
 class PhysicsEngine
 {
 	public:
-
 			/**
 			* @brief Enum for the different types of rigid bodies created.
 			*
@@ -81,7 +140,8 @@ class PhysicsEngine
 			BOX = 2,			/**< Box shape rigid body */
 			SPHERE = 3,			/**< Sphere shape rigid body */
 			HEIGHTFIELD = 4,	/**< Heightfield terrain shape rigid body */
-			PLANE = 5			/**< Plane shape rigid body */
+			PLANE = 5,			/**< Plane shape rigid body */
+			MESH = 6			/**< Mesh collider */
 		}RIGID_BODY_TYPE;
 
 			/**
@@ -114,6 +174,7 @@ class PhysicsEngine
 			* @return void
 			*/
 		void CreateStaticRigidBody(btVector3 &pos);
+		//void CreateStaticRigidBody(glm::vec3 &pos);
 
 			/**
 			* @brief Creates dynamic rigid body
@@ -121,11 +182,12 @@ class PhysicsEngine
 			* This is a test function that creates dynamic rigid bodies for testing purposes
 			*
 			* @param pos - Position to create dynamic body
+			* @param dimensions - Dimensions of the bounding shape to be created
 			*
 			* @return void
 			*/
-		void CreateDynamicRigidBody(btVector3 &pos);
-
+		void CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions);
+		//void CreateDynamicRigidBody(glm::vec3 &pos, std::string objType);
 			/**
 			* @brief Creates dynamic rigid body for a player controlled object
 			*
@@ -148,6 +210,7 @@ class PhysicsEngine
 			* @return void
 			*/
 		void Simulate(std::vector<CollisionBody*>& collisionBodies, btVector3 &playerObj);
+		//void Simulate(std::vector<glm::vec3> &bodyPos, std::vector<Quaternion> &bodyRot);
 
 			/*
 			* @brief Public function that calls different private functions for creation of rigid bodies
@@ -181,11 +244,140 @@ class PhysicsEngine
 			*/
 		void ActivateAllObjects();
 
-		btCollisionObject* TriangleMeshTest(std::vector<Mesh> &modelMesh, btVector3 &pos, bool useQuantizedBvhTree, bool collision);
+		btCollisionObject* TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuantizedBvhTree, bool collision);
 
 		btDiscreteDynamicsWorld* GetDynamicsWorld() { return m_dynamicsWorld; };
 
 		btAlignedObjectArray<btCollisionShape*>& GetCollisionShapes() { return m_collisionShapes; };
+
+			/**
+			* @brief Initialises the debug draw
+			*
+			*
+			*
+			* @return void
+			*/
+		void InitDebugDraw();
+
+			/**
+			* @brief Sets up the debug draw lines to be rendered
+			*
+			* 
+			*
+			* @return void
+			*/
+		void DebugDraw();
+
+		Shader* GetDebugShader() { return m_debugShader; };
+
+		void SetCamera(Camera* camera) { m_camera = camera; }
+
+		void ParseModel(Model* model);
+
+		unsigned int VAO, VBO;
+		
+		/*************************************NEW**************************************/
+		/**
+		* @brief Initialize all PointMass for an object
+		*
+		* Initialize all point mass data points within an object to determine the Cog and inertia of an object
+		*
+		* @param pointMass - Pointer to the PointMass data to initialize
+		* @param mass - Mass of object
+		*
+		* @return void
+		*/
+		//void InitializePointMass(std::vector<PointMass> &pointMassVect, btScalar mass, glm::vec3 size);
+
+		/**
+		* @brief Calculate center of gravity
+		*
+		* Calculate an objects center of gravity using its PointMass data
+		*
+		* @param pointMass - Pointer to the PointMass data of object
+		* @param numElements - Number of PointMass data points
+		*
+		* @return void
+		*/
+		//void CalcObjectCenterOfGravity(std::vector<PointMass> &pointMassVect, ObjectTypePhysicsData* &newObject);
+
+		/**
+		* @brief Calculate second moment of mass
+		*
+		* Calculate the second moment of mass for an object
+		*
+		* @return void
+		*/
+		//void CalcObjectSecondMoment(ObjectTypePhysicsData* &objectData, glm::vec3 size);
+
+		/**
+		* @brief Calculate PointMass relative positions
+		*
+		* Calculate the relative positions for each PointMass data point in an object
+		*
+		* @param pointMass - Pointer to the pointMass data of object
+		* @param numElements - Number of PointMass data points
+		*
+		* @return void
+		*/
+		//void CalcPointMassRelativePositions(std::vector<PointMass> &pointMassVect, ObjectTypePhysicsData* &objectData);
+		/*************************************NEW**************************************/
+
+	private:
+		/*************************************NEW**************************************/
+		/*
+		/// Collision world
+		btCollisionWorld* m_collisionWorld;
+
+		/// Coefficient of restitution (conservation/loss of kinetic energy)
+		btScalar m_epsilon;
+
+		/// vector of different object types and physics data associated with them
+		std::vector<ObjectTypePhysicsData*> m_ObjectTypePhysicsData;
+
+		/// Vector of each rigid body being simulated
+		std::vector<ObjectRigidBodyData*> m_objectRigidBodyData;
+
+
+			/// Normal vector at collision point
+		glm::vec3 m_normal;
+
+			/// Linear impulse of collision
+		glm::vec3 m_impulse;
+
+		int count;
+
+		float delta_t; // Physics time step, seconds
+		float game_time; // Current game time, seconds
+		float prev_game_time; // Game time at previous frame
+		float physics_lag_time; // Time since last update
+
+		/**
+			* @brief Normalize a vec3
+			*
+			* Normalize the values of a glm::vec3
+			*
+			* @param vec - The vec3 to normalize
+			*
+			* @return glm::vec3
+			*/
+		//glm::vec3 Normalize(glm::vec3 vec);
+
+		/**
+		* @brief Dot product of two vec3
+		*
+		* Calculate the dot product of two glm::vec3
+		*
+		* @param one - The first vec3
+		* @param two - The second vec3
+		*
+		* @return btScalar
+		*/
+		//btScalar DotProduct(glm::vec3 one, glm::vec3 two);
+
+		//glm::vec3 CrossProduct(glm::vec3 first, glm::vec3 second);
+		
+		/*************************************NEW**************************************/
 
 	protected:
 
@@ -239,6 +431,22 @@ class PhysicsEngine
 
 			/// Holds all heightfield data (used for testing)
 		unsigned char *m_terrainData;
+
+			/// Debug draw
+		std::vector<btVector3> m_debugLines;
+
+		Shader* m_debugShader;
+
+		// Used to alter the scale, position, rotation of the debug draw (lines)
+		glm::mat4 m_modelMatrix;
+		glm::vec3 m_scale;
+
+		Camera* m_camera;
+
+			/// Player height controller
+		btScalar m_floorHeight = 0.0f;
+
+		//DebugDraw d;
 
 		//btIDebugDraw test;
 };

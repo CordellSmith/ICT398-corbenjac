@@ -232,7 +232,7 @@ public:
 
 	void ParsePhysics(PhysicsEngine& physicsWorld, std::vector<CollisionBody*>& collisionBodies)
 	{ 
-		m_physicsWorld = physicsWorld;
+		m_physicsWorld = &physicsWorld;
 		m_collisionBodies = &collisionBodies;
 	}
 
@@ -247,6 +247,6 @@ protected:
 	float m_moveSpeed = 2;
 	float m_turnSpeed = 0.5;
 
-	PhysicsEngine m_physicsWorld;
+	PhysicsEngine* m_physicsWorld;
 	std::vector<CollisionBody*>* m_collisionBodies;
 };

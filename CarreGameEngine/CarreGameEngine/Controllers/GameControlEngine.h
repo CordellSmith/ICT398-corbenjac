@@ -17,6 +17,7 @@
 #include "..\AssetFactory\GameAssetFactory.h"
 #include "..\AssetFactory\Player.h"
 #include "..\Renderer\OpenGl.h"
+
 //#include "..\headers\ComputerAI.h"
 
 	/*
@@ -192,9 +193,13 @@ protected:
 	/// Map containing all heightmaps data
 	std::unordered_map<std::string, HeightmapsData> m_allHeightmapsData;
 
-	/// Vector holding all AI
-	std::vector<ComputerAI*> m_allAI;
+	/// Vector holding all AI (intelligent agents)
+	std::vector<ComputerAI*> m_agents;
 
 	/// Player object
 	Player* m_player;
+
+	/// Affordance lookup table
+	/// Look to Typedef this lol
+	std::unordered_map<std::string, std::vector<std::pair<std::string, float>>> m_affordanceTable;
 };

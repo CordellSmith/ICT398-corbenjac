@@ -214,7 +214,7 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 	std::string texFilePath;
 
 	// Different types of data being read in
-	std::string values[9];
+	std::string values[8];
 	values[0] = "filePath";
 	values[1] = "texFilePath";
 	values[2] = "scaleX";
@@ -223,14 +223,12 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 	values[5] = "posX";
 	values[6] = "posY";
 	values[7] = "posZ";
-	values[8] = "AI";
 
 	//temp values
 	std::string temp;
 	std::vector<float> tempData;
 	glm::vec3 tempPos;
 	glm::vec3 tempScale;
-	bool isAI = false;
 
 	// Push to first table
 	lua_pushnil(Environment);
@@ -268,8 +266,6 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 					tempPos.y = lua_tonumber(Environment, -1);
 				if (temp.compare(values[7]) == 0)
 					tempPos.z = lua_tonumber(Environment, -1);
-				if (temp.compare(values[8]) == 0)
-					isAI = lua_toboolean(Environment, -1);
 
 				// Pop out of current table
 				lua_pop(Environment, 1);
@@ -296,9 +292,6 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 			// Clear for next batch of data
 			tempData.clear();
 
-			// Pass in if AI or not
-			modelData.isAI.push_back(isAI);
-
 			// Pop out of current table
 			lua_pop(Environment, 1);
 		}
@@ -308,9 +301,7 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 		// Clear vectors of any data before adding more, and reset string
 		modelData.modelPositions.clear();
 		modelData.modelScales.clear();
-		modelData.filePath.clear();
-		modelData.texFilePath.clear();
-		modelData.isAI.clear();
+		modelData.filePath = "";
 
 		// Pop out of current table
 		lua_pop(Environment, 1);
@@ -446,6 +437,116 @@ bool ScriptManager::LoadHeightmapsInitLua(std::unordered_map<std::string, Height
 			// Pop out of current table
 			lua_pop(Environment, 1);
 		}
+		// Pop out of current table
+		lua_pop(Environment, 1);
+	}
+
+	// Close environment
+	lua_close(Environment);
+
+	// Return true for successful loading and reading
+	return true;
+}
+
+bool ScriptManager::LoadAffordanceTable(std::unordered_map<std::string, std::vector<std::pair<std::string, float>>>& affordanceTable)
+{
+	// Create lua state
+	lua_State* Environment = lua_open();
+	if (Environment == NULL)
+	{
+		// Show error and exit program
+		std::cout << "Error Initializing lua.." << std::endl;
+		getchar();
+		exit(0);
+	}
+
+	// Load standard lua library functions
+	luaL_openlibs(Environment);
+
+	// Load and run script
+	if (luaL_dofile(Environment, "Resources/scripts/AffordanceInit.lua"))
+	{
+		std::cout << "Error opening file.." << std::endl;
+		getchar();
+		return false;
+	}
+
+	// Read from script
+	lua_settop(Environment, 0);
+	lua_getglobal(Environment, "AffordanceTable");
+
+	// Name of current model
+	std::string modelName;
+
+	// Different types of data being read in
+	std::string values[3];
+	values[0] = "canSit";
+	values[1] = "canStand";
+	values[2] = "canKick";
+
+	//temp values
+	std::string temp;
+	std::vector<std::pair<std::string, float>> tempData;
+	float tempSit, tempStand, tempKick;
+	std::pair<std::string, float> tempAffValuePair;
+	std::pair<std::string, std::vector<std::pair<std::string, float>>> tempAffObj;
+
+	// Push to first table
+	lua_pushnil(Environment);
+
+	// Keep reading while there is data in table
+	while (lua_next(Environment, -2) != 0)
+	{
+		// Get current model name being read in
+		modelName = lua_tostring(Environment, -2);
+
+		// Push to next table
+		lua_pushnil(Environment);
+		while (lua_next(Environment, -2) != 0)
+		{
+			// Push to next table
+			lua_pushnil(Environment);
+			while (lua_next(Environment, -2) != 0)
+			{
+				// Load data into correct variable
+				temp = lua_tostring(Environment, -2);
+				if (temp.compare(values[0]) == 0)
+					tempSit = lua_tonumber(Environment, -1);
+				if (temp.compare(values[1]) == 0)
+					tempStand = lua_tonumber(Environment, -1);
+				if (temp.compare(values[2]) == 0)
+					tempKick = lua_tonumber(Environment, -1);
+
+				// Pop out of current table
+				lua_pop(Environment, 1);
+			}
+			// Create 3 different pairs with string: affordance name to float: affordance value
+			// canSit affordance
+			tempAffValuePair = std::pair<std::string, float>(values[0], tempSit);
+			// Add to vector
+			tempData.push_back(tempAffValuePair);
+			// canStand affordance
+			tempAffValuePair = std::pair<std::string, float>(values[1], tempStand);
+			// Add to vector
+			tempData.push_back(tempAffValuePair);
+			// canKick affordance
+			tempAffValuePair = std::pair<std::string, float>(values[2], tempKick);
+			// Add to vector
+			tempData.push_back(tempAffValuePair);
+
+			// Highest level of structure is creating the pair with string: object name to vector of pairs: affordance data
+			tempAffObj = std::pair<std::string, std::vector<std::pair<std::string, float>>>(modelName, tempData);
+
+			// Add to affordanceTable data structure that is read in by ref
+			affordanceTable.insert(tempAffObj);
+
+			// Clear for next batch of data
+			tempData.clear();
+
+			// Pop out of current table
+			lua_pop(Environment, 1);
+		}
+
 		// Pop out of current table
 		lua_pop(Environment, 1);
 	}

@@ -23,6 +23,7 @@
     <ClCompile Include="Scripting\ScriptManager.cpp" />
     <ClCompile Include="Physics\PhysicsEngine.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
+    <ClCompile Include="AI\Affordance\Affordance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetFactory\Bruteforce.h" />
@@ -54,6 +55,8 @@
     <ClInclude Include="Controllers\GLFWManager.h" />
     <ClInclude Include="Controllers\TimeManager.h" />
     <ClInclude Include="Controllers\IWindowManager.h" />
+    <ClInclude Include="Physics\DebugDraw.h" />
+    <ClInclude Include="AI\Affordance\Affordance.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\scripts\ModelInit.lua" />
@@ -64,5 +67,7 @@
     <None Include="Resources\scripts\WindowInit.lua" />
     <None Include="Resources\shaders\Default.shader" />
     <None Include="Resources\shaders\Terrain.shader" />
+    <None Include="Resources\shaders\DebugDraw.shader" />
+    <None Include="Resources\scripts\AffordanceInit.lua" />
   </ItemGroup>
 </Project>

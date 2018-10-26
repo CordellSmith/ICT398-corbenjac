@@ -7,7 +7,7 @@ Player::Player(std::string playerName)
 
 	m_currentMoveSpeed = 0;
 	m_currentTurnSpeed = 0;
-	m_moveSpeed = 30;
+	m_moveSpeed = 150;
 	m_turnSpeed = 0.1;
 }
 
@@ -74,14 +74,10 @@ void Player::ThrowBall(float time, Camera* cam)
 	glm::vec3 look = m_playerModel->GetCamera()->GetView() * 1000.0f;
 	
 	// Add crates sphere shape rigid body
-	btRigidBody* sphere = m_physicsWorld.AddSphere(150.0, camPos);
+	btRigidBody* sphere = m_physicsWorld->AddSphere(110.0, camPos);
 	// Add linear velocity to the sphere
 	sphere->setLinearVelocity(btVector3(look.x, look.y, look.z));
 
 	// Add to our array of collision bodies
-	m_collisionBodies->push_back(new CollisionBody("ball", camPos));
-
-	// Testing
-	std::cout << "THROW" << std::endl;
-	//std::cout << "Collision Body Pos Size: " << m_collisionBodies->size() << std::endl;
+	m_collisionBodies->push_back(new CollisionBody("projectile", "ball", camPos));
 }

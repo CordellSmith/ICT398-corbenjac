@@ -9,7 +9,7 @@ AllTextures=
 {
   	taxi=
   	{
-    		{filePath = "Resources/objects/taxi/taxi_chrome_d.dds"},
+    	{filePath = "Resources/objects/taxi/taxi_chrome_d.dds"},
   		{filePath = "Resources/objects/taxi/taxi_chrome_s.dds"},
 		{filePath = "Resources/objects/taxi/taxi_d.dds"},
 		{filePath = "Resources/objects/taxi/taxi_damaged_d.dds"},

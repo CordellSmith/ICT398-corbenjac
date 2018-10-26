@@ -129,7 +129,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="Resources\scripts\AffordanceInit.lua" />
     <None Include="Resources\scripts\CameraInit.lua" />
+    <None Include="Resources\shaders\DebugDraw.shader" />
     <None Include="res\scripts\ModelInit.lua" />
     <None Include="Resources\scripts\ModelsInit.lua" />
     <None Include="Resources\scripts\TerrainsInit.lua" />
@@ -139,6 +141,7 @@
     <None Include="Resources\shaders\Default.shader" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AI\Affordance\Affordance.h" />
     <ClInclude Include="AssetFactory\Bruteforce.h" />
     <ClInclude Include="AssetFactory\GameAssetFactory.h" />
     <ClInclude Include="AssetFactory\Mesh.h" />
@@ -157,6 +160,7 @@
     <ClInclude Include="Controllers\GameWorld.h" />
     <ClInclude Include="Controllers\GLFWManager.h" />
     <ClInclude Include="Input\InputManager.h" />
+    <ClInclude Include="Physics\DebugDraw.h" />
     <ClInclude Include="Physics\PhysicsEngine.h" />
     <ClInclude Include="Scripting\ScriptManager.h" />
     <ClInclude Include="Renderer\Shader.h" />
@@ -170,6 +174,7 @@
     <ClInclude Include="Renderer\OpenGl.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AI\Affordance\Affordance.cpp" />
     <ClCompile Include="AssetFactory\Bruteforce.cpp" />
     <ClCompile Include="AssetFactory\Entity.cpp" />
     <ClCompile Include="AssetFactory\GameAssetFactory.cpp" />

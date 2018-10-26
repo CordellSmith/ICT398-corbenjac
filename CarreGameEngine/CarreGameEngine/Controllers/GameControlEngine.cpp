@@ -274,8 +274,9 @@ void GameControlEngine::InitializePhysics()
 
 		if (itr->second->GetAssetName() == "person")
 		{
-			// 3 Agents
-			for (size_t i = 0; i < 3; i++)
+			// 3 Agents (changed to 1 because of Zfighting)
+			// All seem to be following the same path
+			for (size_t i = 0; i < 1; i++)
 			{
 					objRigidBodyPosition = btVector3(itr->second->GetPosition().x + (i * 100), itr->second->GetPosition().y, itr->second->GetPosition().z + (i * 100));
 					objRigidBodyRotation = btVector3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
@@ -298,11 +299,112 @@ void GameControlEngine::InitializePhysics()
 			}
 			continue;
 		}
-		// Adjust rotation for table, orientation is not correct
-		//if (itr->first == "table")
-		//{
-		//	itr->second->SetRotation(glm::vec3(0.0, 20.0, 45.0));
-		//}
+
+		/// CSmith
+		// Create tables for each row and adjusted rotation
+		if (itr->first == "table")
+		{
+			int count = 0;
+			float x = 10500.0f;
+			float y = 700.0f;
+			float z = 6000.0f;
+
+			for (size_t i = 0; i < 5; i++)
+			{
+				// Right tables
+				float yrot = -120.0f;
+
+				for (size_t j = 0; j < 3; j++)
+				{
+					count++;
+					if (j == 1)
+					{
+						// Middle tables
+						x -= 400.0f;
+						yrot = 0.0f;
+					}
+					if (j == 2)
+					{
+						// Left tables
+						x += 800.0f;
+						yrot = 120.0f;
+					}
+
+					std::string uniqueName = "Table " + std::to_string(count);
+					
+					objRigidBodyPosition = btVector3(x, y, z);
+					objRigidBodyRotation = btVector3(0, yrot, 0);
+
+					m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons());
+					m_collisionBodies.push_back(new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation));
+
+					z += 4000.0f;
+				}
+
+				x = 10500.0f - (i+1) * 1900.0f;
+				y += (i+1) * 220.0f;
+				z = 6000.0f;
+			}
+		}
+
+		/// CSmith
+		// Create chairs for each row and adjusted rotation
+		if (itr->first == "chair")
+		{
+			int count = 0;
+			float x = 10200.0f;
+			float y = 700.0f;
+			float z = 6000.0f;
+
+			for (size_t i = 0; i < 5; i++)
+			{
+				// Right chairs
+				float yrot = 290;
+
+				for (size_t j = 0; j < 3; j++)
+				{
+					if (j == 1)
+					{
+						// Middle chairs
+						x -= 400.0f;
+						yrot = -80.0f;
+					}
+					if (j == 2)
+					{
+						// Left chairs
+						x += 800.0f;
+						yrot = -10.0f;
+					}
+
+					for (size_t k = 0; k < 2; k++)
+					{
+						count++;
+
+						if (k == 1 && j == 0)
+							x -= 250;
+
+						if (k == 1 && j == 2)
+							x += 500;
+						
+						std::string uniqueName = "Chair " + std::to_string(count);
+
+						objRigidBodyPosition = btVector3(x, y, z);
+						objRigidBodyRotation = btVector3(0, yrot, 0);
+
+						m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons());
+						m_collisionBodies.push_back(new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation));
+
+						z += 600.0f;
+					}
+
+					z += 2700.0f;
+				}
+
+				x = 10200.0f - (i + 1) * 1900.0f;
+				y += (i + 1) * 220.0f;
+				z = 6000.0f;
+			}
+		}
 
 		/// CSmith	
 		///			03/10/18 -- Start

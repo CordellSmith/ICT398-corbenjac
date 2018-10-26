@@ -142,7 +142,7 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions
 	// Create box shape size of the dimensions of the object
 	btCollisionShape* boxShape = new btBoxShape(btVector3(
 		btScalar(dimensions.x / 2), 
-		btScalar(dimensions.y / 2), 
+		btScalar(dimensions.y / 6), 
 		btScalar(dimensions.z / 2))
 	);
 	
@@ -156,7 +156,7 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions
 	startTransform.setOrigin(pos);
 	
 	// Set mass (non-zero for dynamic)
-	m_mass = 10.0;
+	m_mass = 1000.0;
 
 	// Set dynamic objects to objects with mass that is non-zero
 	m_isDynamic = (m_mass != 0.0f);
@@ -271,16 +271,16 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 
 			/// Terrain checking needs to be fixed csmith 17/10/18
 			// If floor height gets higher
-			if (res.m_hitPointWorld.getY() > m_floorHeight && res.m_collisionObject->getCollisionShape()->getName())
-			{
-				// New floor height is set to current ray hit value
-				m_floorHeight = res.m_hitPointWorld.getY();
-				std::cout << "Up" << std::endl;
-				std::cout << res.m_hitPointWorld.getY() << std::endl;
+			//if (res.m_hitPointWorld.getY() > m_floorHeight && res.m_collisionObject->getCollisionShape()->getName())
+			//{
+			//	// New floor height is set to current ray hit value
+			//	m_floorHeight = res.m_hitPointWorld.getY();
+			//	std::cout << "Up" << std::endl;
+			//	std::cout << res.m_hitPointWorld.getY() << std::endl;
 
-				// Move player position up
-				m_newForce.setY((playerObj.y() - m_playerObject.y()) * -1000);
-			}
+			//	// Move player position up
+			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * -1000);
+			//}
 
 			//// If floor height gets lower
 			//if (res.m_hitPointWorld.getY() < m_floorHeight)

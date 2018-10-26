@@ -131,7 +131,7 @@ void GameWorld::UpdatePhysics()
 
 	if (rayCallback.hasHit())
 	{
-		std::cout << rayCallback.m_collisionObject->getCollisionShape()->getName() << std::endl;
+		//std::cout << rayCallback.m_collisionObject->getCollisionShape()->getName() << std::endl;
 	}
 
 	m_player->SetPosition(glm::vec3(bt_playerPos.getX(), bt_playerPos.getY(), bt_playerPos.getZ()));

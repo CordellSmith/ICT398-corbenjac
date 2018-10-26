@@ -113,16 +113,18 @@ struct ObjectRigidBodyData
 
 struct CollisionBody {
 
-	CollisionBody(std::string name, std::string modelName, const btVector3& position, ComputerAI* AI = NULL)
+	CollisionBody(std::string name, std::string modelName, const btVector3& position, const btVector3& rotation, ComputerAI* AI = NULL)
 	{ 
 		m_name = name;
 		m_modelName = modelName;
 		m_position = position;
+		m_rotation = rotation;
 		m_AI = AI;
 	};
 	std::string m_name;
 	std::string m_modelName;
 	btVector3 m_position;
+	btVector3 m_rotation;
 	ComputerAI* m_AI;
 };
 

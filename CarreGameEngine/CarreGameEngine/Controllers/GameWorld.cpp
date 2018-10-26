@@ -1,5 +1,11 @@
 #include "GameWorld.h"
 
+// Helper function
+glm::vec3 BttoGlm(const btVector3& btVector)
+{
+	return glm::vec3(btVector.getX(), btVector.getY(), btVector.getZ());
+}
+
 void GameWorld::Init(Player* player, std::multimap<std::string, IGameAsset*> gameAssets)
 {
 	// Sets this game contexts assets to the  loaded game assets from the control engine
@@ -51,7 +57,7 @@ void GameWorld::Update()
 	//m_glRenderer.Render(m_player->GetModel());
 
 	/// Debug draw
-	m_physicsWorld->DebugDraw();
+	//m_physicsWorld->DebugDraw();
 
 	// Update all physics body locations *** All asset rendering is done through here for now because I dont want to have to call asset render twice ***
 	UpdatePhysics();
@@ -95,15 +101,21 @@ void GameWorld::UpdatePhysics()
 	// Loop through all the rigid bodies to update their position
 	for (size_t i = 0; i < m_collisionBodies->size(); i++)
 	{
-		glm::vec3 updPosition = glm::vec3(
-			m_collisionBodies->at(i)->m_position.x(),
-			m_collisionBodies->at(i)->m_position.y(),
-			m_collisionBodies->at(i)->m_position.z());
+		glm::vec3 updPosition = BttoGlm(m_collisionBodies->at(i)->m_position);
+		glm::vec3 updRotation = BttoGlm(m_collisionBodies->at(i)->m_rotation);
 
-		// Search through map using find. If found, update that objects position
+		// Search through map using find. If found, update that objects position and rotation
 		m_gameAssets.find(m_collisionBodies->at(i)->m_modelName)->second->GetModel()->SetPosition(updPosition);
+		m_gameAssets.find(m_collisionBodies->at(i)->m_modelName)->second->GetModel()->SetRotation(updRotation);
 		// Search through map using find. If found, render the object
 		m_glRenderer.Render(m_gameAssets.find(m_collisionBodies->at(i)->m_modelName)->second->GetModel());
+
+		//if (m_collisionBodies->at(i)->m_name == "AI 1")
+		//	printf("AI 1 <X %d><Y %d><Z %d>\n", updPosition.x, updPosition.y, updPosition.z);
+		//if (m_collisionBodies->at(i)->m_name == "AI 2")																			 
+		//	printf("AI 2 <X %d><Y %d><Z %d>\n", updPosition.x, updPosition.y, updPosition.z);
+		//if (m_collisionBodies->at(i)->m_name == "AI 3")																		
+		//	printf("AI 3 <X %d><Y %d><Z %d>\n", updPosition.x, updPosition.y, updPosition.z);
 	}
 
 	// Ray casting
@@ -119,7 +131,7 @@ void GameWorld::UpdatePhysics()
 
 	if (rayCallback.hasHit())
 	{
-		//std::cout << "HIT Object: " << rayCallback.m_collisionObject->getCollisionShape()->getName() << std::endl;
+		//std::cout << rayCallback.m_collisionObject->getCollisionShape()->getName() << std::endl;
 	}
 
 	m_player->SetPosition(glm::vec3(bt_playerPos.getX(), bt_playerPos.getY(), bt_playerPos.getZ()));

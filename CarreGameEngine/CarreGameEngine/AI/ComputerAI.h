@@ -99,7 +99,7 @@ class ComputerAI
 			*
 			* This is the default constructor
 			*/
-		ComputerAI(glm::vec3 pos);
+		ComputerAI(glm::vec3 pos, glm::vec3 rot);
 
 			/**
 			* @brief De-constructor
@@ -197,6 +197,10 @@ class ComputerAI
 			*/
 		glm::vec3 GetPosition();
 
+		void SetRotation(glm::vec3 rot);
+
+		glm::vec3 GetRotation();
+
 			/**
 			* @brief Move to a location
 			*
@@ -228,6 +232,9 @@ class ComputerAI
 
 		/// Current XYZ position
 		glm::vec3 m_currPos;
+
+		/// Current XYZ rotation
+		glm::vec3 m_currRot;
 
 		/// Current velocity
 		glm::vec3 m_currVel;

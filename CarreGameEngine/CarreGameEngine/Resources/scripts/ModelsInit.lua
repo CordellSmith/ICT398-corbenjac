@@ -25,14 +25,14 @@ AllModels=
 	table=
 	{
 		{
-			filePath = "Resources/objects/table/Table.obj", 
+			filePath = "Resources/objects/table/table.obj", 
 			texFilePath = "", 
-			scaleX = 20.0, 
-			scaleY = 20.0, 
-			scaleZ = 20.0, 
-			posX = 9880.0, 
-			posY = 1000.0, 
-			posZ = 10100.0,
+			scaleX = 200.0, 
+			scaleY = 400.0, 
+			scaleZ = 250.0, 
+			posX = 0.0, 
+			posY = 0.0, 
+			posZ = 0.0,
 			Affordance = "table"
 		},
 	},
@@ -41,12 +41,12 @@ AllModels=
 		{
 			filePath = "Resources/objects/chair/office_chair.obj", 
 			texFilePath = "", 
-			scaleX = 300.0, 
-			scaleY = 300.0, 
-			scaleZ = 300.0,
-			posX = 9600.0, 
-			posY = 1000.0, 
-			posZ = 10100.0,
+			scaleX = 220.0, 
+			scaleY = 260.0, 
+			scaleZ = 220.0,
+			posX = 0.0,
+			posY = 0.0,
+			posZ = 0.0,
 			Affordance = "chair"
 		},
 	},

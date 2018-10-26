@@ -10,9 +10,9 @@ AllModels=
 {
 	lecTheatre=
 	{
-		filePath = "Resources/objects/lecture theatre/LBLT.obj", 
-		texFilePath = "", 
 		{
+			filePath = "Resources/objects/lecture theatre/LBLT.obj", 
+			texFilePath = "", 
 			scaleX = 150.0,
 			scaleY = 150.0, 
 			scaleZ = 150.0, 
@@ -24,9 +24,9 @@ AllModels=
 	},
 	table=
 	{
-		filePath = "Resources/objects/table/Table.obj", 
-		texFilePath = "", 
 		{
+			filePath = "Resources/objects/table/Table.obj", 
+			texFilePath = "", 
 			scaleX = 20.0, 
 			scaleY = 20.0, 
 			scaleZ = 20.0, 
@@ -38,9 +38,9 @@ AllModels=
 	},
 	chair=
 	{
-		filePath = "Resources/objects/chair/office_chair.obj", 
-		texFilePath = "", 
 		{
+			filePath = "Resources/objects/chair/office_chair.obj", 
+			texFilePath = "", 
 			scaleX = 300.0, 
 			scaleY = 300.0, 
 			scaleZ = 300.0,
@@ -52,9 +52,9 @@ AllModels=
 	},
 	player=
 	{
-		filePath = "Resources/objects/box_stack.obj", 
-		texFilePath = "", 
 		{
+			filePath = "Resources/objects/box_stack.obj", 
+			texFilePath = "", 
 			scaleX = 1.0, 
 			scaleY = 1.0, 
 			scaleZ = 1.0,
@@ -66,9 +66,9 @@ AllModels=
 	},
 	crate=
 	{
-		filePath = "Resources/objects/crate/Crate1.obj", 
-		texFilePath = "",
 		{
+			filePath = "Resources/objects/crate/Crate1.obj", 
+			texFilePath = "",
 			scaleX = 1000.0, 
 			scaleY = 1000.0, 
 			scaleZ = 1000.0,
@@ -80,9 +80,9 @@ AllModels=
 	},
 	ball=
 	{
-		filePath = "Resources/objects/ball/ball.obj", 
-		texFilePath = "",
 		{
+			filePath = "Resources/objects/ball/ball.obj", 
+			texFilePath = "",
 			scaleX = 1.0, 
 			scaleY = 1.0, 
 			scaleZ = 1.0,

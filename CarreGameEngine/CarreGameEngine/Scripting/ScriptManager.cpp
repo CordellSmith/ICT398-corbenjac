@@ -235,17 +235,22 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 	while (lua_next(Environment, -2) != 0)
 	{
 		// Get current model name being read in
-		objectName = lua_tostring(Environment, -2);
-		
+		modelName = lua_tostring(Environment, -2);
+		//modelName = lua_tostring(Environment, -2);
+		std::cout << modelName << std::endl;
 		// Push to next table
 		lua_pushnil(Environment);
 		while (lua_next(Environment, -2) != 0)
 		{
-			std::cout << "loop" << std::endl;
+			objectName = lua_tostring(Environment, -2);
+			std::cout << objectName << std::endl;
+			std::cout << lua_tostring(Environment, -2) << std::endl;
+
 			// Push to next table
 			lua_pushnil(Environment);
 			while (lua_next(Environment, -2) != 0)
 			{
+				std::cout << "var" << std::endl;
 				// Load data into correct variable
 				temp = lua_tostring(Environment, -2);
 				if (temp.compare(values[0]) == 0)

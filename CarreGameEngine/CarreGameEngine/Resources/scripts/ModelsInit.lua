@@ -10,6 +10,7 @@ AllModels=
 {
 	lecTheatre=
 	{
+		lecTheatre=
 		{
 			filePath = "Resources/objects/lecture theatre/LBLT.obj", 
 			texFilePath = "", 
@@ -20,6 +21,7 @@ AllModels=
 	},
 	table=
 	{
+		table1=
 		{
 			filePath = "Resources/objects/table/Table.obj", 
 			texFilePath = "", 
@@ -30,6 +32,7 @@ AllModels=
 	},
 	chair=
 	{
+		chair1=
 		{
 			filePath = "Resources/objects/chair/office_chair.obj", 
 			texFilePath = "", 
@@ -37,9 +40,18 @@ AllModels=
 			pos = "9600.0 1000.0 10100.0", 
 			Affordance = "chair"
 		},
+		chair2=
+		{
+			filePath = "Resources/objects/chair/office_chair.obj", 
+			texFilePath = "", 
+			scale = "300.0 300.0 300.0", 
+			pos = "9600.0 1000.0 10500.0", 
+			Affordance = "chair"
+		},
 	},
 	player=
 	{
+		player=
 		{
 			filePath = "Resources/objects/box_stack.obj", 
 			texFilePath = "", 
@@ -50,6 +62,7 @@ AllModels=
 	},
 	crate=
 	{
+		crate=
 		{
 			filePath = "Resources/objects/crate/Crate1.obj", 
 			texFilePath = "",
@@ -60,6 +73,7 @@ AllModels=
 	},
 	ball=
 	{
+		ball=
 		{
 			filePath = "Resources/objects/ball/ball.obj", 
 			texFilePath = "",
@@ -70,6 +84,7 @@ AllModels=
 	},
 	person=
 	{
+		person1=
 		{
 			filePath = "Resources/ai/Person.obj", 
 			texFilePath = "",

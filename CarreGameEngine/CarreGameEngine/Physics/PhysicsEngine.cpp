@@ -145,9 +145,6 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions
 		btScalar(dimensions.y / 2), 
 		btScalar(dimensions.z / 2))
 	);
-	
-	// Add affordance data to collision shape for ray casting
-	//boxShape->SetAffordance(affordance);
 
 	// Create a dynamic object
 	btTransform startTransform;
@@ -322,7 +319,8 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 				collisionBodies[j]->m_position.setX(collisionBodies[j]->m_AI->GetPosition().x);
 				collisionBodies[j]->m_position.setY(collisionBodies[j]->m_AI->GetPosition().y);
 				collisionBodies[j]->m_position.setZ(collisionBodies[j]->m_AI->GetPosition().z);
-
+				
+				// Update the object rotations for drawing
 				collisionBodies[j]->m_rotation.setX(collisionBodies[j]->m_AI->GetRotation().x);
 				collisionBodies[j]->m_rotation.setY(collisionBodies[j]->m_AI->GetRotation().y);
 				collisionBodies[j]->m_rotation.setZ(collisionBodies[j]->m_AI->GetRotation().z);

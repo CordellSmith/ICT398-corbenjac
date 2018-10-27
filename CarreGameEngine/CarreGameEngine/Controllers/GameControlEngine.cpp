@@ -246,7 +246,7 @@ void GameControlEngine::InitializePhysics()
 			// Convert from glm::vec3 to Bullets btVector3
 			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 			objRigidBodyRotation = btVector3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
-
+			
 			std::cout << "Physics Init " << itr->second->GetAssetName() << ": " << itr->second->GetModel()->GetMeshBatch().size() << " and " << itr->second->GetModel()->GetMeshBatch().size() << std::endl;
 
 			Affordance* affordance = new Affordance(itr->second->GetAssetName());
@@ -272,7 +272,7 @@ void GameControlEngine::InitializePhysics()
 			// Have to convert from glm::vec3 to Bullets btVector3
 			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 			objRigidBodyRotation = btVector3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
-
+			
 			Affordance* affordance = new Affordance(itr->second->GetAssetName());
 
 			CollisionBody* colBody = new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
@@ -287,7 +287,6 @@ void GameControlEngine::InitializePhysics()
 		if (itr->second->GetAssetName() == "person")
 		{
 			// 3 Agents (changed to 1 because of Zfighting)
-			// All seem to be following the same path
 			for (size_t i = 0; i < 1; i++)
 			{
 					objRigidBodyPosition = btVector3(itr->second->GetPosition().x + (i * 100), itr->second->GetPosition().y, itr->second->GetPosition().z + (i * 100));
@@ -297,7 +296,7 @@ void GameControlEngine::InitializePhysics()
 					std::string uniqueName = "AI " + std::to_string(i + 1);
 
 					// Create a new AI with position
-					ComputerAI* AI = new ComputerAI(itr->second->GetPosition(), itr->second->GetRotation());
+					ComputerAI* AI = new ComputerAI(itr->second->GetPosition());
 					// Give it to person
 					itr->second->SetAI(AI);
 
@@ -319,7 +318,7 @@ void GameControlEngine::InitializePhysics()
 			}
 			continue;
 		}
-
+/*
 		/// CSmith
 		// Create tables for each row and adjusted rotation
 		if (itr->first == "table")
@@ -433,7 +432,7 @@ void GameControlEngine::InitializePhysics()
 			}
 			continue;
 		}
-
+*/
 		/// CSmith	
 		///			03/10/18 -- Start
 		///			09/10/18 -- Only generating box shape rigid objects, removed name specific code

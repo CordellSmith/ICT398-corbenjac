@@ -20,9 +20,9 @@ public:
 	Affordance(std::string name);
 	Affordance(std::string name, float sitOn, float standOn, float kick);
 	~Affordance() { }
-
 	std::string GetName() const { return m_name; }
 	void SetName(std::string name) { m_name = name; }
+
 protected:
 	/// Affordances and corresponding value
 	float m_sitOn, m_standOn, m_kick;

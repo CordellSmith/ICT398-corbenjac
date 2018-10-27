@@ -60,27 +60,7 @@ struct Personality
 // Will need to be changed to a class
 struct Emotions
 {
-	// range [1-100]
-	float m_joy = 1.0f;
-	float m_sad = 1.0f;
-	float m_anger = 1.0f;
-	float m_fear = 1.0f;
-	float m_trust = 1.0f;
-	float m_disgust = 1.0f;
-
-	bool isJoy, isSad;
-	bool isAnger, isFear;
-	bool isTrust, isDisgusted;
-
-	/*
-		Emotions values change
-		Rules should determine what state the AI is in (read from script)
-			Change state
-			eg. If m_joy > 70 && m_sad < 10
-					change state -> happy;
-
-			Happy state -> AI moves around much faster ie. AIspeed * 2
-	*/
+	
 };
 
 class ComputerAI
@@ -99,7 +79,7 @@ class ComputerAI
 			*
 			* This is the default constructor
 			*/
-		ComputerAI(glm::vec3 pos, glm::vec3 rot);
+		ComputerAI(glm::vec3 pos);
 
 			/**
 			* @brief De-constructor
@@ -197,10 +177,6 @@ class ComputerAI
 			*/
 		glm::vec3 GetPosition();
 
-		void SetRotation(glm::vec3 rot);
-
-		glm::vec3 GetRotation();
-
 			/**
 			* @brief Move to a location
 			*
@@ -232,9 +208,6 @@ class ComputerAI
 
 		/// Current XYZ position
 		glm::vec3 m_currPos;
-
-		/// Current XYZ rotation
-		glm::vec3 m_currRot;
 
 		/// Current velocity
 		glm::vec3 m_currVel;

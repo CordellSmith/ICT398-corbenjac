@@ -17,9 +17,8 @@ ComputerAI::ComputerAI()
 	this->m_computerAIFSM->SetGlobalState(&m_globalState::GetInstance());
 
 	// Read from script
-	this->m_currPos = glm::vec3(0);
-	this->m_currRot = glm::vec3(0);
-	this->m_currVel = glm::vec3(0);
+	this->m_currPos = glm::vec3(0, 0, 0);
+	this->m_currVel = glm::vec3(0, 0, 0);
 	this->m_health = 100;
 	this->m_maxHealth = 100;
 	this->m_isDead = false;
@@ -28,7 +27,7 @@ ComputerAI::ComputerAI()
 }
 
 // Parameter constructor
-ComputerAI::ComputerAI(glm::vec3 pos, glm::vec3 rot)
+ComputerAI::ComputerAI(glm::vec3 pos)
 {
 	this->m_computerAIFSM = new StateMachine<ComputerAI>(this);
 
@@ -37,9 +36,8 @@ ComputerAI::ComputerAI(glm::vec3 pos, glm::vec3 rot)
 	this->m_computerAIFSM->SetGlobalState(&m_globalState::GetInstance());
 
 	// Read from script
-	this->m_currPos = pos;
-	this->m_currRot = rot;
-	this->m_currVel = glm::vec3(0);
+	this->m_currPos = glm::vec3(pos.x, pos.y, pos.z);
+	this->m_currVel = glm::vec3(0, 0, 0);
 	this->m_health = 100;
 	this->m_maxHealth = 100;
 	this->m_isDead = false;
@@ -118,18 +116,6 @@ glm::vec3 ComputerAI::GetPosition()
 	return m_currPos;
 }
 
-// Set current rotation
-void ComputerAI::SetRotation(glm::vec3 rot)
-{
-	this->m_currRot = rot;
-}
-
-// Return current rotation
-glm::vec3 ComputerAI::GetRotation()
-{
-	return m_currRot;
-}
-
 // Move to a location
 bool ComputerAI::MoveTo(ComputerAI* compAI, glm::vec3 targetPos)
 {
@@ -150,7 +136,7 @@ bool ComputerAI::MoveTo(ComputerAI* compAI, glm::vec3 targetPos)
 	// Calculate new velocity and new position
 	currVel = toTarget * glm::length(currVel);
 	compAI->SetVelocity(currVel);
-	glm::vec3 displacement = currVel * 0.10f;
+	glm::vec3 displacement = currVel * 0.05f;
 	glm::vec3 newPos = currPos + displacement;
 
 	// Calculate real target position
@@ -161,12 +147,13 @@ bool ComputerAI::MoveTo(ComputerAI* compAI, glm::vec3 targetPos)
 	glm::vec3 toRealTarget2 = glm::normalize(toRealTarget);
 	if (toRealTarget2.x == 0 && toRealTarget2.z == 0)
 	{
+		//std::cout << "here 1" << std::endl;
 		currPos = realTargetPos;
 		compAI->SetPosition(currPos);
-		compAI->SetVelocity(glm::vec3(0));
+		compAI->SetVelocity(glm::vec3(0, 0, 0));
 		return true;
 	}
-
+	
 	//std::cout << toRealTarget2 << " : " << toTarget << std::endl;
 
 	//// Check to see whether newPos has passed the realTargetPos

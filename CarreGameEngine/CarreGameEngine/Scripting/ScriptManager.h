@@ -156,6 +156,26 @@ class ScriptManager
 			* This is the de-constructor
 			*/
 		~ScriptManager();
+
+			/**
+			 * @brief String to float converter.
+			 *
+			 * Does not check whether the string is a number, so ensure that it is convertable.
+			 *
+			 * @param num A sring representing a number.
+			 *
+			 * @return A float version of the string input.
+			 */
+		float toFloat(const std::string& num);
+
+			/**
+			 * @brief Space delimited string splitter.
+			 *
+			 * @param source The space delimited string to split.
+			 *
+			 * @return A vector of each part of the source string.
+			 */
+		std::vector<std::string> split(std::string& source);
 };
 
 #endif

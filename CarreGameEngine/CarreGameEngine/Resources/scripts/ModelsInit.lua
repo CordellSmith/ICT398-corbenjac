@@ -10,107 +10,87 @@ AllModels=
 {
 	lecTheatre=
 	{
+		lecTheatre=
 		{
 			filePath = "Resources/objects/lecture theatre/LBLT.obj", 
-			texFilePath = "", 
-			scaleX = 150.0,
-			scaleY = 150.0, 
-			scaleZ = 150.0, 
-			posX = 7000.0, 
-			posY = 0.0, 
-			posZ = 5200.0, 
-			AI = false,
-			Affordance= "building"
+			scale = "150.0 150.0 150.0", 
+			pos = "7000.0 0.0 5200", 
+			rot = "0.0 0.0 0.0", 
+			Affordance = "building"
 		},
 	},
 	table=
 	{
+		table1=
 		{
 			filePath = "Resources/objects/table/Table.obj", 
-			texFilePath = "", 
-			scaleX = 20.0, 
-			scaleY = 20.0, 
-			scaleZ = 20.0, 
-			posX = 9880.0, 
-			posY = 1000.0, 
-			posZ = 10100.0, 
-			AI = false,
-			Affordance= "table"
+			scale = "20.0 20.0 20.0", 
+			pos = "9880.0 1000.0 10100.0",
+			rot = "0.0 0.0 0.0", 			
+			Affordance = "table"
 		},
 	},
 	chair=
 	{
+		chair1=
 		{
 			filePath = "Resources/objects/chair/office_chair.obj", 
-			texFilePath = "", 
-			scaleX = 300.0, 
-			scaleY = 300.0, 
-			scaleZ = 300.0,
-			posX = 9600.0, 
-			posY = 1000.0, 
-			posZ = 10100.0, 
-			AI = false,
-			Affordance= "chair"
+			scale = "300.0 300.0 300.0", 
+			pos = "9600.0 1000.0 10100.0", 
+			rot = "0.0 0.0 0.0", 
+			Affordance = "chair"
+		},
+		chair2=
+		{
+			filePath = "Resources/objects/chair/office_chair.obj", 
+			scale = "300.0 300.0 300.0", 
+			pos = "9600.0 1000.0 10500.0", 
+			rot = "0.0 0.0 0.0", 
+			Affordance = "chair"
 		},
 	},
 	player=
 	{
+		player=
 		{
 			filePath = "Resources/objects/box_stack.obj", 
-			texFilePath = "", 
-			scaleX = 1.0, 
-			scaleY = 1.0, 
-			scaleZ = 1.0,
-			posX = 14000.0, 
-			posY = 900.0, 
-			posZ = 10100.0, 
-			AI = false,
-			Affordance= "player"
+			scale = "1.0 1.0 1.0", 
+			pos = "14000.0 900.0 10100.0", 
+			rot = "0.0 0.0 0.0", 
+			Affordance = "player"
 		},
 	},
 	crate=
 	{
+		crate=
 		{
 			filePath = "Resources/objects/crate/Crate1.obj", 
-			texFilePath = "",
-			scaleX = 1000.0, 
-			scaleY = 1000.0, 
-			scaleZ = 1000.0,
-			posX = 14000.0, 
-			posY = 900.0, 
-			posZ = 10100.0, 
-			AI = false,
-			Affordance= "crate"
+			scale = "1000.0 1000.0 1000.0", 
+			pos = "14000.0 900.0 10100.0", 
+			rot = "0.0 0.0 0.0", 
+			Affordance = "crate"
 		},
 	},
 	ball=
 	{
+		ball=
 		{
 			filePath = "Resources/objects/ball/ball.obj", 
-			texFilePath = "",
-			scaleX = 1.0, 
-			scaleY = 1.0, 
-			scaleZ = 1.0,
-			posX = 14000.0, 
-			posY = 1500.0, 
-			posZ = 10100.0, 
-			AI = false,
-			Affordance= "ball"
+			scale = "1.0 1.0 1.0", 
+			pos = "14000.0 1500.0 10100.0", 
+			rot = "0.0 0.0 0.0", 
+			Affordance = "ball"
 		},
 	},
 	person=
 	{
+		person1=
 		{
 			filePath = "Resources/ai/Person.obj", 
-			texFilePath = "",
-			scaleX = 10.0, 
-			scaleY = 10.0, 
-			scaleZ = 10.0,
-			posX = 14000.0, 
-			posY = -1000.0, 
-			posZ = 10100.0, 
-			AI = false,
-			Affordance= "person"
+			scale = "300.0 400.0 300.0", 
+			pos = "14000.0 0.0 10000.0", 
+			rot = "0.0 0.0 0.0", 
+			Affordance = "person"
 		},
 	},
 }

@@ -193,8 +193,8 @@ protected:
 	/// Map containing all heightmaps data
 	std::unordered_map<std::string, HeightmapsData> m_allHeightmapsData;
 
-	/// Vector holding all AI
-	std::vector<ComputerAI*> m_allAI;
+	/// Vector holding all AI (intelligent agents)
+	std::vector<ComputerAI*> m_agents;
 
 	/// Player object
 	Player* m_player;

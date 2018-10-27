@@ -215,11 +215,12 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 	std::string texFilePath;
 
 	// Different types of data being read in
-	std::string values[4];
+	std::string values[5];
 	values[0] = "filePath";
 	values[1] = "texFilePath";
 	values[2] = "scale";
 	values[3] = "pos";
+	values[4] = "rot";
 
 	//temp values
 	std::string temp;
@@ -236,7 +237,7 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 	{
 		// Get current model name being read in
 		modelName = lua_tostring(Environment, -2);
-		//modelName = lua_tostring(Environment, -2);
+		
 		std::cout << modelName << std::endl;
 		// Push to next table
 		lua_pushnil(Environment);
@@ -244,13 +245,11 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 		{
 			objectName = lua_tostring(Environment, -2);
 			std::cout << objectName << std::endl;
-			std::cout << lua_tostring(Environment, -2) << std::endl;
 
 			// Push to next table
 			lua_pushnil(Environment);
 			while (lua_next(Environment, -2) != 0)
 			{
-				std::cout << "var" << std::endl;
 				// Load data into correct variable
 				temp = lua_tostring(Environment, -2);
 				if (temp.compare(values[0]) == 0)
@@ -291,15 +290,18 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 			// Clear for next batch of data
 			tempData.clear();
 
+			// Add to map
+			std::cout << "adding " + objectName + "to map" << std::endl;
+			allModelData[objectName] = modelData;
+
+			// Clear vectors of any data before adding more, and reset string
+			modelData.modelPositions.clear();
+			modelData.modelScales.clear();
+
 			// Pop out of current table
 			lua_pop(Environment, 1);
 		}
-		// Add to map
-		allModelData[objectName] = modelData;
 
-		// Clear vectors of any data before adding more, and reset string
-		modelData.modelPositions.clear();
-		modelData.modelScales.clear();
 		modelData.filePath = "";
 
 		// Pop out of current table

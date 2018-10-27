@@ -23,6 +23,7 @@ struct ModelsData
 	std::string texFilePath;
 	std::vector<std::vector<float>> modelPositions;
 	std::vector<std::vector<float>> modelScales;
+	std::vector<std::vector<float>> modelRotations;
 };
 
 /// Struct to hold all of heightmaps data (positions, scales, size, filePath to load and texture)

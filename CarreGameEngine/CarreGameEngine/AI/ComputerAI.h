@@ -178,6 +178,26 @@ class ComputerAI
 		glm::vec3 GetPosition();
 
 			/**
+			* @brief Set rotation
+			*
+			* Sets the current rotation
+			*
+			* @param pos - Rotation to be set
+			*
+			* @return void
+			*/
+		void SetRotation(glm::vec3 rot);
+
+			/**
+			* @brief Return rotation
+			*
+			* Returns the current position
+			*
+			* @return Vector3 - m_currRot
+			*/
+		glm::vec3 GetRotation();
+
+			/**
 			* @brief Move to a location
 			*
 			* Moves to a given location (waypoint, player, other AI)
@@ -208,6 +228,9 @@ class ComputerAI
 
 		/// Current XYZ position
 		glm::vec3 m_currPos;
+
+		/// Current rotation
+		glm::vec3 m_currRot;
 
 		/// Current velocity
 		glm::vec3 m_currVel;

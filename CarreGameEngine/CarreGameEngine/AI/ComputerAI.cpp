@@ -116,6 +116,18 @@ glm::vec3 ComputerAI::GetPosition()
 	return m_currPos;
 }
 
+// Set current rotation
+void ComputerAI::SetRotation(glm::vec3 rot)
+{
+	this->m_currRot = rot;
+}
+
+// Return current rotation
+glm::vec3 ComputerAI::GetRotation()
+{
+	return m_currRot;
+}
+
 // Move to a location
 bool ComputerAI::MoveTo(ComputerAI* compAI, glm::vec3 targetPos)
 {

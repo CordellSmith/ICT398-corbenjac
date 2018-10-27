@@ -75,7 +75,7 @@ void Player::ThrowBall(float time, Camera* cam)
 	
 	// Add crates sphere shape rigid body
 	//btRigidBody* sphere = m_physicsWorld->AddSphere(110.0, camPos, "ball");
-	m_physicsWorld->AddSphere(110.0, camPos, "ball");
+	m_physicsWorld->AddSphere(110.0, camPos, "ball", look /= 1000);
 	// Add linear velocity to the sphere
 	//sphere->setLinearVelocity(btVector3(look.x, look.y, look.z));
 

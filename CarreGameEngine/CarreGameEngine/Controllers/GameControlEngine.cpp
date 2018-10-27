@@ -257,7 +257,7 @@ void GameControlEngine::InitializePhysics()
 			// Have to convert from glm::vec3 to Bullets btVector3
 			objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 
-			m_physicsWorld->AddSphere(110.0, objRigidBodyPosition, "ball");
+			m_physicsWorld->AddSphere(110.0, objRigidBodyPosition, "ball", glm::vec3(0));
 			// Add to our array of collision bodies
 			//m_collisionBodyPos.push_back(objRigidBodyPosition);
 			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));

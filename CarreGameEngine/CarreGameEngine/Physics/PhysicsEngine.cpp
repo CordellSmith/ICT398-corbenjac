@@ -291,7 +291,7 @@ void PhysicsEngine::CreateDynamicRigidBody(glm::vec3 &pos, glm::vec3& dimensions
 
 
 // Create a dynamic rigid body
-void PhysicsEngine::AddSphere(float radius, glm::vec3 &startPos, std::string objType)
+void PhysicsEngine::AddSphere(float radius, glm::vec3 &startPos, std::string objType, glm::vec3 &startVel)
 {
 	// Does object data already exist
 	bool objExists = false;
@@ -357,6 +357,7 @@ void PhysicsEngine::AddSphere(float radius, glm::vec3 &startPos, std::string obj
 	objRigidBodyData->objType = objType;
 
 	objRigidBodyData->currPos = startPos;
+	objRigidBodyData->currLinearVel = startVel;
 	m_objectRigidBodyData.push_back(objRigidBodyData);
 
 	/***************************************************/
@@ -374,37 +375,15 @@ void PhysicsEngine::AddSphere(float radius, glm::vec3 &startPos, std::string obj
 	m_derivState.push_back(glm::vec3(0));
 	m_derivState.push_back(glm::vec3(0));
 	m_derivState.push_back(glm::vec3(0));
-	// Set mass (non-zero for dynamic)
-	//m_mass = 10.0;
-
-	// Set dynamic objects to objects with mass that is non-zero
-	//m_isDynamic = (m_mass != 1.0f);
-
-	//btVector3 localInertia(0.0, 0.0, 0.0);
-
-	//if (m_isDynamic)
-		//sphereShape->calculateLocalInertia(m_mass, localInertia);
-	objRigidBodyData->currLinearVel.x = 5.0f;
-	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-	//btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-	//btRigidBody::btRigidBodyConstructionInfo rbInfo(m_mass, myMotionState, sphereShape, localInertia);
-	//btRigidBody* body = new btRigidBody(rbInfo);
-
-	// Set the index for the type of rigid body that is being created
-	//body->setUserIndex(SPHERE);
-
-	// Add the body to the dynamic world
-	//m_dynamicsWorld->addRigidBody(body);
-
-	//return body;
+	
 }
 
 // Simulate the dynamic world
 void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, std::vector<Quaternion> &bodyRot, glm::vec3& playerObj)
 {
 	// Time step
-	//game_time += 1.0;
-	//physics_lag_time += (game_time - prev_game_time);
+	game_time += 1.0;
+	physics_lag_time += (game_time - prev_game_time);
 
 	btVector3 btFrom(playerObj.x, playerObj.y, playerObj.z);
 	btVector3 btTo(playerObj.z, -3000.0f, playerObj.z);
@@ -431,279 +410,307 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, std::
 	btVector3 ptB = { 0, 0, 0 };
 
 
-	//while (physics_lag_time > delta_t)
-	//{
+	while (physics_lag_time > delta_t)
+	{
 		// Data
-	ptA = { 0, 0, 0 };
-	ptB = { 0, 0, 0 };
+		ptA = { 0, 0, 0 };
+		ptB = { 0, 0, 0 };
 
-	// Data
-	int posA;
-	int posB;
+		// Data
+		int posA;
+		int posB;
+		int i,j,k;
 
-	// Check all objects for collision detection, and get number of collisions
-	m_collisionWorld->performDiscreteCollisionDetection();
-	numManifolds = m_collisionWorld->getDispatcher()->getNumManifolds();
+		// Check all objects for collision detection, and get number of collisions
+		m_collisionWorld->performDiscreteCollisionDetection();
+		numManifolds = m_collisionWorld->getDispatcher()->getNumManifolds();
 
-	// Get info for each colliding pair
-	for (int i = 0; i < numManifolds; i++)
-	{
-		btPersistentManifold* contactManifold = m_collisionWorld->getDispatcher()->getManifoldByIndexInternal(i);
-		objA = const_cast<btCollisionObject*>(contactManifold->getBody0());
-		objB = const_cast<btCollisionObject*>(contactManifold->getBody1());
-		contactManifold->refreshContactPoints(objA->getWorldTransform(), objB->getWorldTransform());
-
-		// Get number of contact points on colliding bodies
-		int numContacts = contactManifold->getNumContacts();
-
-		// Get data for colliding objects
-		for (int j = 0; j < m_collisionWorld->getNumCollisionObjects(); j++)
-			//for (int j = m_collisionWorld->getNumCollisionObjects() - 1; j >= 0; j--)
+		// Get info for each colliding pair
+		for (i = 0; i < numManifolds; i++)
 		{
+			btPersistentManifold* contactManifold = m_collisionWorld->getDispatcher()->getManifoldByIndexInternal(i);
+			objA = const_cast<btCollisionObject*>(contactManifold->getBody0());
+			objB = const_cast<btCollisionObject*>(contactManifold->getBody1());
+			contactManifold->refreshContactPoints(objA->getWorldTransform(), objB->getWorldTransform());
+
+			// Get number of contact points on colliding bodies
+			int numContacts = contactManifold->getNumContacts();
+
+			// Get data for colliding objects
+			for (j = 0; j < m_collisionWorld->getNumCollisionObjects(); j++)
+				//for (int j = m_collisionWorld->getNumCollisionObjects() - 1; j >= 0; j--)
+			{
+				btCollisionObject* obj = m_collisionWorld->getCollisionObjectArray()[j];
+
+				if (obj == objA)
+				{
+					rbA = m_objectRigidBodyData[j];
+					for (k = 0; k < m_ObjectTypePhysicsData.size(); k++)
+					{
+						if (m_ObjectTypePhysicsData[k]->objType == m_objectRigidBodyData[j]->objType)
+							pdA = m_ObjectTypePhysicsData[k];
+					}
+					posA = j;
+				}
+				if (obj == objB)
+				{
+					rbB = m_objectRigidBodyData[j];
+					for (k = 0; k < m_ObjectTypePhysicsData.size(); k++)
+					{
+						if (m_ObjectTypePhysicsData[k]->objType == m_objectRigidBodyData[j]->objType)
+							pdB = m_ObjectTypePhysicsData[k];
+					}
+					posB = j;
+				}
+			}
+
+
+
+			//For each contact point in that manifold
+			for (j = 0; j < numContacts; j++)
+			{
+				//Get the contact information
+				btManifoldPoint& pt = contactManifold->getContactPoint(j);
+
+				// Sum up all the contact points
+				ptA += pt.getPositionWorldOnA();
+				ptB += pt.getPositionWorldOnB();
+			}
+
+			// Get average contact point of both colliding objects
+			ptA /= numContacts;
+			ptB /= numContacts;
+
+			// Get vector for distance from object center to the average collision point
+			glm::vec3 centerAToCol = glm::vec3(rbA->currPos.x, rbA->currPos.y, rbA->currPos.z) - glm::vec3(ptA.getX(), ptA.getY(), ptA.getZ());
+			glm::vec3 centerBToCol = rbB->currPos - glm::vec3(ptB.getX(), ptB.getY(), ptB.getZ());
+
+			// Calculate normal of colliding objects
+			m_normal = centerAToCol - centerBToCol;
+			m_normal = Normalize(m_normal);
+
+			// Calculate linear impulse
+			btScalar tempImpulse;
+
+			tempImpulse = DotProduct(rbA->currLinearVel - rbB->currLinearVel, m_normal);
+			tempImpulse *= -(1 + m_epsilon) * pdA->totalMass * pdB->totalMass;
+			tempImpulse /= (pdA->totalMass + pdB->totalMass);
+			m_impulse = tempImpulse * m_normal;
+
+			//btScalar numerator = DotProduct(m_normal, rbA->currLinearVel - rbB->currLinearVel) + (DotProduct(rbA->currAngularVel, CrossProduct(centerAToCol, m_normal))) + (DotProduct(rbB->currAngularVel, CrossProduct(centerBToCol, m_normal)));
+			//numerator *= -(1.0f + m_epsilon);
+			//glm::vec3 denominatorA; // = (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
+			//glm::vec3 transA = CrossProduct(centerAToCol, m_normal);
+			//glm::vec3 transB = CrossProduct(centerBToCol, m_normal);
+			//glm::vec3 negInert = (1.0f / pdA->secondMoment);
+			//denominatorA = CrossProduct(centerAToCol, m_normal) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + CrossProduct(centerBToCol, m_normal) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
+			////denominatorA = glm::vec3(transA.z, transA.y, transA.x) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + glm::vec3(transB.z, transB.y, transB.x) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
+			//denominatorA += (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
+			//glm::vec3 angImpulse = numerator / denominatorA;
+			//angImpulse *= m_normal;
+
+			// Calculate object velocities after collision
+			rbA->currLinearVel = rbA->currLinearVel + (m_impulse / pdA->totalMass);
+			rbB->currLinearVel = rbB->currLinearVel - (m_impulse / pdB->totalMass);
+
+			// Set new linear velocities to corresponding current values
+			m_currState[posA * NUMSTATE] += m_impulse / pdA->totalMass;
+			m_currState[posB * NUMSTATE] -= m_impulse / pdA->totalMass;
+
+
+			/*****************************************************************/
+			/**This works**/
+			// Calc torgue
+			rbA->torque = CrossProduct(centerAToCol, pdA->totalMass * rbA->currLinearVel);
+			rbB->torque = CrossProduct(centerBToCol, pdB->totalMass * rbB->currLinearVel);
+
+			// Calc angular acceleration
+			rbA->angularAccel = rbA->torque / pdA->secondMoment;
+			rbB->angularAccel = rbB->torque / pdB->secondMoment;
+
+			// Calc new angular velocity
+			rbA->prevAngularVel += rbA->currAngularVel;
+			rbB->prevAngularVel += rbB->currAngularVel;
+
+			rbA->currAngularVel += rbA->angularAccel * delta_t;
+			rbB->currAngularVel += rbB->angularAccel * delta_t;
+
+			rbA->angle -= rbA->currAngularVel * delta_t;
+			rbB->angle += rbB->currAngularVel * delta_t;
+
+			// Set new angular momentum to corresponding value
+			//m_currState[posA * NUMSTATE + 3] = pdA->secondMoment * rbA->currAngularVel;
+			//m_currState[posB * NUMSTATE + 3] = pdB->secondMoment * rbB->currAngularVel;
+			/**This works**/
+
+			btScalar numerator = DotProduct(m_normal, rbA->currLinearVel - rbB->currLinearVel) + (DotProduct(rbA->currAngularVel, CrossProduct(centerAToCol, m_normal))) + (DotProduct(rbB->currAngularVel, CrossProduct(centerBToCol, m_normal)));
+			numerator *= -(1.0f + m_epsilon);
+			glm::vec3 denominatorA; // = (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
+			glm::vec3 transA = CrossProduct(centerAToCol, m_normal);
+			glm::vec3 transB = CrossProduct(centerBToCol, m_normal);
+			glm::vec3 negInert = (1.0f / pdA->secondMoment);
+			denominatorA = CrossProduct(centerAToCol, m_normal) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + CrossProduct(centerBToCol, m_normal) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
+			//denominatorA = glm::vec3(transA.z, transA.y, transA.x) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + glm::vec3(transB.z, transB.y, transB.x) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
+			denominatorA += (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
+			glm::vec3 angImpulse = numerator / denominatorA;
+			angImpulse *= m_normal;
+
+
+			//ExplicitEuler(rbA, delta_t);
+			//ExplicitEuler(rbB, delta_t);
+			//rbB->angularMomentum *= -1;
+
+			//btScalar numerator = DotProduct(m_normal, rbA->currLinearVel - rbB->currLinearVel) + (DotProduct(rbA->currAngularVel, CrossProduct(centerAToCol, m_normal))) + (DotProduct(rbB->currAngularVel, CrossProduct(centerBToCol, m_normal)));
+			//numerator *= -(1.0 + m_epsilon);
+			//glm::vec3 denominatorA; // = (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
+			//denominatorA = CrossProduct(centerAToCol, m_normal) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + CrossProduct(centerBToCol, m_normal) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
+			//denominatorA += (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
+			//glm::vec3 angImpulse = numerator / denominatorA;
+			//angImpulse *= 1;
+			glm::vec3 tempU = CrossProduct(centerAToCol, m_normal);
+			glm::vec3 tempV = CrossProduct(centerAToCol, m_normal);
+			rbA->angularMomentum += angImpulse * CrossProduct(centerAToCol, m_normal);
+			rbB->angularMomentum -= angImpulse * CrossProduct(centerBToCol, m_normal);
+			//std::cout << rbA->angularMomentum.x << std::endl;
+			m_currState[posA * NUMSTATE + 3] += angImpulse * CrossProduct(centerAToCol, m_normal);
+			m_currState[posB * NUMSTATE + 3] += angImpulse * CrossProduct(centerBToCol, m_normal);
+
+			//rbA->angularMomentum = rbA->angularMomentum * 180.0f / (float)M_PI;
+			//rbB->angularMomentum = rbB->angularMomentum * 180.0f / (float)M_PI;
+
+			//rbA->angularMomentum = rbA->angularMomentum * (float)M_PI / 180.0f;
+			//rbB->angularMomentum = rbB->angularMomentum * (float)M_PI / 180.0f;
+		}
+
+
+		for (i = 0; i < m_objectRigidBodyData.size(); i++)
+		{
+			if(m_objectRigidBodyData[i]->objType.compare("ball") == false)
+				UpdateBodyPos(i);
+			//m_derivState[4 * i] = CalcForceOnObject(i);
+			///m_derivState[4 * i + 1] = UpdateBodyPos(i);
+			//m_derivState[4 * i + 2] = calc
+			///m_derivState[4 * i + 3] = calcTorque();
+		}
+
+		ExplicitEuler();
+
+		// Messing with terrain tracking
+
+		//printf("Collision at: <%.2f>\n", res.m_hitPointWorld.getY());
+
+		// Update positions of all dynamic objects
+		for (j = 0; j < m_collisionWorld->getNumCollisionObjects(); j++)
+		{
+			// Get the next object, and activate it
 			btCollisionObject* obj = m_collisionWorld->getCollisionObjectArray()[j];
+			btTransform temp = obj->getWorldTransform();
+			btVector3 temp2 = temp.getOrigin();
+			//btRigidBody* body = btRigidBody::upcast(obj);
+			//btTransform trans;
 
-			if (obj == objA)
+			// Reset forces on player object prior to next step simulation
+			if (obj->getUserIndex() == CAMERA)
 			{
-				rbA = m_objectRigidBodyData[j];
-				for (int k = 0; k < m_ObjectTypePhysicsData.size(); k++)
-				{
-					if (m_ObjectTypePhysicsData[k]->objType == m_objectRigidBodyData[j]->objType)
-						pdA = m_ObjectTypePhysicsData[k];
-				}
-				posA = j;
+				//body->clearForces();
+				//btVector3 tempVel = body->getLinearVelocity();
+				//body->setLinearVelocity(btVector3(0,-2,0));
+				//body->setLinearVelocity(btVector3(0, 0, 0));
 			}
-			if (obj == objB)
+
+			// Update rigid body positions
+			/*if (body && body->getMotionState())
 			{
-				rbB = m_objectRigidBodyData[j];
-				for (int k = 0; k < m_ObjectTypePhysicsData.size(); k++)
-				{
-					if (m_ObjectTypePhysicsData[k]->objType == m_objectRigidBodyData[j]->objType)
-						pdB = m_ObjectTypePhysicsData[k];
-				}
-				posB = j;
+				body->getMotionState()->getWorldTransform(trans);
+			}
+			else
+			{
+				trans = obj->getWorldTransform();
+			}*/
+
+			// Check to see if player object
+			if (obj->getUserIndex() == CAMERA)
+			{
+				// TODO: Make this better (Jack)
+				// Apply force in direction camera was moved
+				//m_newForce.x = ((playerObj.x - m_playerObject.x) * 3000);
+				//m_newForce.setY((playerObj.y() - m_playerObject.y()) * 3000);
+				//m_newForce.x = ((playerObj.z - m_playerObject.z) * 3000);
+
+
+				/// Terrain checking needs to be fixed csmith 17/10/18
+				// If floor height gets higher
+				//if (res.m_hitPointWorld.getY() > m_floorHeight)
+				//{
+				//	std::cout << "Up" << std::endl;
+				//	std::cout << res.m_hitPointWorld.getY() << std::endl;
+
+				//	// Move player position up
+				//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * 3000);
+				//	// New floor height is set to current ray hit value
+
+				//	std::cout << "new force " << m_newForce.getY() << std::endl;
+
+				//	if (m_newForce.getY() >= 6000)
+				//	{
+				//		m_newForce.setY(0);
+				//		m_floorHeight = res.m_hitPointWorld.getY();
+				//	}
+				//}
+
+				// If floor height gets lower
+				//if (res.m_hitPointWorld.getY() < m_floorHeight)
+				//{
+				//	std::cout << "Down" << std::endl;
+				//	std::cout << res.m_hitPointWorld.getY() << std::endl;
+
+				//	// Move player position down
+				//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * (-3000));
+				//	// New floor height is set to current ray hit value
+				//	m_floorHeight = res.m_hitPointWorld.getY();
+				//}
+
+				//if (res.m_hitPointWorld.getY() < m_stepHeight)
+				//{
+				//	std::cout << "Moving Down" << std::endl;
+				//	btScalar stepDown = collisionBodies[j]->m_position.getY() - 300;
+				//	std::cout << "Step Down: " << stepDown << std::endl;
+				//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * -stepDown);
+				//	m_stepHeight = res.m_hitPointWorld.getY();
+				//}
+
+				//std::cout << "Player Height: " << m_playerObject.y() << std::endl;
+
+				// Update rigid body location for drawing
+				//body->applyCentralForce(m_newForce);
+				//m_playerObject = trans.getOrigin();
+				playerObj = m_playerObject;
+			}
+			else
+			{
+				// Update object positions for drawing
+				//collisionBodies[j]->m_position.x = (trans.getOrigin().getX());
+				//collisionBodies[j]->m_position.y = (trans.getOrigin().getY());
+				//collisionBodies[j]->m_position.z = (trans.getOrigin().getZ());
+				//temp.setOrigin(btVector3(m_currState[j * NUMSTATE + 1].x, m_currState[j * NUMSTATE + 1].y, m_currState[j * NUMSTATE + 1].z));
+				//obj->setWorldTransform(temp);
+
+				collisionBodies[j]->m_position = m_currState[j * NUMSTATE + 1];
+
+				/*m_objectRigidBodyData[j]->prevPos.x = m_objectRigidBodyData[j]->currPos.x;
+				m_objectRigidBodyData[j]->prevPos.y = m_objectRigidBodyData[j]->currPos.y;
+				m_objectRigidBodyData[j]->prevPos.z = m_objectRigidBodyData[j]->currPos.z;
+
+				m_objectRigidBodyData[j]->currPos.x = temp.getOrigin().getX();
+				m_objectRigidBodyData[j]->currPos.y = temp.getOrigin().getY();
+				m_objectRigidBodyData[j]->currPos.z = temp.getOrigin().getZ();*/
 			}
 		}
 
-
-
-		//For each contact point in that manifold
-		for (int j = 0; j < numContacts; j++)
-		{
-			//Get the contact information
-			btManifoldPoint& pt = contactManifold->getContactPoint(j);
-
-			// Sum up all the contact points
-			ptA += pt.getPositionWorldOnA();
-			ptB += pt.getPositionWorldOnB();
-		}
-
-		// Get average contact point of both colliding objects
-		ptA /= numContacts;
-		ptB /= numContacts;
-
-		// Get vector for distance from object center to the average collision point
-		glm::vec3 centerAToCol = glm::vec3(rbA->currPos.x, rbA->currPos.y, rbA->currPos.z) - glm::vec3(ptA.getX(), ptA.getY(), ptA.getZ());
-		glm::vec3 centerBToCol = rbB->currPos - glm::vec3(ptB.getX(), ptB.getY(), ptB.getZ());
-
-		// Calculate normal of colliding objects
-		m_normal = centerAToCol - centerBToCol;
-		m_normal = Normalize(m_normal);
-
-		// Calculate linear impulse
-		btScalar tempImpulse;
-
-		tempImpulse = DotProduct(rbA->currLinearVel - rbB->currLinearVel, m_normal);
-		tempImpulse *= -(1 + m_epsilon) * pdA->totalMass * pdB->totalMass;
-		tempImpulse /= (pdA->totalMass + pdB->totalMass);
-		m_impulse = tempImpulse * m_normal;
-
-		//btScalar numerator = DotProduct(m_normal, rbA->currLinearVel - rbB->currLinearVel) + (DotProduct(rbA->currAngularVel, CrossProduct(centerAToCol, m_normal))) + (DotProduct(rbB->currAngularVel, CrossProduct(centerBToCol, m_normal)));
-		//numerator *= -(1.0f + m_epsilon);
-		//glm::vec3 denominatorA; // = (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
-		//glm::vec3 transA = CrossProduct(centerAToCol, m_normal);
-		//glm::vec3 transB = CrossProduct(centerBToCol, m_normal);
-		//glm::vec3 negInert = (1.0f / pdA->secondMoment);
-		//denominatorA = CrossProduct(centerAToCol, m_normal) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + CrossProduct(centerBToCol, m_normal) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
-		////denominatorA = glm::vec3(transA.z, transA.y, transA.x) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + glm::vec3(transB.z, transB.y, transB.x) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
-		//denominatorA += (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
-		//glm::vec3 angImpulse = numerator / denominatorA;
-		//angImpulse *= m_normal;
-
-		// Calculate object velocities after collision
-		rbA->currLinearVel = rbA->currLinearVel + (m_impulse / pdA->totalMass);
-		rbB->currLinearVel = rbB->currLinearVel - (m_impulse / pdB->totalMass);
-
-		// Set new linear velocities to corresponding current values
-		m_currState[posA * NUMSTATE] += m_impulse / pdA->totalMass;
-		m_currState[posB * NUMSTATE] -= m_impulse / pdA->totalMass;
-
-
-		/*****************************************************************/
-		/**This works**/
-		// Calc torgue
-		rbA->torque = CrossProduct(centerAToCol, pdA->totalMass * rbA->currLinearVel);
-		rbB->torque = CrossProduct(centerBToCol, pdB->totalMass * rbB->currLinearVel);
-
-		// Calc angular acceleration
-		rbA->angularAccel = rbA->torque / pdA->secondMoment;
-		rbB->angularAccel = rbB->torque / pdB->secondMoment;
-
-		// Calc new angular velocity
-		rbA->prevAngularVel += rbA->currAngularVel;
-		rbB->prevAngularVel += rbB->currAngularVel;
-
-		rbA->currAngularVel += rbA->angularAccel * delta_t;
-		rbB->currAngularVel += rbB->angularAccel * delta_t;
-
-		rbA->angle -= rbA->currAngularVel * delta_t;
-		rbB->angle += rbB->currAngularVel * delta_t;
-
-		// Set new angular momentum to corresponding value
-		//m_currState[posA * NUMSTATE + 3] = pdA->secondMoment * rbA->currAngularVel;
-		//m_currState[posB * NUMSTATE + 3] = pdB->secondMoment * rbB->currAngularVel;
-		/**This works**/
-
-		btScalar numerator = DotProduct(m_normal, rbA->currLinearVel - rbB->currLinearVel) + (DotProduct(rbA->currAngularVel, CrossProduct(centerAToCol, m_normal))) + (DotProduct(rbB->currAngularVel, CrossProduct(centerBToCol, m_normal)));
-		numerator *= -(1.0f + m_epsilon);
-		glm::vec3 denominatorA; // = (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
-		glm::vec3 transA = CrossProduct(centerAToCol, m_normal);
-		glm::vec3 transB = CrossProduct(centerBToCol, m_normal);
-		glm::vec3 negInert = (1.0f / pdA->secondMoment);
-		denominatorA = CrossProduct(centerAToCol, m_normal) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + CrossProduct(centerBToCol, m_normal) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
-		//denominatorA = glm::vec3(transA.z, transA.y, transA.x) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + glm::vec3(transB.z, transB.y, transB.x) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
-		denominatorA += (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
-		glm::vec3 angImpulse = numerator / denominatorA;
-		angImpulse *= m_normal;
-
-
-		//ExplicitEuler(rbA, delta_t);
-		//ExplicitEuler(rbB, delta_t);
-		//rbB->angularMomentum *= -1;
-
-		//btScalar numerator = DotProduct(m_normal, rbA->currLinearVel - rbB->currLinearVel) + (DotProduct(rbA->currAngularVel, CrossProduct(centerAToCol, m_normal))) + (DotProduct(rbB->currAngularVel, CrossProduct(centerBToCol, m_normal)));
-		//numerator *= -(1.0 + m_epsilon);
-		//glm::vec3 denominatorA; // = (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
-		//denominatorA = CrossProduct(centerAToCol, m_normal) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + CrossProduct(centerBToCol, m_normal) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
-		//denominatorA += (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
-		//glm::vec3 angImpulse = numerator / denominatorA;
-		//angImpulse *= 1;
-		glm::vec3 tempU = CrossProduct(centerAToCol, m_normal);
-		glm::vec3 tempV = CrossProduct(centerAToCol, m_normal);
-		rbA->angularMomentum += angImpulse * CrossProduct(centerAToCol, m_normal);
-		rbB->angularMomentum -= angImpulse * CrossProduct(centerBToCol, m_normal);
-		//std::cout << rbA->angularMomentum.x << std::endl;
-		m_currState[posA * NUMSTATE + 3] += angImpulse * CrossProduct(centerAToCol, m_normal);
-		m_currState[posB * NUMSTATE + 3] += angImpulse * CrossProduct(centerBToCol, m_normal);
-
-		//rbA->angularMomentum = rbA->angularMomentum * 180.0f / (float)M_PI;
-		//rbB->angularMomentum = rbB->angularMomentum * 180.0f / (float)M_PI;
-
-		//rbA->angularMomentum = rbA->angularMomentum * (float)M_PI / 180.0f;
-		//rbB->angularMomentum = rbB->angularMomentum * (float)M_PI / 180.0f;
-	}
-
-
-	// Messing with terrain tracking
-
-	//printf("Collision at: <%.2f>\n", res.m_hitPointWorld.getY());
-
-	// Update positions of all dynamic objects
-	for (int j = 0; j < m_collisionWorld->getNumCollisionObjects(); j++)
-	{
-		// Get the next object, and activate it
-		btCollisionObject* obj = m_collisionWorld->getCollisionObjectArray()[j];
-		btRigidBody* body = btRigidBody::upcast(obj);
-		btTransform trans;
-
-		// Reset forces on player object prior to next step simulation
-		if (obj->getUserIndex() == CAMERA)
-		{
-			//body->clearForces();
-			//btVector3 tempVel = body->getLinearVelocity();
-			//body->setLinearVelocity(btVector3(0,-2,0));
-			//body->setLinearVelocity(btVector3(0, 0, 0));
-		}
-
-		// Update rigid body positions
-		if (body && body->getMotionState())
-		{
-			body->getMotionState()->getWorldTransform(trans);
-		}
-		else
-		{
-			trans = obj->getWorldTransform();
-		}
-
-		// Check to see if player object
-		if (obj->getUserIndex() == CAMERA)
-		{
-			// TODO: Make this better (Jack)
-			// Apply force in direction camera was moved
-			m_newForce.x = ((playerObj.x - m_playerObject.x) * 3000);
-			//m_newForce.setY((playerObj.y() - m_playerObject.y()) * 3000);
-			m_newForce.x = ((playerObj.z - m_playerObject.z) * 3000);
-
-
-			/// Terrain checking needs to be fixed csmith 17/10/18
-			// If floor height gets higher
-			//if (res.m_hitPointWorld.getY() > m_floorHeight)
-			//{
-			//	std::cout << "Up" << std::endl;
-			//	std::cout << res.m_hitPointWorld.getY() << std::endl;
-
-			//	// Move player position up
-			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * 3000);
-			//	// New floor height is set to current ray hit value
-
-			//	std::cout << "new force " << m_newForce.getY() << std::endl;
-
-			//	if (m_newForce.getY() >= 6000)
-			//	{
-			//		m_newForce.setY(0);
-			//		m_floorHeight = res.m_hitPointWorld.getY();
-			//	}
-			//}
-
-			// If floor height gets lower
-			//if (res.m_hitPointWorld.getY() < m_floorHeight)
-			//{
-			//	std::cout << "Down" << std::endl;
-			//	std::cout << res.m_hitPointWorld.getY() << std::endl;
-
-			//	// Move player position down
-			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * (-3000));
-			//	// New floor height is set to current ray hit value
-			//	m_floorHeight = res.m_hitPointWorld.getY();
-			//}
-
-			//if (res.m_hitPointWorld.getY() < m_stepHeight)
-			//{
-			//	std::cout << "Moving Down" << std::endl;
-			//	btScalar stepDown = collisionBodies[j]->m_position.getY() - 300;
-			//	std::cout << "Step Down: " << stepDown << std::endl;
-			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * -stepDown);
-			//	m_stepHeight = res.m_hitPointWorld.getY();
-			//}
-
-			//std::cout << "Player Height: " << m_playerObject.y() << std::endl;
-
-			// Update rigid body location for drawing
-			//body->applyCentralForce(m_newForce);
-			//m_playerObject = trans.getOrigin();
-			playerObj = m_playerObject;
-		}
-		else
-		{
-			// Update object positions for drawing
-			collisionBodies[j]->m_position.x = (trans.getOrigin().getX());
-			collisionBodies[j]->m_position.y = (trans.getOrigin().getY());
-			collisionBodies[j]->m_position.z = (trans.getOrigin().getZ());
-		}
-	}
-
-		
+		physics_lag_time -= delta_t;
 		//std::cout << "/n/n/n/n/n" << std::endl;
-	//}
+	}
+	prev_game_time = game_time;
 }
 
 // Testing for creating a heightfield terrain shape
@@ -826,44 +833,44 @@ void PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuant
 	colObject->setCollisionShape(trimeshShape);
 
 	// Search vector of object types to see if object data has already been created
-	for (int i = 0; i < m_ObjectTypePhysicsData.size(); i++)
-	{
-		// If object data already exists, set flag true
-		if (objType == m_ObjectTypePhysicsData[i]->objType)
-			objExists = true;
-	}
+	//for (int i = 0; i < m_ObjectTypePhysicsData.size(); i++)
+	//{
+	//	// If object data already exists, set flag true
+	//	if (objType == m_ObjectTypePhysicsData[i]->objType)
+	//		objExists = true;
+	//}
 
-	// If object data does not exist, create it
-	if (!objExists)
-	{
-		// New object data
-		ObjectTypePhysicsData* objPhysicsData = new ObjectTypePhysicsData();
+	//// If object data does not exist, create it
+	//if (!objExists)
+	//{
+	//	// New object data
+	//	ObjectTypePhysicsData* objPhysicsData = new ObjectTypePhysicsData();
 
-		// Set type of object
-		objPhysicsData->objType = objType;
+	//	// Set type of object
+	//	objPhysicsData->objType = objType;
 
-		// Mass
-		m_mass = 50000000;
+	//	// Mass
+	//	m_mass = 50000000;
 
-		// Size of object
-		glm::vec3 size = { 10, 10, 10 };
+	//	// Size of object
+	//	glm::vec3 size = { 10, 10, 10 };
 
-		// Make new PointMass data and initialize it
-		std::vector<PointMass> pointMassData;
-		InitializePointMass(pointMassData, m_mass, size);
+	//	// Make new PointMass data and initialize it
+	//	std::vector<PointMass> pointMassData;
+	//	InitializePointMass(pointMassData, m_mass, size);
 
-		// Calc center of gravity
-		CalcObjectCenterOfGravity(pointMassData, objPhysicsData);
+	//	// Calc center of gravity
+	//	CalcObjectCenterOfGravity(pointMassData, objPhysicsData);
 
-		// Calc relative positions of pointmass data
-		CalcPointMassRelativePositions(pointMassData, objPhysicsData);
+	//	// Calc relative positions of pointmass data
+	//	CalcPointMassRelativePositions(pointMassData, objPhysicsData);
 
-		// Calc second moment of mass (inertia)
-		CalcObjectSecondMoment(objPhysicsData, size);
+	//	// Calc second moment of mass (inertia)
+	//	CalcObjectSecondMoment(objPhysicsData, size);
 
-		// Add object data to vector
-		m_ObjectTypePhysicsData.push_back(objPhysicsData);
-	}
+	//	// Add object data to vector
+	//	m_ObjectTypePhysicsData.push_back(objPhysicsData);
+	//}
 
 	// Add object to collision world
 	m_collisionWorld->addCollisionObject(colObject);
@@ -890,29 +897,6 @@ void PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuant
 	m_derivState.push_back(glm::vec3(0));
 	m_derivState.push_back(glm::vec3(0));
 	m_derivState.push_back(glm::vec3(0));
-
-	//btVector3 inertia(0, 0, 0);
-
-	//btDefaultMotionState* motionstate = new btDefaultMotionState(trans);
-	//btRigidBody* body = new btRigidBody(0, motionstate, trimeshShape, inertia);
-
-	//m_trianglemeshs.push_back(trimesh);
-	//m_triangleMeshBodies.push_back(body);
-	//body->setUserIndex(MESH);
-	//body->setContactProcessingThreshold(BT_LARGE_FLOAT);
-	//m_dynamicsWorld->addRigidBody(body);
-	//std::vector< btVector3* > tmp;
-	//m_vertices.push_back(tmp);
-	//m_vertices[m_triangleMeshBodies.size() - 1].push_back(&p0);
-	//m_vertices[m_triangleMeshBodies.size() - 1].push_back(&p1);
-	//m_vertices[m_triangleMeshBodies.size() - 1].push_back(&p2);
-
-	//if (collision)
-		
-	//return m_triangleMeshBodies.size() - 1;
-	
-
-	//return body;
 }
 
 void PhysicsEngine::InitDebugDraw()
@@ -990,189 +974,6 @@ void PhysicsEngine::ParseModel(Model* model)
 		glm::vec3(0),
 		glm::vec3(m_scale.x, m_scale.y, m_scale.z));
 }
-
-
-// Creates all rigid bodies for all game objects
-/*bool PhysicsEngine::CreateAllRigidBodies(Data &objectData)
-{
-	// Holds current rigid body type to create
-	Data tempDataType;
-
-	// Loop through data structure, creating rigid body for each game object
-	for (int i = 0; i < objectData.length() - 1; i++)
-	{
-		tempDataType = objectData[i].getType();
-
-		// Determine what rigid body type to create, then call that function
-		// Return false if no rigid body type found in data structure
-		switch (tempDataType)
-		{
-		case CAMERA: CreateCameraRigidBody(objectData[i]);
-			break;
-		case BOX: CreateBoxShapeRigidBody(objectData[i]);
-			break;
-		case SPHERE: CreateSphereShapeRigidBody(objectData[i]);
-			break;
-		case HEIGHTFIELD: CreateHeightFieldTerrainShape(objectData[i]);
-			break;
-		default: std::cout << "Error reading game object data into Physics Engine.." << std::endl;
-			return false;
-			break;
-		}
-	}
-
-	// If all data read successfully and rigid bodies created, return true
-	return true;
-}*/
-
-// Create a sphere shape rigid body for the camera
-/*void PhysicsEngine::CreateCameraRigidBody(Data &objectData)
-{
-	// Create box shape and add to shape array
-	btCollisionShape* sphereShape = new btSphereShape(objectData.getRadius());
-	collisionShapes.push_back(sphereShape);
-
-	// Initialize transform and location
-	btTransform startTransform;
-	startTransform.setIdentity();
-	startTransform.setOrigin(objectData.getPos());
-
-	// Set mass (non-zero for dynamic)
-	mass = objectData.getMass();
-	isDynamic = (mass != 0.0f);
-
-	// Set initial inertia
-	btVector3 localInertia(0.0, 0.0, 0.0);
-
-	// If dynamic, calculate local inertia
-	if (isDynamic)
-		sphereShape->calculateLocalInertia(mass, localInertia);
-
-	// Using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, sphereShape, localInertia);
-	btRigidBody* body = new btRigidBody(rbInfo);
-
-	// Set the index for the type of rigid body that is being created
-	body->setUserIndex(CAMERA);
-
-	// Add the body to the dynamic world
-	dynamicsWorld->addRigidBody(body);
-
-	// Set starting player object/camera coordinates
-	playerObject = objectData.getPos();
-
-	// Disable gravity for this object or not
-	if(objectData.applyGravity())
-		body->setGravity(btVector3(0.0, 0.0, 0.0));
-}*/
-
-// Create a box shape rigid body
-/*void PhysicsEngine::CreateBoxShapeRigidBody(Data &objectData)
-{
-	// Create box shape and add to shape array
-	btCollisionShape* boxShape = new btBoxShape(btVector3(objectData.getm_scaleX(), objectData.getm_scaleY(), objectData.getm_scaleZ()));
-	collisionShapes.push_back(boxShape);
-
-	// Initialize transform and location
-	btTransform startTransform;
-	startTransform.setIdentity();
-	startTransform.setOrigin(objectData.getPos());
-
-	// Set mass (non-zero for dynamic)
-	mass = objectData.getMass();
-	isDynamic = (mass != 0.0f);
-
-	// Set initial inertia
-	btVector3 localInertia(0.0, 0.0, 0.0);
-
-	// If dynamic, calculate local inertia
-	if (isDynamic)
-		boxShape->calculateLocalInertia(mass, localInertia);
-	
-	// Using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, boxShape, localInertia);
-	btRigidBody* body = new btRigidBody(rbInfo);
-
-	// Set the index for the type of rigid body that is being created
-	body->setUserIndex(BOX);
-
-	// Add the body to the dynamic world
-	dynamicsWorld->addRigidBody(body);
-}*/
-
-// Create a sphere shape rigid body
-/*void PhysicsEngine::CreateSphereShapeRigidBody(Data &objectData)
-{
-	// Create sphere shape and add to shape array
-	btCollisionShape* sphereShape = new btSphereShape(objectData.getRadius());
-	collisionShapes.push_back(sphereShape);
-
-	// Initialize transform and location
-	btTransform startTransform;
-	startTransform.setIdentity();
-	startTransform.setOrigin(objectData.getPos());
-
-	// Set mass (non-zero for dynamic)
-	mass = objectData.getMass();
-	isDynamic = (mass != 0.0f);
-
-	// Set initial inertia
-	btVector3 localInertia(0.0, 0.0, 0.0);
-
-	// If dynamic, calculate local inertia
-	if (isDynamic)
-		sphereShape->calculateLocalInertia(mass, localInertia);
-
-	// Using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, sphereShape, localInertia);
-	btRigidBody* body = new btRigidBody(rbInfo);
-
-	// Set the index for the type of rigid body that is being created
-	body->setUserIndex(SPHERE);
-
-	// Add the body to the dynamic world
-	dynamicsWorld->addRigidBody(body);
-}*/
-
-// Create a heightfield terrain shape
-/*void PhysicsEngine::CreateHeightFieldTerrainShape(Data &objectData)
-{
-	// Create heightfield terrain shape and add to shape array
-	btCollisionShape* heightfieldShape = new btHeightfieldTerrainShape(objectData.getm_scaleX(), objectData.getm_scaleZ(), objectData.getData(), objectData.getHeightm_scale(), objectData.getMinHeight(), objectData.getMaxHeight(), 1, PHY_UCHAR, true);
-	collisionShapes.push_back(heightfieldShape);
-
-	// Initialize transform and location
-	btTransform startTransform;
-	startTransform.setIdentity();
-	startTransform.setOrigin(objectData.getPos());
-
-	// Set mass (non-zero for dynamic)
-	mass = objectData.getMass();
-	isDynamic = (mass != 0.0f);
-
-	// Set initial inertia
-	btVector3 localInertia(0.0, 0.0, 0.0);
-
-	// If dynamic, calculate local inertia
-	if (isDynamic)
-		heightfieldShape->calculateLocalInertia(mass, localInertia);
-
-	// Using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, heightfieldShape, localInertia);
-	btRigidBody* body = new btRigidBody(rbInfo);
-
-	// Set the index for the type of rigid body that is being created
-	body->setUserIndex(HEIGHTFIELD);
-
-	// Add the body to the dynamic world
-	dynamicsWorld->addRigidBody(body);
-}*/
-
-
 
 /*************************************NEW**************************************/
 
@@ -1289,4 +1090,24 @@ btScalar PhysicsEngine::DotProduct(glm::vec3 one, glm::vec3 two)
 glm::vec3 PhysicsEngine::CrossProduct(glm::vec3 first, glm::vec3 second)
 {
 	return glm::vec3(first.y*second.z - first.z*second.y, first.z*second.x - first.x*second.z, first.x*second.y - first.y*second.x);
+}
+
+void PhysicsEngine::UpdateBodyPos(int statePos)
+{
+	//m_prevState[statePos * NUMSTATE + 1] = m_currState[statePos * NUMSTATE + 1];
+	m_currState[statePos * NUMSTATE + 1] += m_currState[statePos * NUMSTATE];
+	//m_derivState[statePos * NUMSTATE + 1] = m_currState[statePos * NUMSTATE + 1] + m_currState[statePos * NUMSTATE];
+	//m_currState[statePos * NUMSTATE + 1]
+	//m_currState[statePos * NUMSTATE + 1] += glm::vec3(1, 2, 3);
+}
+
+void PhysicsEngine::ExplicitEuler()
+{
+	int size = m_currState.size();
+
+	for (int i = 0; i < size; i++)
+	{
+		m_prevState[i] = m_currState[i];
+		m_currState[i] += delta_t * m_derivState[i];
+	}
 }

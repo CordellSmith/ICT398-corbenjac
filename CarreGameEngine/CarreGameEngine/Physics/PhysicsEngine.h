@@ -222,7 +222,7 @@ class PhysicsEngine
 			* @param 
 			* @return 
 			*/
-		void AddSphere(float radius, glm::vec3 &startPos, std::string objType);
+		void AddSphere(float radius, glm::vec3 &startPos, std::string objType, glm::vec3 &startVel);
 
 			/**
 			* @brief Create a heightfield terrain shape
@@ -383,6 +383,10 @@ class PhysicsEngine
 		// pos
 		// angularVel
 		// angularMomentum
+
+		void UpdateBodyPos(int statePos);
+
+		void ExplicitEuler();
 		
 		/*************************************NEW**************************************/
 

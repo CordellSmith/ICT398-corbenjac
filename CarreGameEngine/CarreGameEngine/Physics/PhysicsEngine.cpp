@@ -400,10 +400,10 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, std::
 	btCollisionObject* objB;
 
 	// Data of colliding rigid bodies
-	ObjectRigidBodyData* rbA = m_objectRigidBodyData[0];
-	ObjectRigidBodyData* rbB = m_objectRigidBodyData[0];
-	ObjectTypePhysicsData* pdA = m_ObjectTypePhysicsData[0];
-	ObjectTypePhysicsData* pdB = m_ObjectTypePhysicsData[0];
+	ObjectRigidBodyData* rbA = 0; //= m_objectRigidBodyData[0];
+	ObjectRigidBodyData* rbB = 0; // m_objectRigidBodyData[0];
+	ObjectTypePhysicsData* pdA = 0;// = m_ObjectTypePhysicsData[0];
+	ObjectTypePhysicsData* pdB = 0;// m_ObjectTypePhysicsData[0];
 
 	// Collision point data
 	btVector3 ptA = { 0, 0, 0 };
@@ -415,6 +415,11 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, std::
 		// Data
 		ptA = { 0, 0, 0 };
 		ptB = { 0, 0, 0 };
+
+		rbA = 0;
+		rbB = 0;
+		pdA = 0;
+		pdB = 0;
 
 		// Data
 		int posA;
@@ -428,6 +433,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, std::
 		// Get info for each colliding pair
 		for (i = 0; i < numManifolds; i++)
 		{
+			//std::cout << numManifolds << std::endl;
 			btPersistentManifold* contactManifold = m_collisionWorld->getDispatcher()->getManifoldByIndexInternal(i);
 			objA = const_cast<btCollisionObject*>(contactManifold->getBody0());
 			objB = const_cast<btCollisionObject*>(contactManifold->getBody1());
@@ -464,7 +470,8 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, std::
 				}
 			}
 
-
+			//if (pdA->objType == "ball" || pdB->objType == "ball")
+				std::cout << "OBJ1: " << pdA->objType << " collided with OBJ2: " << pdB->objType << std::endl;
 
 			//For each contact point in that manifold
 			for (j = 0; j < numContacts; j++)
@@ -585,7 +592,11 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, std::
 
 		for (i = 0; i < m_objectRigidBodyData.size(); i++)
 		{
-			if(m_objectRigidBodyData[i]->objType.compare("ball") == false)
+			if(m_objectRigidBodyData[i]->objType.compare("ball0") == false ||
+				m_objectRigidBodyData[i]->objType.compare("ball1") == false || 
+				m_objectRigidBodyData[i]->objType.compare("ball2") == false || 
+				m_objectRigidBodyData[i]->objType.compare("ball3") == false || 
+				m_objectRigidBodyData[i]->objType.compare("ball4") == false)
 				UpdateBodyPos(i);
 			//m_derivState[4 * i] = CalcForceOnObject(i);
 			///m_derivState[4 * i + 1] = UpdateBodyPos(i);

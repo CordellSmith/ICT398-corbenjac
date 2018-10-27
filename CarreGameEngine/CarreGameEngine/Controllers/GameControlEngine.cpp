@@ -257,7 +257,7 @@ void GameControlEngine::InitializePhysics()
 			// Have to convert from glm::vec3 to Bullets btVector3
 			objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 
-			m_physicsWorld->AddSphere(110.0, objRigidBodyPosition, "ball", glm::vec3(0));
+			m_physicsWorld->AddSphere(10.0, objRigidBodyPosition, "ball", glm::vec3(0));
 			// Add to our array of collision bodies
 			//m_collisionBodyPos.push_back(objRigidBodyPosition);
 			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
@@ -267,11 +267,11 @@ void GameControlEngine::InitializePhysics()
 		if (itr->second->GetAssetName() == "chair")
 		{
 			// Creates 5 chairs (testing)
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < 1; i++)
 			{
 				objRigidBodyPosition = glm::vec3(
 					itr->second->GetPosition().x + 100 * i, 
-					itr->second->GetPosition().y + 100 * i, 
+					itr->second->GetPosition().y + 1500 * i, 
 					itr->second->GetPosition().z + 100 * i
 				);
 				m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), "chair");
@@ -291,7 +291,7 @@ void GameControlEngine::InitializePhysics()
 		///			09/10/18 -- Only generating box shape rigid objects, removed name specific code
 		///			20/10/18 -- CreateDynamicRigidBody() now takes the models dimensions to create a more accurate size bounding box
 		objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
-		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), "table");
+		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), itr->first);
 		m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 	}
 

@@ -236,6 +236,8 @@ public:
 		m_collisionBodies = &collisionBodies;
 	}
 
+	int count;
+
 protected:
 	std::string m_filePath;
 	std::string m_name;

@@ -9,6 +9,7 @@ Player::Player(std::string playerName)
 	m_currentTurnSpeed = 0;
 	m_moveSpeed = 150;
 	m_turnSpeed = 0.1;
+	count = 0;
 }
 
 void Player::LoadFromFilePath(std::string filePath)
@@ -75,10 +76,10 @@ void Player::ThrowBall(float time, Camera* cam)
 	
 	// Add crates sphere shape rigid body
 	//btRigidBody* sphere = m_physicsWorld->AddSphere(110.0, camPos, "ball");
-	m_physicsWorld->AddSphere(110.0, camPos, "ball", look /= 1000);
+	m_physicsWorld->AddSphere(10.0, camPos, "ball" + std::to_string(count), look /= 1000);
 	// Add linear velocity to the sphere
 	//sphere->setLinearVelocity(btVector3(look.x, look.y, look.z));
-
+	count++;
 	// Add to our array of collision bodies
 	m_collisionBodies->push_back(new CollisionBody("ball", camPos));
 

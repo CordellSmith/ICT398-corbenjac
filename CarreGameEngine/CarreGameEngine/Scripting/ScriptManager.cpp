@@ -212,15 +212,13 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 	// Name of current model being read in
 	std::string modelName;
 	std::string objectName;
-	std::string texFilePath;
 
 	// Different types of data being read in
 	std::string values[5];
 	values[0] = "filePath";
-	values[1] = "texFilePath";
-	values[2] = "scale";
-	values[3] = "pos";
-	values[4] = "rot";
+	values[1] = "scale";
+	values[2] = "pos";
+	values[3] = "rot";
 
 	//temp values
 	std::string temp;
@@ -228,6 +226,7 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 	std::vector<float> tempData;
 	std::vector<std::string> tempPos;
 	std::vector<std::string> tempScale;
+	std::vector<std::string> tempRot;
 
 	// Push to first table
 	lua_pushnil(Environment);
@@ -254,15 +253,17 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 				temp = lua_tostring(Environment, -2);
 				if (temp.compare(values[0]) == 0)
 					filePath = lua_tostring(Environment, -1);
-				if (temp.compare(values[1]) == 0)
-					texFilePath = lua_tostring(Environment, -1);
-				if (temp.compare(values[2]) == 0) {
+				if (temp.compare(values[1]) == 0) {
 					tempVec = lua_tostring(Environment, -1);
 					tempScale = split(tempVec);
 				}
-				if (temp.compare(values[3]) == 0) {
+				if (temp.compare(values[2]) == 0) {
 					tempVec = lua_tostring(Environment, -1);
 					tempPos = split(tempVec);
+				}
+				if (temp.compare(values[3]) == 0) {
+					tempVec = lua_tostring(Environment, -1);
+					tempRot = split(tempVec);
 				}
 					
 				// Pop out of current table
@@ -270,7 +271,6 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 			}	
 			// Pass in filePath to modelData
 			modelData.filePath = filePath;
-			modelData.texFilePath = texFilePath;
 
 			// Pass in model scales and push to modelData
 			tempData.push_back(toFloat(tempScale[0]));
@@ -286,6 +286,15 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 			tempData.push_back(toFloat(tempPos[1]));
 			tempData.push_back(toFloat(tempPos[2]));
 			modelData.modelPositions.push_back(tempData);
+
+			// Clear for next batch of data
+			tempData.clear();
+
+			//pass in rorations and push to modelData
+			tempData.push_back(toFloat(tempRot[0]));
+			tempData.push_back(toFloat(tempRot[1]));
+			tempData.push_back(toFloat(tempRot[2]));
+			modelData.modelRotations.push_back(tempData);
 
 			// Clear for next batch of data
 			tempData.clear();

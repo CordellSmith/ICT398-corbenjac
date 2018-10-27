@@ -197,7 +197,8 @@ void PhysicsEngine::CreatePlayerControlledRigidBody(glm::vec3 &playerObj)
 }
 
 // Create a dynamic rigid body
-void PhysicsEngine::CreateDynamicRigidBody(glm::vec3 &pos, glm::vec3& dimensions, std::string objType)
+//void PhysicsEngine::CreateDynamicRigidBody(glm::vec3 &pos, glm::vec3& dimensions, std::string objType)
+void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions, CollisionBody* colBody)
 {
 	// Does object data already exist
 	bool objExists = false;
@@ -217,7 +218,16 @@ void PhysicsEngine::CreateDynamicRigidBody(glm::vec3 &pos, glm::vec3& dimensions
 	);
 
 	// Set shape to object
-	colObject->setCollisionShape(boxShape);
+	//colObject->setCollisionShape(boxShape);
+
+	// Create a dynamic object
+	btTransform startTransform;
+	startTransform.setIdentity();
+	// Set origin of body
+	startTransform.setOrigin(pos);
+	
+	// Set mass (non-zero for dynamic)
+	m_mass = 100.0;
 
 	// Search vector of object types to see if object data has already been created
 	for (int i = 0; i < m_ObjectTypePhysicsData.size(); i++)
@@ -262,6 +272,10 @@ void PhysicsEngine::CreateDynamicRigidBody(glm::vec3 &pos, glm::vec3& dimensions
 	// Add object to collision world
 	m_collisionWorld->addCollisionObject(colObject);
 
+	// Set the index for the type of rigid body that is being created
+	body->setUserIndex(BOX);
+
+	body->setUserPointer(colBody);
 	
 
 	// Add object rigid body data to vector
@@ -291,7 +305,8 @@ void PhysicsEngine::CreateDynamicRigidBody(glm::vec3 &pos, glm::vec3& dimensions
 
 
 // Create a dynamic rigid body
-void PhysicsEngine::AddSphere(float radius, glm::vec3 &startPos, std::string objType, glm::vec3 &startVel)
+//void PhysicsEngine::AddSphere(float radius, glm::vec3 &startPos, std::string objType, glm::vec3 &startVel)
+btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos, CollisionBody* colBody)
 {
 	// Does object data already exist
 	bool objExists = false;
@@ -338,6 +353,11 @@ void PhysicsEngine::AddSphere(float radius, glm::vec3 &startPos, std::string obj
 
 		// Calc center of gravity
 		CalcObjectCenterOfGravity(pointMassData, objPhysicsData);
+	body->setUserPointer(colBody);
+
+	// Add the body to the dynamic world
+	m_dynamicsWorld->addRigidBody(body);
+	//m_collisionWorld->addCollisionObject(body);
 
 		// Calc relative positions of pointmass data
 		CalcPointMassRelativePositions(pointMassData, objPhysicsData);
@@ -408,6 +428,24 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, std::
 	// Collision point data
 	btVector3 ptA = { 0, 0, 0 };
 	btVector3 ptB = { 0, 0, 0 };
+
+	// Update positions of all dynamic objects
+	//for (int j = 0; j < m_dynamicsWorld->getNumCollisionObjects(); j++)
+	//{
+	//	// Get the next object, and activate it
+	//	btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[j];
+	//	btRigidBody* body = btRigidBody::upcast(obj);
+	//	btTransform trans;
+	//	ComputerAI* compAI;
+
+	//	// Reset forces on player object prior to next step simulation
+	//	if (body->getUserIndex() == CAMERA)
+	//	{
+	//		//body->clearForces();
+	//		//btVector3 tempVel = body->getLinearVelocity();
+	//		//body->setLinearVelocity(btVector3(0,-2,0));
+	//		body->setLinearVelocity(btVector3(0, 0, 0));
+	//	}
 
 
 	while (physics_lag_time > delta_t)
@@ -720,6 +758,82 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, std::
 
 		physics_lag_time -= delta_t;
 		//std::cout << "/n/n/n/n/n" << std::endl;
+
+		// Check to see if player object
+		//if (body->getUserIndex() == CAMERA)
+		//{
+		//	// TODO: Make this better (Jack)
+		//	// Apply force in direction camera was moved
+		//	m_newForce.setX((playerObj.x() - m_playerObject.x()) * 3000);
+		//	//m_newForce.setY((playerObj.y() - m_playerObject.y()) * 3000);
+		//	m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 3000);
+
+
+		//	/// Terrain checking needs to be fixed csmith 17/10/18
+		//	// If floor height gets higher
+		//	//if (res.m_hitPointWorld.getY() > m_floorHeight && res.m_collisionObject->getCollisionShape()->getName())
+		//	//{
+		//	//	// New floor height is set to current ray hit value
+		//	//	m_floorHeight = res.m_hitPointWorld.getY();
+		//	//	std::cout << "Up" << std::endl;
+		//	//	std::cout << res.m_hitPointWorld.getY() << std::endl;
+
+		//	//	// Move player position up
+		//	//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * -1000);
+		//	//}
+
+		//	//// If floor height gets lower
+		//	//if (res.m_hitPointWorld.getY() < m_floorHeight)
+		//	//{
+		//	//	// New floor height is set to current ray hit value
+		//	//	m_floorHeight = res.m_hitPointWorld.getY();
+		//	//	std::cout << "Down" << std::endl;
+		//	//	std::cout << res.m_hitPointWorld.getY() << std::endl;
+
+		//	//	// Move player position down
+		//	//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * 100000);
+		//	//}
+
+		//	//std::cout << "Player Height: " << m_playerObject.y() << std::endl;
+
+		//	// Update rigid body location for drawing
+		//	body->applyCentralForce(m_newForce);
+		//	m_playerObject = trans.getOrigin();
+		//	playerObj = m_playerObject;
+		//}
+		//else
+		//{
+		//	// Collision body has AI
+		//	if (collisionBodies[j]->m_AI != NULL)
+		//	{
+		//		// Update state
+		//		collisionBodies[j]->m_AI->Update();
+
+		//		// Update the physics collision object position
+		//		trans.getOrigin().setX(collisionBodies[j]->m_AI->GetPosition().x);
+		//		trans.getOrigin().setY(collisionBodies[j]->m_AI->GetPosition().y);
+		//		trans.getOrigin().setZ(collisionBodies[j]->m_AI->GetPosition().z);
+
+		//		// Update the object positions for drawing
+		//		collisionBodies[j]->m_position.setX(collisionBodies[j]->m_AI->GetPosition().x);
+		//		collisionBodies[j]->m_position.setY(collisionBodies[j]->m_AI->GetPosition().y);
+		//		collisionBodies[j]->m_position.setZ(collisionBodies[j]->m_AI->GetPosition().z);
+		//		
+		//		// Update the object rotations for drawing
+		//		collisionBodies[j]->m_rotation.setX(collisionBodies[j]->m_AI->GetRotation().x);
+		//		collisionBodies[j]->m_rotation.setY(collisionBodies[j]->m_AI->GetRotation().y);
+		//		collisionBodies[j]->m_rotation.setZ(collisionBodies[j]->m_AI->GetRotation().z);
+
+		//		obj->setWorldTransform(trans);
+		//	}
+		//	else
+		//	{
+		//		// Update non AI object positions for drawing
+		//		collisionBodies[j]->m_position.setX(trans.getOrigin().getX());
+		//		collisionBodies[j]->m_position.setY(trans.getOrigin().getY());
+		//		collisionBodies[j]->m_position.setZ(trans.getOrigin().getZ());
+		//	}
+		//}
 	}
 	prev_game_time = game_time;
 }
@@ -823,9 +937,9 @@ void PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuant
 			trimesh->addTriangle(A, B, C);
 
 			// Add points to debug draw array of btVector3s
-			//m_debugLines.push_back(A);
-			//m_debugLines.push_back(B);
-			//m_debugLines.push_back(C);
+			m_debugLines.push_back(A);
+			m_debugLines.push_back(B);
+			m_debugLines.push_back(C);
 		}
 	}
 
@@ -875,6 +989,23 @@ void PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuant
 
 	//	// Calc relative positions of pointmass data
 	//	CalcPointMassRelativePositions(pointMassData, objPhysicsData);
+
+	//m_trianglemeshs.push_back(trimesh);
+	//m_triangleMeshBodies.push_back(body);
+	body->setUserIndex(MESH);
+	//body->setContactProcessingThreshold(BT_LARGE_FLOAT);
+	m_dynamicsWorld->addRigidBody(body);
+
+	//std::vector< btVector3* > tmp;
+	//m_vertices.push_back(tmp);
+	//m_vertices[m_triangleMeshBodies.size() - 1].push_back(&p0);
+	//m_vertices[m_triangleMeshBodies.size() - 1].push_back(&p1);
+	//m_vertices[m_triangleMeshBodies.size() - 1].push_back(&p2);
+
+	//if (collision)
+		
+	//return m_triangleMeshBodies.size() - 1;
+	
 
 	//	// Calc second moment of mass (inertia)
 	//	CalcObjectSecondMoment(objPhysicsData, size);
@@ -963,7 +1094,7 @@ void PhysicsEngine::DebugDraw()
 	glEnableVertexAttribArray(0);
 
 	// Draw the lines
-	//glDrawArrays(GL_LINES, 0, sizeof(m_debugLines[0]) * m_debugLines.size());
+	glDrawArrays(GL_LINES, 0, sizeof(m_debugLines[0]) * m_debugLines.size());
 
 	// Disable the position attribute
 	glDisableVertexAttribArray(0);

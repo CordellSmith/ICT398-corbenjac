@@ -70,6 +70,7 @@
 #include "DebugDraw.h"
 #include <cmath>
 #include "../../Dependencies/GLM/include/GLM/vec3.hpp"
+#include "../AI/Affordance/Affordance.h"
 
 
 /*************************************NEW**************************************/
@@ -115,14 +116,21 @@ struct ObjectRigidBodyData
 /*************************************NEW**************************************/
 
 struct CollisionBody {
-
-	CollisionBody(std::string name, const glm::vec3& position) 
+	CollisionBody(std::string name, std::string modelName, const btVector3& position, const btVector3& rotation, Affordance* affordanceData, ComputerAI* AI = NULL)
 	{ 
 		m_name = name;
+		m_modelName = modelName;
 		m_position = position;
+		m_rotation = rotation;
+		m_affordance = affordanceData;
+		m_AI = AI;
 	};
 	std::string m_name;
+	std::string m_modelName;
 	glm::vec3 m_position;
+	glm::vec3 m_rotation;
+	Affordance* m_affordance;
+	ComputerAI* m_AI;
 };
 
 class PhysicsEngine
@@ -185,7 +193,8 @@ class PhysicsEngine
 			*
 			* @return void
 			*/
-		void CreateDynamicRigidBody(glm::vec3 &pos, glm::vec3& dimensions, std::string objType);
+		void CreateDynamicRigidBody(glm::vec3 &pos, glm::vec3& dimensions, CollisionBody* colBody);
+		//void CreateDynamicRigidBody(glm::vec3 &pos, std::string objType);
 			/**
 			* @brief Creates dynamic rigid body for a player controlled object
 			*
@@ -222,7 +231,7 @@ class PhysicsEngine
 			* @param 
 			* @return 
 			*/
-		void AddSphere(float radius, glm::vec3 &startPos, std::string objType, glm::vec3 &startVel);
+		btRigidBody* AddSphere(float radius, glm::vec3 &startPos, CollisionBody* colBody);
 
 			/**
 			* @brief Create a heightfield terrain shape
@@ -244,7 +253,7 @@ class PhysicsEngine
 
 		void TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuantizedBvhTree, bool collision, std::string objType);
 
-		btDiscreteDynamicsWorld* GetDynamicsWorld() { return m_dynamicsWorld; };
+		btDiscreteDynamicsWorld* GetDynamicsWorld() const { return m_dynamicsWorld; };
 
 		btAlignedObjectArray<btCollisionShape*>& GetCollisionShapes() { return m_collisionShapes; };
 
@@ -455,8 +464,7 @@ class PhysicsEngine
 		Camera* m_camera;
 
 			/// Player height controller
-		btScalar m_floorHeight = 10.0f;
-		btScalar m_cap;
+		btScalar m_floorHeight = 0.0f;
 
 		//DebugDraw d;
 

@@ -70,20 +70,20 @@ void Player::TurnAntiClock(float time)
 
 void Player::ThrowBall(float time, Camera* cam)
 {
-	// Get camera position and lookAt vector
+	// Get camera position, rotation and lookAt vector
 	glm::vec3 camPos = glm::vec3(m_playerModel->GetPosition().x, m_playerModel->GetPosition().y, m_playerModel->GetPosition().z);
+	glm::vec3 camRot = glm::vec3(m_playerModel->GetRotation().x, m_playerModel->GetRotation().y, m_playerModel->GetRotation().z);
 	glm::vec3 look = m_playerModel->GetCamera()->GetView() * 1000.0f;
 	
+	Affordance* affordance = new Affordance("ball");
+	CollisionBody* colBody = new CollisionBody("projectile", "ball", camPos, camRot, affordance);
+
 	// Add crates sphere shape rigid body
 	//btRigidBody* sphere = m_physicsWorld->AddSphere(110.0, camPos, "ball");
-	m_physicsWorld->AddSphere(10.0, camPos, "ball" + std::to_string(count), look /= 1000);
+	btRigidBody* sphere = m_physicsWorld->AddSphere(110.0, camPos, colBody);
 	// Add linear velocity to the sphere
 	//sphere->setLinearVelocity(btVector3(look.x, look.y, look.z));
 	count++;
 	// Add to our array of collision bodies
-	m_collisionBodies->push_back(new CollisionBody("ball", camPos));
-
-	// Testing
-	std::cout << "THROW" << std::endl;
-	//std::cout << "Collision Body Pos Size: " << m_collisionBodies->size() << std::endl;
+	m_collisionBodies->push_back(colBody);
 }

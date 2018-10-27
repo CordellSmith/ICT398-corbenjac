@@ -89,7 +89,7 @@ void GameWorld::UpdatePhysics()
 	// TODO: Make this better (Jack)
 	
 	btVector3 bt_playerPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
-	
+
 	// Set updated camera location
 	//m_camera->SetPosition(glm::vec3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z));
 		
@@ -109,29 +109,44 @@ void GameWorld::UpdatePhysics()
 		m_gameAssets.find(m_collisionBodies->at(i)->m_modelName)->second->GetModel()->SetRotation(updRotation);
 		// Search through map using find. If found, render the object
 		m_glRenderer.Render(m_gameAssets.find(m_collisionBodies->at(i)->m_modelName)->second->GetModel());
-
-		//if (m_collisionBodies->at(i)->m_name == "AI 1")
-		//	printf("AI 1 <X %d><Y %d><Z %d>\n", updPosition.x, updPosition.y, updPosition.z);
-		//if (m_collisionBodies->at(i)->m_name == "AI 2")																			 
-		//	printf("AI 2 <X %d><Y %d><Z %d>\n", updPosition.x, updPosition.y, updPosition.z);
-		//if (m_collisionBodies->at(i)->m_name == "AI 3")																		
-		//	printf("AI 3 <X %d><Y %d><Z %d>\n", updPosition.x, updPosition.y, updPosition.z);
 	}
 
-	// Ray casting
+	/// CSmith	20/10/18
+	///			Started ray cast
+	///			25/10/18
+	///			Ray casting returning collision shape information (name, modelname, position, affordance etc)
 	glm::vec3 camDirection = m_camera->GetView() * 10000.0f;
-	btCollisionWorld::ClosestRayResultCallback rayCallback(btVector3(
-		m_camera->GetPosition().x, 
-		m_camera->GetPosition().y, 
-		m_camera->GetPosition().z), 
-		btVector3(camDirection.x, 
-			camDirection.y, 
-			camDirection.z));
+	btCollisionWorld::ClosestRayResultCallback rayCallback(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(
+		camDirection.x, 
+		camDirection.y,
+		camDirection.z));
 	m_physicsWorld->GetDynamicsWorld()->rayTest(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z), rayCallback);
+	
+	const btRigidBody* body;
+	CollisionBody* data;
 
 	if (rayCallback.hasHit())
 	{
-		//std::cout << rayCallback.m_collisionObject->getCollisionShape()->getName() << std::endl;
+		// Upcast the collision object to btRigidBody where the user pointer function is
+		body = btRigidBody::upcast(rayCallback.m_collisionObject);
+
+		// Check if the body is not null
+		if (body != NULL)
+		{
+			// Set the local data variable pointer to the 'hit' objects btRigidBody object
+			data = (CollisionBody*)body->getUserPointer();
+
+			// Check if the collision body data is not null
+			if (data != NULL)
+			{
+				// Do whatever with information
+				std::cout << "Model Name: " << data->m_name << "\n"
+					<< "ModelName: " << data->m_modelName << "\n"
+					<< "Position x:" << data->m_position.getX()
+					<< " y: " << data->m_position.getY()
+					<< " z: " << data->m_position.getZ() << std::endl;
+			}
+		}
 	}
 
 	m_player->SetPosition(glm::vec3(bt_playerPos.getX(), bt_playerPos.getY(), bt_playerPos.getZ()));

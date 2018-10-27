@@ -137,12 +137,12 @@ void PhysicsEngine::CreatePlayerControlledRigidBody(btVector3 &playerObj)
 }
 
 // Create a dynamic rigid body
-void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions)
+void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions, CollisionBody* colBody)
 {
 	// Create box shape size of the dimensions of the object
 	btCollisionShape* boxShape = new btBoxShape(btVector3(
 		btScalar(dimensions.x / 2), 
-		btScalar(dimensions.y / 6), 
+		btScalar(dimensions.y / 2), 
 		btScalar(dimensions.z / 2))
 	);
 	
@@ -156,7 +156,7 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions
 	startTransform.setOrigin(pos);
 	
 	// Set mass (non-zero for dynamic)
-	m_mass = 1000.0;
+	m_mass = 100.0;
 
 	// Set dynamic objects to objects with mass that is non-zero
 	m_isDynamic = (m_mass != 0.0f);
@@ -173,6 +173,8 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions
 
 	// Set the index for the type of rigid body that is being created
 	body->setUserIndex(BOX);
+
+	body->setUserPointer(colBody);
 	
 	// Add the body to the dynamic world
 	m_dynamicsWorld->addRigidBody(body);
@@ -180,7 +182,7 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions
 
 
 // Create a dynamic rigid body
-btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos)
+btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos, CollisionBody* colBody)
 {
 	// Create box shape and add to shape array
 	btCollisionShape* sphereShape = new btSphereShape(radius);
@@ -209,6 +211,8 @@ btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos)
 
 	// Set the index for the type of rigid body that is being created
 	body->setUserIndex(SPHERE);
+
+	body->setUserPointer(colBody);
 
 	// Add the body to the dynamic world
 	m_dynamicsWorld->addRigidBody(body);
@@ -458,6 +462,7 @@ btCollisionObject* PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh,
 	body->setUserIndex(MESH);
 	//body->setContactProcessingThreshold(BT_LARGE_FLOAT);
 	m_dynamicsWorld->addRigidBody(body);
+
 	//std::vector< btVector3* > tmp;
 	//m_vertices.push_back(tmp);
 	//m_vertices[m_triangleMeshBodies.size() - 1].push_back(&p0);

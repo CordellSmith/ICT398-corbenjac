@@ -228,12 +228,16 @@ void GameControlEngine::InitializePhysics()
 
 		if (itr->second->GetAssetName() == "player")
 		{
-			// Create camera capsule shape to collide with objects
 			objRigidBodyPosition = btVector3(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
 			objRigidBodyRotation = btVector3(m_player->GetRotation().x, m_player->GetRotation().y, m_player->GetRotation().z);
+			
+			Affordance* affordance = new Affordance(itr->second->GetAssetName());
 
+			CollisionBody* colBody = new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
+
+			// Create camera capsule to collide with objects
 			m_physicsWorld->CreatePlayerControlledRigidBody(objRigidBodyPosition);
-			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation));
+			m_collisionBodies.push_back(colBody);
 			continue;
 		}
 		
@@ -245,6 +249,10 @@ void GameControlEngine::InitializePhysics()
 
 			std::cout << "Physics Init " << itr->second->GetAssetName() << ": " << itr->second->GetModel()->GetMeshBatch().size() << " and " << itr->second->GetModel()->GetMeshBatch().size() << std::endl;
 
+			Affordance* affordance = new Affordance(itr->second->GetAssetName());
+
+			CollisionBody* colBody = new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
+
 			/// 15/10/18 CSmith Debug Draw
 			/// 16/10/18		Debug Draw almost working
 			///					Mesh collider with LBLT is working
@@ -253,7 +261,7 @@ void GameControlEngine::InitializePhysics()
 			// Static Triangle mesh of LBLT is created here!
 			// Debug draw is also used here
 			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, false);
-			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation));
+			m_collisionBodies.push_back(colBody);
 			// This has to be called after the mesh data is passed in
 			m_physicsWorld->InitDebugDraw();
 			continue;
@@ -265,10 +273,14 @@ void GameControlEngine::InitializePhysics()
 			objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 			objRigidBodyRotation = btVector3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
 
-			m_physicsWorld->AddSphere(110.0, objRigidBodyPosition);
+			Affordance* affordance = new Affordance(itr->second->GetAssetName());
+
+			CollisionBody* colBody = new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
+
+			m_physicsWorld->AddSphere(110.0, objRigidBodyPosition, colBody);
 			// Add to our array of collision bodies
 			//m_collisionBodyPos.push_back(objRigidBodyPosition);
-			m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation));
+			m_collisionBodies.push_back(colBody);
 			continue;
 		}
 
@@ -280,18 +292,26 @@ void GameControlEngine::InitializePhysics()
 			{
 					objRigidBodyPosition = btVector3(itr->second->GetPosition().x + (i * 100), itr->second->GetPosition().y, itr->second->GetPosition().z + (i * 100));
 					objRigidBodyRotation = btVector3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
+					
+					// Create UNIQUE NAME for AI
+					std::string uniqueName = "AI " + std::to_string(i + 1);
 
 					// Create a new AI with position
 					ComputerAI* AI = new ComputerAI(itr->second->GetPosition(), itr->second->GetRotation());
 					// Give it to person
 					itr->second->SetAI(AI);
 
+					// Create affordance for AI
+					Affordance* affordance = new Affordance(uniqueName);
+
+					// Create a collision body object
+					CollisionBody* colBody = new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance, AI);
+
 					// Create new dynamic rigid body
-					m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons());
+					m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody);
 
 					// Add to collision bodies vector with UNIQUE NAME
-					std::string uniqueName = "AI " + std::to_string(i + 1);
-					m_collisionBodies.push_back(new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, AI));
+					m_collisionBodies.push_back(colBody);
 					// Add to all AI
 					m_agents.push_back(AI);
 
@@ -335,8 +355,12 @@ void GameControlEngine::InitializePhysics()
 					objRigidBodyPosition = btVector3(x, y, z);
 					objRigidBodyRotation = btVector3(0, yrot, 0);
 
-					m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons());
-					m_collisionBodies.push_back(new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation));
+					Affordance* affordance = new Affordance(uniqueName);
+
+					CollisionBody* colBody = new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
+
+					m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody);
+					m_collisionBodies.push_back(colBody);
 
 					z += 4000.0f;
 				}
@@ -391,8 +415,11 @@ void GameControlEngine::InitializePhysics()
 						objRigidBodyPosition = btVector3(x, y, z);
 						objRigidBodyRotation = btVector3(0, yrot, 0);
 
-						m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons());
-						m_collisionBodies.push_back(new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation));
+						Affordance* affordance = new Affordance(uniqueName);
+
+						CollisionBody* colBody = new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
+						m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody);
+						m_collisionBodies.push_back(colBody);
 
 						z += 600.0f;
 					}
@@ -404,6 +431,7 @@ void GameControlEngine::InitializePhysics()
 				y += (i + 1) * 220.0f;
 				z = 6000.0f;
 			}
+			continue;
 		}
 
 		/// CSmith	
@@ -413,8 +441,12 @@ void GameControlEngine::InitializePhysics()
 		objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
 		objRigidBodyRotation = btVector3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
 
-		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons());
-		m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation));
+		Affordance* affordance = new Affordance(itr->second->GetAssetName());
+
+		CollisionBody* colBody = new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
+
+		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody);
+		m_collisionBodies.push_back(colBody);
 	}
 
 	// Parse physics data to player

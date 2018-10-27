@@ -67,6 +67,7 @@
 #include "DebugDraw.h"
 #include <cmath>
 #include "../../Dependencies/GLM/include/GLM/vec3.hpp"
+#include "../AI/Affordance/Affordance.h"
 
 
 /*************************************NEW**************************************/
@@ -113,18 +114,20 @@ struct ObjectRigidBodyData
 
 struct CollisionBody {
 
-	CollisionBody(std::string name, std::string modelName, const btVector3& position, const btVector3& rotation, ComputerAI* AI = NULL)
+	CollisionBody(std::string name, std::string modelName, const btVector3& position, const btVector3& rotation, Affordance* affordanceData, ComputerAI* AI = NULL)
 	{ 
 		m_name = name;
 		m_modelName = modelName;
 		m_position = position;
 		m_rotation = rotation;
+		m_affordance = affordanceData;
 		m_AI = AI;
 	};
 	std::string m_name;
 	std::string m_modelName;
 	btVector3 m_position;
 	btVector3 m_rotation;
+	Affordance* m_affordance;
 	ComputerAI* m_AI;
 };
 
@@ -188,7 +191,7 @@ class PhysicsEngine
 			*
 			* @return void
 			*/
-		void CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions);
+		void CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions, CollisionBody* colBody);
 		//void CreateDynamicRigidBody(glm::vec3 &pos, std::string objType);
 			/**
 			* @brief Creates dynamic rigid body for a player controlled object
@@ -226,7 +229,7 @@ class PhysicsEngine
 			* @param 
 			* @return 
 			*/
-		btRigidBody* AddSphere(float radius, btVector3 &startPos);
+		btRigidBody* AddSphere(float radius, btVector3 &startPos, CollisionBody* colBody);
 
 			/**
 			* @brief Create a heightfield terrain shape
@@ -248,7 +251,7 @@ class PhysicsEngine
 
 		btCollisionObject* TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuantizedBvhTree, bool collision);
 
-		btDiscreteDynamicsWorld* GetDynamicsWorld() { return m_dynamicsWorld; };
+		btDiscreteDynamicsWorld* GetDynamicsWorld() const { return m_dynamicsWorld; };
 
 		btAlignedObjectArray<btCollisionShape*>& GetCollisionShapes() { return m_collisionShapes; };
 

@@ -211,24 +211,22 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 
 	// Name of current model being read in
 	std::string modelName;
+	std::string objectName;
 	std::string texFilePath;
 
 	// Different types of data being read in
-	std::string values[8];
+	std::string values[4];
 	values[0] = "filePath";
 	values[1] = "texFilePath";
-	values[2] = "scaleX";
-	values[3] = "scaleY";
-	values[4] = "scaleZ";
-	values[5] = "posX";
-	values[6] = "posY";
-	values[7] = "posZ";
+	values[2] = "scale";
+	values[3] = "pos";
 
 	//temp values
 	std::string temp;
+	std::string tempVec;
 	std::vector<float> tempData;
-	glm::vec3 tempPos;
-	glm::vec3 tempScale;
+	std::vector<std::string> tempPos;
+	std::vector<std::string> tempScale;
 
 	// Push to first table
 	lua_pushnil(Environment);
@@ -237,7 +235,7 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 	while (lua_next(Environment, -2) != 0)
 	{
 		// Get current model name being read in
-		modelName = lua_tostring(Environment, -2);
+		objectName = lua_tostring(Environment, -2);
 		
 		// Push to next table
 		lua_pushnil(Environment);
@@ -254,19 +252,15 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 					filePath = lua_tostring(Environment, -1);
 				if (temp.compare(values[1]) == 0)
 					texFilePath = lua_tostring(Environment, -1);
-				if (temp.compare(values[2]) == 0)
-					tempScale.x = lua_tonumber(Environment, -1);
-				if (temp.compare(values[3]) == 0)
-					tempScale.y = lua_tonumber(Environment, -1);
-				if (temp.compare(values[4]) == 0)
-					tempScale.z = lua_tonumber(Environment, -1);
-				if (temp.compare(values[5]) == 0)
-					tempPos.x = lua_tonumber(Environment, -1);
-				if (temp.compare(values[6]) == 0)
-					tempPos.y = lua_tonumber(Environment, -1);
-				if (temp.compare(values[7]) == 0)
-					tempPos.z = lua_tonumber(Environment, -1);
-
+				if (temp.compare(values[2]) == 0) {
+					tempVec = lua_tostring(Environment, -1);
+					tempScale = split(tempVec);
+				}
+				if (temp.compare(values[3]) == 0) {
+					tempVec = lua_tostring(Environment, -1);
+					tempPos = split(tempVec);
+				}
+					
 				// Pop out of current table
 				lua_pop(Environment, 1);
 			}	
@@ -275,18 +269,18 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 			modelData.texFilePath = texFilePath;
 
 			// Pass in model scales and push to modelData
-			tempData.push_back(tempScale.x);
-			tempData.push_back(tempScale.y);
-			tempData.push_back(tempScale.z);
+			tempData.push_back(toFloat(tempScale[0]));
+			tempData.push_back(toFloat(tempScale[1]));
+			tempData.push_back(toFloat(tempScale[2]));
 			modelData.modelScales.push_back(tempData);
 
 			// Clear for next batch of data
 			tempData.clear();
 
 			// Pass in positions and push to modelData
-			tempData.push_back(tempPos.x);
-			tempData.push_back(tempPos.y);
-			tempData.push_back(tempPos.z);
+			tempData.push_back(toFloat(tempPos[0]));
+			tempData.push_back(toFloat(tempPos[1]));
+			tempData.push_back(toFloat(tempPos[2]));
 			modelData.modelPositions.push_back(tempData);
 
 			// Clear for next batch of data
@@ -296,7 +290,7 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 			lua_pop(Environment, 1);
 		}
 		// Add to map
-		allModelData[modelName] = modelData;
+		allModelData[objectName] = modelData;
 
 		// Clear vectors of any data before adding more, and reset string
 		modelData.modelPositions.clear();
@@ -556,4 +550,22 @@ bool ScriptManager::LoadAffordanceTable(std::unordered_map<std::string, std::vec
 
 	// Return true for successful loading and reading
 	return true;
+}
+
+//space delimited string splitter
+std::vector<std::string> ScriptManager::split(std::string& source) {
+	std::vector<std::string> results;
+	unsigned delimPos;
+	while ((delimPos = source.find(" ")) != std::string::npos) {
+		results.push_back(source.substr(0, delimPos));
+		source.erase(0, delimPos + 1);
+	}
+	results.push_back(source);
+
+	return results;
+}
+
+//str-float converter
+float ScriptManager::toFloat(const std::string& num) {
+	return std::stof(num);
 }

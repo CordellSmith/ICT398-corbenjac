@@ -13,12 +13,8 @@ AllModels=
 		{
 			filePath = "Resources/objects/lecture theatre/LBLT.obj", 
 			texFilePath = "", 
-			scaleX = 150.0,
-			scaleY = 150.0, 
-			scaleZ = 150.0, 
-			posX = 7000.0, 
-			posY = 0.0, 
-			posZ = 5200.0,
+			scale = "150.0 150.0 150.0", 
+			pos = "7000.0 0.0 5200", 
 			Affordance = "building"
 		},
 	},
@@ -27,12 +23,8 @@ AllModels=
 		{
 			filePath = "Resources/objects/table/Table.obj", 
 			texFilePath = "", 
-			scaleX = 20.0, 
-			scaleY = 20.0, 
-			scaleZ = 20.0, 
-			posX = 9880.0, 
-			posY = 1000.0, 
-			posZ = 10100.0,
+			scale = "20.0 20.0 20.0", 
+			pos = "9880.0 1000.0 10100.0", 
 			Affordance = "table"
 		},
 	},
@@ -41,12 +33,8 @@ AllModels=
 		{
 			filePath = "Resources/objects/chair/office_chair.obj", 
 			texFilePath = "", 
-			scaleX = 300.0, 
-			scaleY = 300.0, 
-			scaleZ = 300.0,
-			posX = 9600.0, 
-			posY = 1000.0, 
-			posZ = 10100.0,
+			scale = "300.0 300.0 300.0", 
+			pos = "9600.0 1000.0 10100.0", 
 			Affordance = "chair"
 		},
 	},
@@ -55,12 +43,8 @@ AllModels=
 		{
 			filePath = "Resources/objects/box_stack.obj", 
 			texFilePath = "", 
-			scaleX = 1.0, 
-			scaleY = 1.0, 
-			scaleZ = 1.0,
-			posX = 14000.0, 
-			posY = 900.0, 
-			posZ = 10100.0,
+			scale = "1.0 1.0 1.0", 
+			pos = "14000.0 900.0 10100.0", 
 			Affordance = "player"
 		},
 	},
@@ -69,12 +53,8 @@ AllModels=
 		{
 			filePath = "Resources/objects/crate/Crate1.obj", 
 			texFilePath = "",
-			scaleX = 1000.0, 
-			scaleY = 1000.0, 
-			scaleZ = 1000.0,
-			posX = 14000.0, 
-			posY = 900.0, 
-			posZ = 10100.0,
+			scale = "1000.0 1000.0 1000.0", 
+			pos = "14000.0 900.0 10100.0", 
 			Affordance = "crate"
 		},
 	},
@@ -83,12 +63,8 @@ AllModels=
 		{
 			filePath = "Resources/objects/ball/ball.obj", 
 			texFilePath = "",
-			scaleX = 1.0, 
-			scaleY = 1.0, 
-			scaleZ = 1.0,
-			posX = 14000.0, 
-			posY = 1500.0, 
-			posZ = 10100.0,
+			scale = "1.0 1.0 1.0", 
+			pos = "14000.0 1500.0 10100.0", 
 			Affordance = "ball"
 		},
 	},
@@ -97,12 +73,8 @@ AllModels=
 		{
 			filePath = "Resources/ai/Person.obj", 
 			texFilePath = "",
-			scaleX = 300.0, 
-			scaleY = 400.0, 
-			scaleZ = 300.0,
-			posX = 14000.0, 
-			posY = 0.0, 
-			posZ = 10000.0,
+			scale = "300.0 400.0 300.0", 
+			pos = "14000.0 0.0 10000.0", 
 			Affordance = "person"
 		},
 	},

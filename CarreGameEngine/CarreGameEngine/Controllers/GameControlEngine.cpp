@@ -229,7 +229,7 @@ void GameControlEngine::InitializePhysics()
 
 		if (itr->second->GetAssetName() == "player")
 		{
-			objRigidBodyPosition = glm::vec(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
+			objRigidBodyPosition = glm::vec3(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
 			objRigidBodyRotation = glm::vec3(m_player->GetRotation().x, m_player->GetRotation().y, m_player->GetRotation().z);
 			
 			Affordance* affordance = new Affordance(itr->second->GetAssetName());
@@ -264,7 +264,7 @@ void GameControlEngine::InitializePhysics()
 
 			//m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, false, "lecTheatre");
 			//m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
-			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, false);
+			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, false, itr->second->GetAssetName());
 			m_collisionBodies.push_back(colBody);
 
 			// This has to be called after the mesh data is passed in
@@ -286,7 +286,7 @@ void GameControlEngine::InitializePhysics()
 
 			CollisionBody* colBody = new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
 
-			m_physicsWorld->AddSphere(110.0, objRigidBodyPosition, colBody);
+			m_physicsWorld->AddSphere(110.0, objRigidBodyPosition, colBody, glm::vec3(0), itr->second->GetAssetName());
 
 			// Add to our array of collision bodies
 			//m_collisionBodyPos.push_back(objRigidBodyPosition);
@@ -310,8 +310,8 @@ void GameControlEngine::InitializePhysics()
 			// 3 Agents (changed to 1 because of Zfighting)
 			for (size_t i = 0; i < 1; i++)
 			{
-					objRigidBodyPosition = btVector3(itr->second->GetPosition().x + (i * 100), itr->second->GetPosition().y, itr->second->GetPosition().z + (i * 100));
-					objRigidBodyRotation = btVector3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
+					objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x + (i * 100), itr->second->GetPosition().y, itr->second->GetPosition().z + (i * 100));
+					objRigidBodyRotation = glm::vec3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
 					
 					// Create UNIQUE NAME for AI
 					std::string uniqueName = "AI " + std::to_string(i + 1);
@@ -328,7 +328,7 @@ void GameControlEngine::InitializePhysics()
 					CollisionBody* colBody = new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance, AI);
 
 					// Create new dynamic rigid body
-					m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody);
+					m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody, itr->second->GetAssetName());
 
 					// Add to collision bodies vector with UNIQUE NAME
 					m_collisionBodies.push_back(colBody);
@@ -464,13 +464,13 @@ void GameControlEngine::InitializePhysics()
 		//m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 
 		objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
-		objRigidBodyRotation = glm::vec(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
-
+		objRigidBodyRotation = glm::vec3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
+		
 		Affordance* affordance = new Affordance(itr->second->GetAssetName());
 
 		CollisionBody* colBody = new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
 
-		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody);
+		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody, itr->second->GetAssetName());
 		m_collisionBodies.push_back(colBody);
 	}
 

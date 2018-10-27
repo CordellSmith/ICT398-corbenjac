@@ -107,9 +107,12 @@ void GameWorld::UpdatePhysics()
 			GetCollisionBodies()[i]->m_position.y,
 			GetCollisionBodies()[i]->m_position.z);*/
 
-		glm::vec3 updPosition = BttoGlm(m_collisionBodies->at(i)->m_position);
-		glm::vec3 updRotation = BttoGlm(m_collisionBodies->at(i)->m_rotation);
+		//glm::vec3 updPosition = BttoGlm(m_collisionBodies->at(i)->m_position);
+		//glm::vec3 updRotation = BttoGlm(m_collisionBodies->at(i)->m_rotation);
 		
+		glm::vec3 updPosition = m_collisionBodies->at(i)->m_position;
+		glm::vec3 updRotation  =m_collisionBodies->at(i)->m_rotation;
+
 		// Search through map using find. If found, update that objects position
 		m_gameAssets.find(m_collisionBodies->at(i)->m_modelName)->second->GetModel()->SetPosition(updPosition);
 		m_gameAssets.find(m_collisionBodies->at(i)->m_modelName)->second->GetModel()->SetRotation(updRotation);
@@ -126,8 +129,8 @@ void GameWorld::UpdatePhysics()
 		camDirection.x, 
 		camDirection.y,
 		camDirection.z));
-	m_physicsWorld->GetDynamicsWorld()->rayTest(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z), rayCallback);
-	
+	//m_physicsWorld->GetDynamicsWorld()->rayTest(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z), rayCallback);
+
 	const btRigidBody* body;
 	CollisionBody* data;
 
@@ -148,9 +151,9 @@ void GameWorld::UpdatePhysics()
 				// Do whatever with information
 				std::cout << "Model Name: " << data->m_name << "\n"
 					<< "ModelName: " << data->m_modelName << "\n"
-					<< "Position x:" << data->m_position.getX()
-					<< " y: " << data->m_position.getY()
-					<< " z: " << data->m_position.getZ() << std::endl;
+					<< "Position x:" << data->m_position.x
+					<< " y: " << data->m_position.x
+					<< " z: " << data->m_position.x << std::endl;
 			}
 		}
 	}

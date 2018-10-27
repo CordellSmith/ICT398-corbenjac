@@ -116,7 +116,7 @@ struct ObjectRigidBodyData
 /*************************************NEW**************************************/
 
 struct CollisionBody {
-	CollisionBody(std::string name, std::string modelName, const btVector3& position, const btVector3& rotation, Affordance* affordanceData, ComputerAI* AI = NULL)
+	CollisionBody(std::string name, std::string modelName, const glm::vec3& position, const glm::vec3& rotation, Affordance* affordanceData, ComputerAI* AI = NULL)
 	{ 
 		m_name = name;
 		m_modelName = modelName;
@@ -193,7 +193,7 @@ class PhysicsEngine
 			*
 			* @return void
 			*/
-		void CreateDynamicRigidBody(glm::vec3 &pos, glm::vec3& dimensions, CollisionBody* colBody);
+		void CreateDynamicRigidBody(glm::vec3 &pos, glm::vec3& dimensions, CollisionBody* colBody, std::string objType);
 		//void CreateDynamicRigidBody(glm::vec3 &pos, std::string objType);
 			/**
 			* @brief Creates dynamic rigid body for a player controlled object
@@ -216,8 +216,8 @@ class PhysicsEngine
 			*
 			* @return void
 			*/
-		void Simulate(std::vector<CollisionBody*>& collisionBodies, std::vector<Quaternion> &bodyRot, glm::vec3 &playerObj);
-		//void Simulate(std::vector<glm::vec3> &bodyPos, std::vector<Quaternion> &bodyRot);
+		//void Simulate(std::vector<CollisionBody*>& collisionBodies, std::vector<Quaternion> &bodyRot, glm::vec3 &playerObj);
+		void Simulate(std::vector<CollisionBody*>& collisionBodies, glm::vec3& playerObj);
 
 			/*
 			* @brief Public function that calls different private functions for creation of rigid bodies
@@ -231,7 +231,7 @@ class PhysicsEngine
 			* @param 
 			* @return 
 			*/
-		btRigidBody* AddSphere(float radius, glm::vec3 &startPos, CollisionBody* colBody);
+		void AddSphere(float radius, glm::vec3 &startPos, CollisionBody* colBody, glm::vec3& startVel, std::string objType);
 
 			/**
 			* @brief Create a heightfield terrain shape
@@ -453,7 +453,7 @@ class PhysicsEngine
 		unsigned char *m_terrainData;
 
 			/// Debug draw
-		std::vector<glm::vec3> m_debugLines;
+		std::vector<btVector3> m_debugLines;
 
 		Shader* m_debugShader;
 

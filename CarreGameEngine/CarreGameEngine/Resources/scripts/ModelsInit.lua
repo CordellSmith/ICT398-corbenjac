@@ -36,7 +36,7 @@ AllModels=
 		{
 			filePath = "Resources/objects/chair/office_chair.obj", 
 			scale = "300.0 300.0 300.0", 
-			pos = "9600.0 1000.0 10100.0", 
+			pos = "9600.0 1000.0 12100.0", 
 			rot = "0.0 0.0 0.0", 
 			Affordance = "chair"
 		},
@@ -44,7 +44,7 @@ AllModels=
 		{
 			filePath = "Resources/objects/chair/office_chair.obj", 
 			scale = "300.0 300.0 300.0", 
-			pos = "9600.0 1000.0 10500.0", 
+			pos = "9600.0 1000.0 10700.0", 
 			rot = "0.0 0.0 0.0", 
 			Affordance = "chair"
 		},
@@ -55,7 +55,7 @@ AllModels=
 		{
 			filePath = "Resources/objects/box_stack.obj", 
 			scale = "1.0 1.0 1.0", 
-			pos = "14000.0 900.0 10100.0", 
+			pos = "13000.0 5900.0 10800.0", 
 			rot = "0.0 0.0 0.0", 
 			Affordance = "player"
 		},
@@ -66,7 +66,7 @@ AllModels=
 		{
 			filePath = "Resources/objects/crate/Crate1.obj", 
 			scale = "1000.0 1000.0 1000.0", 
-			pos = "14000.0 900.0 10100.0", 
+			pos = "14400.0 900.0 10100.0", 
 			rot = "0.0 0.0 0.0", 
 			Affordance = "crate"
 		},
@@ -88,7 +88,7 @@ AllModels=
 		{
 			filePath = "Resources/ai/Person.obj", 
 			scale = "300.0 400.0 300.0", 
-			pos = "14000.0 0.0 10000.0", 
+			pos = "13000.0 0.0 10000.0", 
 			rot = "0.0 0.0 0.0", 
 			Affordance = "person"
 		},

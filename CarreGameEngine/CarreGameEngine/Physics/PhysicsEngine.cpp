@@ -137,13 +137,13 @@ void PhysicsEngine::CreatePlayerControlledRigidBody(glm::vec3 &playerObj)
 
 	// Add object to collision world
 	colObject->setUserIndex(CAMERA);
-	m_collisionWorld->addCollisionObject(colObject);
+	//m_collisionWorld->addCollisionObject(colObject);
 
 	// Add object rigid body data to vector
 	ObjectRigidBodyData* objRigidBodyData = new ObjectRigidBodyData();
 	objRigidBodyData->objType = "player";
 
-	objRigidBodyData->currLinearVel.y = -0.5f;
+	//objRigidBodyData->currLinearVel.y = -0.5f;
 
 	objRigidBodyData->currPos = playerObj;
 	m_objectRigidBodyData.push_back(objRigidBodyData);
@@ -198,7 +198,7 @@ void PhysicsEngine::CreatePlayerControlledRigidBody(glm::vec3 &playerObj)
 
 // Create a dynamic rigid body
 //void PhysicsEngine::CreateDynamicRigidBody(glm::vec3 &pos, glm::vec3& dimensions, std::string objType)
-void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions, CollisionBody* colBody)
+void PhysicsEngine::CreateDynamicRigidBody(glm::vec3 &pos, glm::vec3& dimensions, CollisionBody* colBody, std::string objType)
 {
 	// Does object data already exist
 	bool objExists = false;
@@ -218,16 +218,16 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions
 	);
 
 	// Set shape to object
-	//colObject->setCollisionShape(boxShape);
+	colObject->setCollisionShape(boxShape);
 
 	// Create a dynamic object
-	btTransform startTransform;
-	startTransform.setIdentity();
-	// Set origin of body
-	startTransform.setOrigin(pos);
-	
-	// Set mass (non-zero for dynamic)
-	m_mass = 100.0;
+	//btTransform startTransform;
+	//startTransform.setIdentity();
+	//// Set origin of body
+	//startTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
+	//
+	//// Set mass (non-zero for dynamic)
+	//m_mass = 100.0;
 
 	// Search vector of object types to see if object data has already been created
 	for (int i = 0; i < m_ObjectTypePhysicsData.size(); i++)
@@ -273,9 +273,8 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions
 	m_collisionWorld->addCollisionObject(colObject);
 
 	// Set the index for the type of rigid body that is being created
-	body->setUserIndex(BOX);
-
-	body->setUserPointer(colBody);
+	colObject->setUserIndex(BOX);
+	colObject->setUserPointer(colBody);
 	
 
 	// Add object rigid body data to vector
@@ -306,7 +305,7 @@ void PhysicsEngine::CreateDynamicRigidBody(btVector3 &pos, glm::vec3& dimensions
 
 // Create a dynamic rigid body
 //void PhysicsEngine::AddSphere(float radius, glm::vec3 &startPos, std::string objType, glm::vec3 &startVel)
-btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos, CollisionBody* colBody)
+void PhysicsEngine::AddSphere(float radius, glm::vec3 &startPos, CollisionBody* colBody, glm::vec3& startVel, std::string objType)
 {
 	// Does object data already exist
 	bool objExists = false;
@@ -353,11 +352,6 @@ btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos, Collisi
 
 		// Calc center of gravity
 		CalcObjectCenterOfGravity(pointMassData, objPhysicsData);
-	body->setUserPointer(colBody);
-
-	// Add the body to the dynamic world
-	m_dynamicsWorld->addRigidBody(body);
-	//m_collisionWorld->addCollisionObject(body);
 
 		// Calc relative positions of pointmass data
 		CalcPointMassRelativePositions(pointMassData, objPhysicsData);
@@ -368,6 +362,13 @@ btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos, Collisi
 		// Add object data to vector
 		m_ObjectTypePhysicsData.push_back(objPhysicsData);
 	}
+
+	colObject->setUserPointer(colBody);
+
+	// Add the body to the dynamic world
+	//m_dynamicsWorld->addRigidBody(body);
+	//m_collisionWorld->addCollisionObject(body);
+
 
 	// Add object to collision world
 	m_collisionWorld->addCollisionObject(colObject);
@@ -399,7 +400,7 @@ btRigidBody* PhysicsEngine::AddSphere(float radius, btVector3 &startPos, Collisi
 }
 
 // Simulate the dynamic world
-void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, std::vector<Quaternion> &bodyRot, glm::vec3& playerObj)
+void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::vec3& playerObj)
 {
 	// Time step
 	game_time += 1.0;
@@ -630,11 +631,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, std::
 
 		for (i = 0; i < m_objectRigidBodyData.size(); i++)
 		{
-			if(m_objectRigidBodyData[i]->objType.compare("ball0") == false ||
-				m_objectRigidBodyData[i]->objType.compare("ball1") == false || 
-				m_objectRigidBodyData[i]->objType.compare("ball2") == false || 
-				m_objectRigidBodyData[i]->objType.compare("ball3") == false || 
-				m_objectRigidBodyData[i]->objType.compare("ball4") == false)
+			if(m_objectRigidBodyData[i]->objType.compare("ball") == false)
 				UpdateBodyPos(i);
 			//m_derivState[4 * i] = CalcForceOnObject(i);
 			///m_derivState[4 * i + 1] = UpdateBodyPos(i);
@@ -992,9 +989,9 @@ void PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuant
 
 	//m_trianglemeshs.push_back(trimesh);
 	//m_triangleMeshBodies.push_back(body);
-	body->setUserIndex(MESH);
+	colObject->setUserIndex(MESH);
 	//body->setContactProcessingThreshold(BT_LARGE_FLOAT);
-	m_dynamicsWorld->addRigidBody(body);
+	//m_dynamicsWorld->addRigidBody(body);
 
 	//std::vector< btVector3* > tmp;
 	//m_vertices.push_back(tmp);

@@ -1,11 +1,5 @@
 #include "GameWorld.h"
 
-// Helper function
-glm::vec3 BttoGlm(const btVector3& btVector)
-{
-	return glm::vec3(btVector.getX(), btVector.getY(), btVector.getZ());
-}
-
 void GameWorld::Init(Player* player, std::multimap<std::string, IGameAsset*> gameAssets)
 {
 	// Sets this game contexts assets to the  loaded game assets from the control engine

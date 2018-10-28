@@ -18,8 +18,6 @@
 #include "..\AssetFactory\Player.h"
 #include "..\Renderer\OpenGl.h"
 
-//#include "..\headers\ComputerAI.h"
-
 	/*
 	* @class GameControlEngine
 	* @brief The main game engine class
@@ -185,7 +183,7 @@ protected:
 	ModelsData m_modelsData;
 
 	/// Map containing all models data
-	std::unordered_map<std::string, ModelsData> m_allModelsData;
+	std::multimap<std::string, ModelsData> m_allModelsData;
 
 	/// Struct containing all heightmaps data
 	HeightmapsData m_heightmapsData;

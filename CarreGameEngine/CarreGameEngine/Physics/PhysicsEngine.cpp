@@ -36,6 +36,10 @@ PhysicsEngine::PhysicsEngine()
 	game_time = 0.0;
 	prev_game_time = 0.0;
 	physics_lag_time = 0.0;
+	// Initialize player object location
+	//m_playerObject.setZero();
+
+	//m_newForce.setZero();
 
 	// Debug draw shader init
 	m_debugShader = new Shader();

@@ -39,6 +39,7 @@
 
 // Includes
 #include <string>
+#include <map>
 #include "lua.hpp"
 #include <GLM\glm.hpp>
 #include "..\Texture\TextureManager.h"
@@ -118,7 +119,7 @@ class ScriptManager
 			*
 			* @return bool - True if load success, else false
 			*/
-		bool LoadModelsInitLua(std::unordered_map<std::string, ModelsData> &allModelData, ModelsData &modelData);
+		bool LoadModelsInitLua(std::multimap<std::string, ModelsData> &allModelData, ModelsData &modelData);
 
 			/**
 			* @brief Load all models

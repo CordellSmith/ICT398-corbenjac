@@ -417,7 +417,7 @@ class PhysicsEngine
 		glm::vec3 m_playerObject;
 
 			/// Old force applied to player controlled object (don't think this is needed)
-		glm::vec3 m_oldForce;
+		//glm::vec3 m_oldForce;
 
 			/// New force applied to player controlled object (don't think this is needed)
 		glm::vec3 m_newForce;

@@ -179,7 +179,7 @@ bool ScriptManager::LoadTexturesInitLua()
 }
 
 // Load all model data
-bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData> &allModelData, ModelsData &modelData)
+bool ScriptManager::LoadModelsInitLua(std::multimap<std::string, ModelsData> &allModelData, ModelsData &modelData)
 {
 	// Create lua state
 	lua_State* Environment = lua_open();
@@ -236,7 +236,7 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 	{
 		// Get current model name being read in
 		modelName = lua_tostring(Environment, -2);
-		
+
 		std::cout << modelName << std::endl;
 		// Push to next table
 		lua_pushnil(Environment);
@@ -244,6 +244,7 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 		{
 			objectName = lua_tostring(Environment, -2);
 			std::cout << objectName << std::endl;
+			modelData.objectName = objectName;
 
 			// Push to next table
 			lua_pushnil(Environment);
@@ -300,8 +301,8 @@ bool ScriptManager::LoadModelsInitLua(std::unordered_map<std::string, ModelsData
 			tempData.clear();
 
 			// Add to map
-			std::cout << "adding " + objectName + "to map" << std::endl;
-			allModelData[objectName] = modelData;
+			std::cout << "adding " << objectName << "to map" << std::endl;
+			allModelData.insert(std::pair<std::string, ModelsData>(modelName, modelData));
 
 			// Clear vectors of any data before adding more, and reset string
 			modelData.modelPositions.clear();

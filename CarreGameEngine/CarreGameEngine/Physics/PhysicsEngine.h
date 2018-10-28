@@ -401,9 +401,6 @@ class PhysicsEngine
 			/// Holds last known player controlled object location
 		btVector3 m_playerObject;
 
-			/// Old force applied to player controlled object (don't think this is needed)
-		btVector3 m_oldForce;
-
 			/// New force applied to player controlled object (don't think this is needed)
 		btVector3 m_newForce;
 

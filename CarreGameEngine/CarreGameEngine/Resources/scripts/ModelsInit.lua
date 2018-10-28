@@ -53,9 +53,9 @@ AllModels=
 	{
 		player=
 		{
-			filePath = "Resources/objects/box_stack.obj", 
-			scale = "1.0 1.0 1.0", 
-			pos = "14000.0 900.0 10100.0", 
+			filePath = "Resources/ai/Person.obj", 
+			scale = "200.0 300.0 200.0", 
+			pos = "14000.0 1200.0 10100.0", 
 			rot = "0.0 0.0 0.0", 
 			Affordance = "player"
 		},

@@ -35,7 +35,6 @@ PhysicsEngine::PhysicsEngine()
 	// Initialize player object location
 	m_playerObject.setZero();
 
-	m_oldForce.setZero();
 	m_newForce.setZero();
 
 	// Debug draw shader init
@@ -265,10 +264,9 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 		{
 			// TODO: Make this better (Jack)
 			// Apply force in direction camera was moved
-			m_newForce.setX((playerObj.x() - m_playerObject.x()) * 3000);
+			m_newForce.setX((playerObj.x() - m_playerObject.x()) * 4000.0f);
 			//m_newForce.setY((playerObj.y() - m_playerObject.y()) * 3000);
-			m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 3000);
-
+			m_newForce.setZ((playerObj.z() - m_playerObject.z()) * 4000.0f);
 
 			/// Terrain checking needs to be fixed csmith 17/10/18
 			// If floor height gets higher

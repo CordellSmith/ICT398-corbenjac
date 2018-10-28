@@ -148,7 +148,7 @@ bool ComputerAI::MoveTo(ComputerAI* compAI, glm::vec3 targetPos)
 	// Calculate new velocity and new position
 	currVel = toTarget * glm::length(currVel);
 	compAI->SetVelocity(currVel);
-	glm::vec3 displacement = currVel * 0.05f;
+	glm::vec3 displacement = currVel * 0.04f;
 	glm::vec3 newPos = currPos + displacement;
 
 	// Calculate real target position

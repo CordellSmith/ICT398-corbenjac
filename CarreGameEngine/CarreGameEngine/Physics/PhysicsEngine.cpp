@@ -528,7 +528,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			//		//rbA->currPos += m_impulse / pdA->totalMass;
 			//	}
 			//}
-			else 
+			//else 
 			{
 				// Get vector for distance from object center to the average collision point
 				glm::vec3 centerAToCol = glm::vec3(rbA->currPos.x, rbA->currPos.y, rbA->currPos.z) - glm::vec3(ptA.getX(), ptA.getY(), ptA.getZ());

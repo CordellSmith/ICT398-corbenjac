@@ -13,7 +13,7 @@ AllModels=
 		lecTheatre=
 		{
 			filePath = "Resources/objects/lecture theatre/LBLT_Complete.obj", 
-			scale = "200.0 150.0 120.0", 
+			scale = "200.0 150.0 150.0", 
 			pos = "7000.0 0.0 5200", 
 			rot = "0.0 0.0 0.0", 
 			Affordance = "building"

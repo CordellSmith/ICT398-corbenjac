@@ -309,33 +309,32 @@ void GameControlEngine::InitializePhysics()
 			// 3 Agents (changed to 1 because of Zfighting)
 			for (size_t i = 0; i < 1; i++)
 			{
-					objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x + (i * 100), itr->second->GetPosition().y, itr->second->GetPosition().z + (i * 100));
-					objRigidBodyRotation = glm::vec3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
+				objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x + (i * 100), itr->second->GetPosition().y, itr->second->GetPosition().z + (i * 100));
+				objRigidBodyRotation = glm::vec3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
 					
-					// Create UNIQUE NAME for AI
-					std::string uniqueName = "AI " + std::to_string(i + 1);
+				// Create UNIQUE NAME for AI
+				std::string uniqueName = modelsItr->second.objectName;
 
-					// Create a new AI with position
-					ComputerAI* AI = new ComputerAI(itr->second->GetPosition());
-					// Give it to person
-					itr->second->SetAI(AI);
+				// Create a new AI with position
+				ComputerAI* AI = new ComputerAI(itr->second->GetPosition());
+				// Give it to person
+				itr->second->SetAI(AI);
 
-					// Create affordance for AI
-					Affordance* affordance = new Affordance(uniqueName);
+				// Create affordance for AI
+				Affordance* affordance = new Affordance(uniqueName);
 
-					// Create a collision body object
-					CollisionBody* colBody = new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance, AI);
+				// Create a collision body object
+				CollisionBody* colBody = new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance, AI);
 
-					// Create new dynamic rigid body
-					m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody, itr->second->GetAssetName());
+				// Create new dynamic rigid body
+				m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody, itr->second->GetAssetName());
 
-					// Add to collision bodies vector with UNIQUE NAME
-					m_collisionBodies.push_back(colBody);
-					// Add to all AI
-					m_agents.push_back(AI);
+				// Add to collision bodies vector with UNIQUE NAME
+				m_collisionBodies.push_back(colBody);
+				// Add to all AI
+				m_agents.push_back(AI);
 
-					std::cout << uniqueName << " Loaded" << std::endl;
-			}
+				std::cout << uniqueName << " Loaded" << std::endl;
 			continue;
 		}
 /*

@@ -82,15 +82,23 @@ AllModels=
 			Affordance = "ball"
 		},
 	},
---	person=
---	{
---		person1=
---		{
---			filePath = "Resources/ai/Person.obj", 
---			scale = "300.0 400.0 300.0", 
---			pos = "13000.0 0.0 10000.0", 
---			rot = "0.0 0.0 0.0", 
---			Affordance = "person"
---		},
---	},
+	person=
+	{
+		person1=
+		{
+			filePath = "Resources/ai/Person.obj", 
+			scale = "300.0 400.0 300.0", 
+			pos = "14000.0 0.0 10000.0", 
+			rot = "0.0 0.0 0.0", 
+			Affordance = "person"
+		},
+		person2=
+		{
+			filePath = "Resources/ai/Person.obj", 
+			scale = "300.0 400.0 300.0", 
+			pos = "15000.0 0.0 10000.0", 
+			rot = "0.0 0.0 0.0", 
+			Affordance = "person"
+		},
+	},
 }

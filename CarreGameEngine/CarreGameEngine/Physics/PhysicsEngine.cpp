@@ -528,7 +528,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			//		//rbA->currPos += m_impulse / pdA->totalMass;
 			//	}
 			//}
-			//else 
+			else 
 			{
 				// Get vector for distance from object center to the average collision point
 				glm::vec3 centerAToCol = glm::vec3(rbA->currPos.x, rbA->currPos.y, rbA->currPos.z) - glm::vec3(ptA.getX(), ptA.getY(), ptA.getZ());
@@ -593,8 +593,6 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			btVector3 temp2 = trans.getOrigin();
 			//btRigidBody* body = btRigidBody::upcast(obj);
 			//btTransform trans;
-			if (obj->getUserIndex() == MESH)
-				std::cout << trans.getOrigin().getX() << " " << trans.getOrigin().getY() << " " << trans.getOrigin().getZ() << std::endl;
 
 			// Reset forces on player object prior to next step simulation
 			if (obj->getUserIndex() == CAMERA)
@@ -848,8 +846,6 @@ void PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuant
 
 	// Set origin to the position of the object (whatever object is being passed in)
 	//trans.setOrigin(btVector3(modelMesh[0].GetPosition().x, modelMesh[0].GetPosition().y, modelMesh[0].GetPosition().z));
-
-	std::cout << trans.getOrigin().getX() << " " << trans.getOrigin().getY() << " " << trans.getOrigin().getZ() << std::endl;
 
 	// Set trimesh scale
 	trimesh->setScaling(btVector3(m_scale.x, m_scale.y, m_scale.z));

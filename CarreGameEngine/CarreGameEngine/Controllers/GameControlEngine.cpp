@@ -259,7 +259,7 @@ void GameControlEngine::InitializePhysics()
 
 			//m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, false, "lecTheatre");
 			//m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
-			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, false, itr->second->GetDimensons(), itr->second->GetAssetName());
+			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, itr->second->GetDimensons(), itr->second->GetAssetName());
 			m_collisionBodies.push_back(colBody);
 
 			// This has to be called after the mesh data is passed in

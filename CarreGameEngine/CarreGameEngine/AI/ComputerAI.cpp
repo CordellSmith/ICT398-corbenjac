@@ -200,3 +200,12 @@ std::vector<glm::vec3> ComputerAI::MakeWaypoints()
 
 	return this->m_waypoints;
 }
+
+void ComputerAI::SetTargetWaypoint(int waypoint) {
+	targetWaypoint = waypoint;
+}
+
+glm::vec3 & ComputerAI::GetTargetWaypoint()
+{
+	return m_waypoints[targetWaypoint];
+}

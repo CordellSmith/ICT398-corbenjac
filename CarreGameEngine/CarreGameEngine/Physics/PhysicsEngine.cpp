@@ -221,7 +221,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 {
 	m_dynamicsWorld->stepSimulation(1.f / 60.0f, 10);
 
-	btVector3 btFrom(playerObj.getX(), playerObj.getY(), playerObj.getZ());
+	btVector3 btFrom(playerObj);
 	btVector3 btTo(playerObj.getX(), -3000.0f, playerObj.getZ());
 	btCollisionWorld::ClosestRayResultCallback res(btFrom, btTo);
 
@@ -270,35 +270,45 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, btVec
 
 			/// Terrain checking needs to be fixed csmith 17/10/18
 			// If floor height gets higher
-			//if (res.m_hitPointWorld.getY() > m_floorHeight && res.m_collisionObject->getCollisionShape()->getName())
+			//if (res.m_hitPointWorld.getY() > m_floorHeight && res.m_collisionObject->getCollisionShape()->getName() == "BVHTRIANGLEMESH")
 			//{
+			//	btScalar oldHeight = playerObj.getY();
+			//	btScalar newHeight = oldHeight + 50;
+			//	trans.setOrigin(btVector3(trans.getOrigin().getX(), newHeight, trans.getOrigin().getX()));
+
 			//	// New floor height is set to current ray hit value
 			//	m_floorHeight = res.m_hitPointWorld.getY();
 			//	std::cout << "Up" << std::endl;
 			//	std::cout << res.m_hitPointWorld.getY() << std::endl;
-
+			//	std::cout << playerObj.getY() << std::endl;
+			//	
 			//	// Move player position up
-			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * -1000);
+			//	m_playerObject = trans.getOrigin();
+			//	playerObj = trans.getOrigin();
 			//}
-
-			//// If floor height gets lower
-			//if (res.m_hitPointWorld.getY() < m_floorHeight)
+			//else if (res.m_hitPointWorld.getY() > m_floorHeight && res.m_collisionObject->getCollisionShape()->getName() == "BVHTRIANGLEMESH")
 			//{
+			//	btScalar oldHeight = playerObj.getY();
+			//	btScalar newHeight = oldHeight - 50;
+			//	trans.setOrigin(btVector3(trans.getOrigin().getX(), newHeight, trans.getOrigin().getX()));
+
 			//	// New floor height is set to current ray hit value
 			//	m_floorHeight = res.m_hitPointWorld.getY();
 			//	std::cout << "Down" << std::endl;
 			//	std::cout << res.m_hitPointWorld.getY() << std::endl;
+			//	std::cout << playerObj.getY() << std::endl;
 
-			//	// Move player position down
-			//	m_newForce.setY((playerObj.y() - m_playerObject.y()) * 100000);
+			//	// Move player position up
+			//	m_playerObject = trans.getOrigin();
+			//	playerObj = trans.getOrigin();
 			//}
-
-			//std::cout << "Player Height: " << m_playerObject.y() << std::endl;
-
-			// Update rigid body location for drawing
-			body->applyCentralForce(m_newForce);
-			m_playerObject = trans.getOrigin();
-			playerObj = m_playerObject;
+			//else
+			{
+				// Update the camera body location for drawing
+				body->applyCentralForce(m_newForce);
+				m_playerObject = trans.getOrigin();
+				playerObj = m_playerObject;
+			}
 		}
 		else
 		{

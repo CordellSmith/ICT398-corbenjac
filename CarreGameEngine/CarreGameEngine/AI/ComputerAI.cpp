@@ -189,13 +189,13 @@ std::vector<glm::vec3> ComputerAI::MakeWaypoints()
 {
 	glm::vec3 waypoint;
 
-	waypoint = glm::vec3(14120, 100, 7337);
+	waypoint = glm::vec3(13511, 100, 6206);
 	this->m_waypoints.push_back(waypoint);
-	waypoint = glm::vec3(14120, 100, 12839);
+	waypoint = glm::vec3(17753, 100, 7559);
 	this->m_waypoints.push_back(waypoint);
-	waypoint = glm::vec3(11664, 100, 12839);
+	waypoint = glm::vec3(18031, 100, 10789);
 	this->m_waypoints.push_back(waypoint);
-	waypoint = glm::vec3(11664, 100, 7337);
+	waypoint = glm::vec3(13511, 100, 11837);
 	this->m_waypoints.push_back(waypoint);
 
 	return this->m_waypoints;

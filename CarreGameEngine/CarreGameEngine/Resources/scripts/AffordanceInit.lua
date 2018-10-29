@@ -54,4 +54,12 @@ AffordanceTable=
 			kick = 100.0
 		}
 	},
+	person=
+	{
+		{
+			sitOn = 0.0,
+			standOn = 0.0,
+			kick = 50.0
+		}
+	},
 }

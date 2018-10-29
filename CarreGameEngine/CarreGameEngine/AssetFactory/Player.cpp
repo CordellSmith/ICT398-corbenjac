@@ -70,11 +70,11 @@ void Player::TurnAntiClock(float time)
 void Player::ThrowBall(float time, Camera* cam)
 {
 	// Get camera position, rotation and lookAt vector
-	btVector3 camPos = btVector3(m_playerModel->GetPosition().x, m_playerModel->GetPosition().y, m_playerModel->GetPosition().z);
-	btVector3 camRot = btVector3(m_playerModel->GetRotation().x, m_playerModel->GetRotation().y, m_playerModel->GetRotation().z);
+	btVector3 camPos = GlmtoBt(m_playerModel->GetPosition());
+	btVector3 camRot = GlmtoBt(m_playerModel->GetRotation());
 	glm::vec3 look = m_playerModel->GetCamera()->GetView() * 1000.0f;
 	
-	Affordance* affordance = new Affordance("ball");
+	Affordance* affordance = new Affordance("ball", 0.0f, 0.0f, 100.0f);
 	CollisionBody* colBody = new CollisionBody("projectile", "ball", camPos, camRot, affordance);
 
 	// Add crates sphere shape rigid body

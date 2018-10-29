@@ -14,10 +14,10 @@
 * @version 2.1	Emotion Engine / Personality and Traits
 */
 
-class ComputerAI;
-
 #ifndef COMPUTERAI_H
 #define COMPUTERAI_H
+
+class ComputerAI;
 
 // Includes
 #include "State.h"
@@ -25,6 +25,7 @@ class ComputerAI;
 #include "GLM\glm.hpp"
 #include <vector>
 #include <time.h>
+#include "Emotions\EmotionalState.h"
 
 struct Trait
 {
@@ -55,12 +56,6 @@ struct Personality
 			}
 		}
 	}
-};
-
-// Will need to be changed to a class
-struct Emotions
-{
-	
 };
 
 class ComputerAI
@@ -258,7 +253,7 @@ class ComputerAI
 		Personality m_personality;
 
 		/// Emotions
-		Emotions m_emotions;
+		EmotionalState m_emotions;
 
 		/// Energy
 		float m_energy;

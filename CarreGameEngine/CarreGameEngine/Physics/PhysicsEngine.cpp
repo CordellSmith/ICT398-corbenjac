@@ -423,7 +423,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			objA = const_cast<btCollisionObject*>(contactManifold->getBody0());
 			objB = const_cast<btCollisionObject*>(contactManifold->getBody1());
 			contactManifold->refreshContactPoints(objA->getWorldTransform(), objB->getWorldTransform());
-			
+
 			// Get number of contact points on colliding bodies
 			int numContacts = contactManifold->getNumContacts();
 
@@ -470,7 +470,6 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 				ptA += pt.getPositionWorldOnA();
 				ptB += pt.getPositionWorldOnB();
 			}
-
 			// Get average contact point of both colliding objects
 			ptA /= numContacts;
 			ptB /= numContacts;
@@ -483,23 +482,12 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			m_normal = centerAToCol - centerBToCol;
 			m_normal = Normalize(m_normal);
 
+			// Linear physics calculations below
 			// Calculate linear impulse
 			btScalar tempImpulse = DotProduct(rbA->currLinearVel - rbB->currLinearVel, m_normal);
 			tempImpulse *= -(1 + m_epsilon) * pdA->totalMass * pdB->totalMass;
 			tempImpulse /= (pdA->totalMass + pdB->totalMass);
 			m_impulse = tempImpulse * m_normal;
-
-			//btScalar numerator = DotProduct(m_normal, rbA->currLinearVel - rbB->currLinearVel) + (DotProduct(rbA->currAngularVel, CrossProduct(centerAToCol, m_normal))) + (DotProduct(rbB->currAngularVel, CrossProduct(centerBToCol, m_normal)));
-			//numerator *= -(1.0f + m_epsilon);
-			//glm::vec3 denominatorA; // = (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
-			//glm::vec3 transA = CrossProduct(centerAToCol, m_normal);
-			//glm::vec3 transB = CrossProduct(centerBToCol, m_normal);
-			//glm::vec3 negInert = (1.0f / pdA->secondMoment);
-			//denominatorA = CrossProduct(centerAToCol, m_normal) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + CrossProduct(centerBToCol, m_normal) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
-			////denominatorA = glm::vec3(transA.z, transA.y, transA.x) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + glm::vec3(transB.z, transB.y, transB.x) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
-			//denominatorA += (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
-			//glm::vec3 angImpulse = numerator / denominatorA;
-			//angImpulse *= m_normal;
 
 			// Calculate object velocities after collision (eq 4.3.9 and eq 4.3.10)
 			rbA->currLinearVel = rbA->currLinearVel + (m_impulse / pdA->totalMass);
@@ -508,8 +496,53 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			// Set new linear velocities to corresponding current values
 			rbA->currPos += m_impulse / pdA->totalMass;
 			rbB->currPos -= m_impulse / pdA->totalMass;
-		
 
+			// Angular physics calculations below
+			// Calculate torque
+			rbA->torque = CrossProduct(centerAToCol, pdA->totalMass * rbA->currLinearVel);
+			rbB->torque = CrossProduct(centerBToCol, pdB->totalMass * rbB->currLinearVel);
+
+			// Calculate angular acceleration
+			rbA->angularAccel = rbA->torque / pdA->secondMoment;
+			rbB->angularAccel = rbB->torque / pdB->secondMoment;
+
+			// Calc new angular velocity
+			rbA->prevAngularVel += rbA->currAngularVel;
+			rbB->prevAngularVel += rbB->currAngularVel;
+			rbA->currAngularVel += rbA->angularAccel * delta_t;
+			rbB->currAngularVel += rbB->angularAccel * delta_t;
+
+			// Calculate new angle
+			rbA->angle -= rbA->currAngularVel * delta_t;
+			rbB->angle += rbB->currAngularVel * delta_t;
+
+			// Set new angular momentum to corresponding value
+			//m_currState[posA * NUMSTATE + 3] = pdA->secondMoment * rbA->currAngularVel;
+			//m_currState[posB * NUMSTATE + 3] = pdB->secondMoment * rbB->currAngularVel;
+
+			// Calculate angular impulse (eq 4.3.38)
+			/*btScalar numerator = DotProduct(m_normal, rbA->currLinearVel - rbB->currLinearVel) + (DotProduct(rbA->currAngularVel, CrossProduct(centerAToCol, m_normal))) + (DotProduct(rbB->currAngularVel, CrossProduct(centerBToCol, m_normal)));
+			numerator *= -(1.0f + m_epsilon);
+			glm::vec3 denominatorA; // = (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
+			glm::vec3 transA = CrossProduct(centerAToCol, m_normal);
+			glm::vec3 transB = CrossProduct(centerBToCol, m_normal);
+			glm::vec3 negInert = (1.0f / pdA->secondMoment);
+			denominatorA = CrossProduct(centerAToCol, m_normal) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + CrossProduct(centerBToCol, m_normal) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
+			denominatorA += (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
+			glm::vec3 angImpulse = numerator / denominatorA;
+			angImpulse *= m_normal;*/
+
+			// Calculate new angular impulse momentum (eq 4.3.37)
+			/*glm::vec3 tempU = CrossProduct(centerAToCol, m_normal);
+			glm::vec3 tempV = CrossProduct(centerAToCol, m_normal);
+			rbA->angularMomentum += angImpulse * CrossProduct(centerAToCol, m_normal);
+			rbB->angularMomentum -= angImpulse * CrossProduct(centerBToCol, m_normal);*/
+
+			// Update angular momentum
+			//m_currState[posA * NUMSTATE + 3] += angImpulse * CrossProduct(centerAToCol, m_normal);
+			//m_currState[posB * NUMSTATE + 3] += angImpulse * CrossProduct(centerBToCol, m_normal);
+		}
+			
 		// Calculate new deriv state for each object after collisions resolved
 		/*for (i = 0; i < m_objectRigidBodyData.size(); i++)
 		{
@@ -522,7 +555,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 		// Perform explicit euler
 		//ExplicitEuler();*/
 
-		// Update positions of all dynamic objects
+			// Update positions of all dynamic objects
 		for (j = 0; j < m_collisionWorld->getNumCollisionObjects(); j++)
 		{
 			// Get the next object
@@ -539,7 +572,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			// Check to see if player object
 			if (obj->getUserIndex() == CAMERA)
 			{
-				
+
 			}
 			else
 			{
@@ -570,7 +603,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 						tempPos.getX() + m_objectRigidBodyData[j]->currLinearVel.x,
 						tempPos.getY() + m_objectRigidBodyData[j]->currLinearVel.y,
 						tempPos.getZ() + m_objectRigidBodyData[j]->currLinearVel.z);
-					
+
 					// Set new position
 					trans.setOrigin(tempPos);
 					obj->setWorldTransform(trans);

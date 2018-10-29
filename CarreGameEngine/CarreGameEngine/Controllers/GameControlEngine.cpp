@@ -223,6 +223,8 @@ void GameControlEngine::InitializePhysics()
 
 	for (itr = m_assetFactory->GetAssets().begin(); itr != m_assetFactory->GetAssets().end(); itr++, modelsItr++)
 	{
+		if (itr->second->GetAssetName() == "ball")
+			continue;
 
 		glm::vec3 objRigidBodyPosition, objRigidBodyRotation;
 
@@ -274,22 +276,18 @@ void GameControlEngine::InitializePhysics()
 		if (itr->second->GetAssetName() == "ball")
 		{
 			// Have to convert from glm::vec3 to Bullets btVector3
-			//objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
-
-			//m_physicsWorld->AddSphere(10.0, objRigidBodyPosition, "ball", glm::vec3(0));
-		
-			//objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
-			//objRigidBodyRotation = glm::vec3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
+			objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
+			objRigidBodyRotation = glm::vec3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
 			
-			//Affordance* affordance = new Affordance(itr->second->GetAssetName());
+			Affordance* affordance = new Affordance(itr->second->GetAssetName());
 
-			//CollisionBody* colBody = new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
+			CollisionBody* colBody = new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
 
-			//m_physicsWorld->AddSphere(110.0, objRigidBodyPosition, colBody, glm::vec3(0), itr->second->GetAssetName());
+			m_physicsWorld->AddSphere(110.0, objRigidBodyPosition, colBody, glm::vec3(0), itr->second->GetAssetName());
 
 			// Add to our array of collision bodies
 			//m_collisionBodyPos.push_back(objRigidBodyPosition);
-			m_physicsWorld->AddSphere(110.0, objRigidBodyPosition, colBody);
+			//m_physicsWorld->AddSphere(110.0, objRigidBodyPosition, colBody);
 
 			m_collisionBodies.push_back(colBody);
 			continue;

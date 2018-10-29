@@ -54,6 +54,17 @@
 *
 * @date 24/10/2018
 * @version 2.3	Swapping out bullet physics for the physics I coded. Spent many hours working on rotations to not much success. Going to do this instead so we at least have something.
+*
+* @date 26/10/2018
+* @version 2.4	Swapped bullet physics for my coded physics, but it isn't working. Program compiles, but objects don't collide.
+*
+* @date 27/08/2018
+* @version 2.5	Still no collision. Slowly working through it. Collisions are being detected, and object positions are being updated, but no collisions are being resolved.
+*
+* @date 28/10/2018
+* @version 2.6	Going to try simplify my code to just do linear collision resolutions. Adding rotations in at this point isn't looking possible, and still trying to successfully implement
+*				the working physics code I had on another project. Got linear physics partially implemented, but with so many collisions, the game is freezing. Need to lower the number
+*				of objects being loaded to continue testing.
 */
 
 #ifndef PHYSICSENGINE_H

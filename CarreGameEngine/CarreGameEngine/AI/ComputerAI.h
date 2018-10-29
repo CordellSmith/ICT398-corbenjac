@@ -220,6 +220,9 @@ class ComputerAI
 		std::vector<glm::vec3> MakeWaypoints();
 		std::vector<glm::vec3> GetWaypoints() { return m_waypoints; }
 
+		void SetTargetWaypoint(int waypoint);
+		glm::vec3& GetTargetWaypoint();
+
 		float GetEnergy() { return m_energy; }
 
 	protected:
@@ -246,6 +249,9 @@ class ComputerAI
 
 		/// Vector of waypoints
 		std::vector<glm::vec3> m_waypoints;
+
+
+		int targetWaypoint;
 
 		/// CSmith 23/10/18 Emotion Engine / Personality and Traits
 		/// Personality

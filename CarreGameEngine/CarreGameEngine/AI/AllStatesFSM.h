@@ -31,10 +31,6 @@ public:
 	void Enter(ComputerAI* compAI);
 	void Execute(ComputerAI* compAI);
 	void Exit(ComputerAI* compAI);
-
-	bool isMoving;
-	std::vector<glm::vec3> m_waypoints;
-	glm::vec3 currTargetPos;
 };
 
 /*****************************************Class Separator******************************************/

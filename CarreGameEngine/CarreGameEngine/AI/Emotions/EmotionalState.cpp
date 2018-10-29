@@ -1,5 +1,8 @@
 #include "EmotionalState.h"
 
+EmotionalState::EmotionalState(){
+}
+
 void EmotionalState::AddEmotion(Emotions emotion, int val) {
 	switch (emotion) {
 		case Emotions::ANGER: m_fa.AddNegative(val);

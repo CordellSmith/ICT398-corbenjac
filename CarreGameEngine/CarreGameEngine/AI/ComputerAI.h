@@ -14,10 +14,10 @@
 * @version 2.1	Emotion Engine / Personality and Traits
 */
 
-class ComputerAI;
-
 #ifndef COMPUTERAI_H
 #define COMPUTERAI_H
+
+class ComputerAI;
 
 // Includes
 #include "State.h"
@@ -25,6 +25,7 @@ class ComputerAI;
 #include "GLM\glm.hpp"
 #include <vector>
 #include <time.h>
+#include "Emotions\EmotionalState.h"
 
 struct Trait
 {
@@ -55,12 +56,6 @@ struct Personality
 			}
 		}
 	}
-};
-
-// Will need to be changed to a class
-struct Emotions
-{
-	
 };
 
 class ComputerAI
@@ -220,6 +215,9 @@ class ComputerAI
 		std::vector<glm::vec3> MakeWaypoints();
 		std::vector<glm::vec3> GetWaypoints() { return m_waypoints; }
 
+		void SetTargetWaypoint(int waypoint);
+		glm::vec3& GetTargetWaypoint();
+
 		float GetEnergy() { return m_energy; }
 
 	protected:
@@ -247,12 +245,15 @@ class ComputerAI
 		/// Vector of waypoints
 		std::vector<glm::vec3> m_waypoints;
 
+
+		int targetWaypoint;
+
 		/// CSmith 23/10/18 Emotion Engine / Personality and Traits
 		/// Personality
 		Personality m_personality;
 
 		/// Emotions
-		Emotions m_emotions;
+		EmotionalState m_emotions;
 
 		/// Energy
 		float m_energy;

@@ -11,11 +11,7 @@
 
 void MoveState::Enter(ComputerAI* compAI)
 {
-	std::cout << "Entering 'Enter' state!" << std::endl;
-
-	isMoving = false;
-	m_waypoints = compAI->GetWaypoints();
-	currTargetPos = m_waypoints[0];
+	std::cout << "Entering 'Move' state!" << std::endl;
 }
 
 void MoveState::Execute(ComputerAI* compAI)
@@ -27,14 +23,14 @@ void MoveState::Execute(ComputerAI* compAI)
 		compAI->SetVelocity(glm::vec3(50, 0, 0));
 
 		//srand(time(NULL));
-		int pos = rand() % m_waypoints.size();
+		int pos = rand() % compAI->GetWaypoints().size();
 		//std::cout << pos << std::endl;
-		currTargetPos = m_waypoints[pos];
+		compAI->SetTargetWaypoint(pos);
 
 		//std::cout << currTargetPos << std::endl;
 	}
 
-	compAI->MoveTo(compAI, currTargetPos);
+	compAI->MoveTo(compAI, compAI->GetTargetWaypoint());
 
 	// Change to idle state if player is too close
 	//if ()
@@ -49,8 +45,6 @@ void MoveState::Execute(ComputerAI* compAI)
 void MoveState::Exit(ComputerAI* compAI)
 {
 	std::cout << "Entering 'Exit' state!" << std::endl;
-	isMoving = false;
-	m_waypoints.clear();
 }
 
 /*****************************************Class Separator******************************************/

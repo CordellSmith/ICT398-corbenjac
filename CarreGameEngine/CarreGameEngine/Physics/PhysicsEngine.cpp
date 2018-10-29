@@ -483,16 +483,32 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			m_normal = centerAToCol - centerBToCol;
 			m_normal = Normalize(m_normal);
 
-			// Calculate linear impulse (eq 4.3.13)
+			// Calculate linear impulse
 			btScalar tempImpulse = DotProduct(rbA->currLinearVel - rbB->currLinearVel, m_normal);
 			tempImpulse *= -(1 + m_epsilon) * pdA->totalMass * pdB->totalMass;
 			tempImpulse /= (pdA->totalMass + pdB->totalMass);
 			m_impulse = tempImpulse * m_normal;
 
+			//btScalar numerator = DotProduct(m_normal, rbA->currLinearVel - rbB->currLinearVel) + (DotProduct(rbA->currAngularVel, CrossProduct(centerAToCol, m_normal))) + (DotProduct(rbB->currAngularVel, CrossProduct(centerBToCol, m_normal)));
+			//numerator *= -(1.0f + m_epsilon);
+			//glm::vec3 denominatorA; // = (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
+			//glm::vec3 transA = CrossProduct(centerAToCol, m_normal);
+			//glm::vec3 transB = CrossProduct(centerBToCol, m_normal);
+			//glm::vec3 negInert = (1.0f / pdA->secondMoment);
+			//denominatorA = CrossProduct(centerAToCol, m_normal) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + CrossProduct(centerBToCol, m_normal) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
+			////denominatorA = glm::vec3(transA.z, transA.y, transA.x) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + glm::vec3(transB.z, transB.y, transB.x) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
+			//denominatorA += (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
+			//glm::vec3 angImpulse = numerator / denominatorA;
+			//angImpulse *= m_normal;
+
 			// Calculate object velocities after collision (eq 4.3.9 and eq 4.3.10)
 			rbA->currLinearVel = rbA->currLinearVel + (m_impulse / pdA->totalMass);
 			rbB->currLinearVel = rbB->currLinearVel - (m_impulse / pdB->totalMass);
-		}
+
+			// Set new linear velocities to corresponding current values
+			rbA->currPos += m_impulse / pdA->totalMass;
+			rbB->currPos -= m_impulse / pdA->totalMass;
+		
 
 		// Calculate new deriv state for each object after collisions resolved
 		/*for (i = 0; i < m_objectRigidBodyData.size(); i++)

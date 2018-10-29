@@ -178,7 +178,8 @@ void GameControlEngine::Initialize()
 	m_windowManager->GetInputManager()->SetPlayer(m_player);
 
 	/// 21/10/18 CSmith Affordance Script Read-in
-	ScriptManager::Instance().LoadAffordanceTable(m_affordanceTable);
+	m_affordanceTable = new AffordanceData();
+	ScriptManager::Instance().LoadAffordanceTable(*m_affordanceTable);
 
 	/********************AI Testing*******************/
 	/*ComputerAI* p = new ComputerAI();
@@ -228,7 +229,10 @@ void GameControlEngine::InitializePhysics()
 		objRigidBodyPosition = GlmtoBt(itr->second->GetPosition());
 		objRigidBodyRotation = GlmtoBt(itr->second->GetRotation());
 
-		Affordance* affordance = new Affordance(itr->second->GetAssetName());
+		// Create UNIQUE NAME
+		std::string uniqueName = modelsItr->second.objectName;
+
+		Affordance* affordance = new Affordance(uniqueName);
 		CollisionBody* colBody = new CollisionBody(modelsItr->second.objectName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
 
 		if (itr->second->GetAssetName() == "player")
@@ -264,149 +268,26 @@ void GameControlEngine::InitializePhysics()
 
 		if (itr->second->GetAssetName() == "person")
 		{
-				objRigidBodyPosition = btVector3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
-				objRigidBodyRotation = btVector3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
-					
-				// Create UNIQUE NAME for AI
-				std::string uniqueName = modelsItr->second.objectName;
+			// Create a new AI with position
+			ComputerAI* AI = new ComputerAI(itr->second->GetPosition());
+			// Give it to person
+			itr->second->SetAI(AI);
 
-				// Create a new AI with position
-				ComputerAI* AI = new ComputerAI(itr->second->GetPosition());
-				// Give it to person
-				itr->second->SetAI(AI);
+			// Create a collision body object with AI
+			CollisionBody* colBody = new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance, AI);
 
-				// Create affordance for AI
-				Affordance* affordance = new Affordance(uniqueName);
+			// Create new dynamic rigid body
+			m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody);
 
-				// Create a collision body object
-				CollisionBody* colBody = new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance, AI);
+			// Add to collision bodies vector with UNIQUE NAME
+			m_collisionBodies.push_back(colBody);
+			// Add to all AI
+			m_agents.push_back(AI);
 
-				// Create new dynamic rigid body
-				m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody);
-
-				// Add to collision bodies vector with UNIQUE NAME
-				m_collisionBodies.push_back(colBody);
-				// Add to all AI
-				m_agents.push_back(AI);
-
-				std::cout << uniqueName << " Loaded" << std::endl;
+			std::cout << uniqueName << " Loaded" << std::endl;
 			continue;
 		}
-/*
-		/// CSmith
-		// Create tables for each row and adjusted rotation
-		if (itr->first == "table")
-		{
-			int count = 0;
-			float x = 10500.0f;
-			float y = 700.0f;
-			float z = 6000.0f;
 
-			for (size_t i = 0; i < 5; i++)
-			{
-				// Right tables
-				float yrot = -120.0f;
-
-				for (size_t j = 0; j < 3; j++)
-				{
-					count++;
-					if (j == 1)
-					{
-						// Middle tables
-						x -= 400.0f;
-						yrot = 0.0f;
-					}
-					if (j == 2)
-					{
-						// Left tables
-						x += 800.0f;
-						yrot = 120.0f;
-					}
-
-					std::string uniqueName = "Table " + std::to_string(count);
-					
-					objRigidBodyPosition = btVector3(x, y, z);
-					objRigidBodyRotation = btVector3(0, yrot, 0);
-
-					Affordance* affordance = new Affordance(uniqueName);
-
-					CollisionBody* colBody = new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
-
-					m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody);
-					m_collisionBodies.push_back(colBody);
-
-					z += 4000.0f;
-				}
-
-				x = 10500.0f - (i+1) * 1900.0f;
-				y += (i+1) * 220.0f;
-				z = 6000.0f;
-			}
-		}
-
-		/// CSmith
-		// Create chairs for each row and adjusted rotation
-		if (itr->first == "chair")
-		{
-			int count = 0;
-			float x = 10200.0f;
-			float y = 700.0f;
-			float z = 6000.0f;
-
-			for (size_t i = 0; i < 5; i++)
-			{
-				// Right chairs
-				float yrot = 290;
-
-				for (size_t j = 0; j < 3; j++)
-				{
-					if (j == 1)
-					{
-						// Middle chairs
-						x -= 400.0f;
-						yrot = -80.0f;
-					}
-					if (j == 2)
-					{
-						// Left chairs
-						x += 800.0f;
-						yrot = -10.0f;
-					}
-
-					for (size_t k = 0; k < 2; k++)
-					{
-						count++;
-
-						if (k == 1 && j == 0)
-							x -= 250;
-
-						if (k == 1 && j == 2)
-							x += 500;
-						
-						std::string uniqueName = "Chair " + std::to_string(count);
-
-						objRigidBodyPosition = btVector3(x, y, z);
-						objRigidBodyRotation = btVector3(0, yrot, 0);
-
-						Affordance* affordance = new Affordance(uniqueName);
-
-						CollisionBody* colBody = new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
-						m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody);
-						m_collisionBodies.push_back(colBody);
-
-						z += 600.0f;
-					}
-
-					z += 2700.0f;
-				}
-
-				x = 10200.0f - (i + 1) * 1900.0f;
-				y += (i + 1) * 220.0f;
-				z = 6000.0f;
-			}
-			continue;
-		}
-*/
 		/// CSmith	
 		///			03/10/18 -- Start
 		///			09/10/18 -- Only generating box shape rigid objects, removed name specific code
@@ -414,6 +295,11 @@ void GameControlEngine::InitializePhysics()
 		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody);
 		m_collisionBodies.push_back(colBody);
 	}
+
+	// Initialize Affordance
+	// Local variable to call initialisation of base affordances
+	Affordance affordance = Affordance("base");
+	affordance.InitBaseAffordances(*m_affordanceTable, m_collisionBodies);
 
 	// Parse physics data to player
 	m_player->ParsePhysics(*m_physicsWorld, m_collisionBodies);

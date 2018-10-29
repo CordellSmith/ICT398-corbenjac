@@ -5,7 +5,6 @@
 
 // Includes
 #include "ScriptManager.h"
-#include <iostream>
 
 // Default constructor
 ScriptManager::ScriptManager(){}
@@ -459,7 +458,7 @@ bool ScriptManager::LoadHeightmapsInitLua(std::unordered_map<std::string, Height
 	return true;
 }
 
-bool ScriptManager::LoadAffordanceTable(std::unordered_map<std::string, std::vector<std::pair<std::string, float>>>& affordanceTable)
+bool ScriptManager::LoadAffordanceTable(AffordanceData& affordanceTable)
 {
 	// Create lua state
 	lua_State* Environment = lua_open();
@@ -491,9 +490,9 @@ bool ScriptManager::LoadAffordanceTable(std::unordered_map<std::string, std::vec
 
 	// Different types of data being read in
 	std::string values[3];
-	values[0] = "canSit";
-	values[1] = "canStand";
-	values[2] = "canKick";
+	values[0] = "sitOn";
+	values[1] = "standOn";
+	values[2] = "kick";
 
 	//temp values
 	std::string temp;
@@ -532,11 +531,11 @@ bool ScriptManager::LoadAffordanceTable(std::unordered_map<std::string, std::vec
 				lua_pop(Environment, 1);
 			}
 			// Create 3 different pairs with string: affordance name to float: affordance value
-			// canSit affordance
+			// sitOn affordance
 			tempAffValuePair = std::pair<std::string, float>(values[0], tempSit);
 			// Add to vector
 			tempData.push_back(tempAffValuePair);
-			// canStand affordance
+			// standOn affordance
 			tempAffValuePair = std::pair<std::string, float>(values[1], tempStand);
 			// Add to vector
 			tempData.push_back(tempAffValuePair);

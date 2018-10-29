@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 	/**
 	* @class Affordance
 	* @brief Affordance class for AI
@@ -14,6 +12,13 @@
 #ifndef AFFORDANCE_H
 #define AFFORDANCE_H
 
+#include <string>
+#include <unordered_map>
+
+class CollisionBody;
+
+typedef std::unordered_map<std::string, std::vector<std::pair<std::string, float>>> AffordanceData;
+
 class Affordance
 {
 public:
@@ -22,6 +27,8 @@ public:
 	~Affordance() { }
 	std::string GetName() const { return m_name; }
 	void SetName(std::string name) { m_name = name; }
+
+	const void InitBaseAffordances(const AffordanceData& affordanceData, std::vector<CollisionBody*>& collisionBodies);
 
 protected:
 	/// Affordances and corresponding value

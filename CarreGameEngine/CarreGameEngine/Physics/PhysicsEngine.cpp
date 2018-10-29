@@ -386,6 +386,9 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 
 	btVector3 btFrom(playerObj.x, playerObj.y, playerObj.z);
 	btVector3 btTo(playerObj.z, -3000.0f, playerObj.z);
+	//btVector3 btFrom(playerObj);
+	//btVector3 btTo(playerObj.getX(), -3000.0f, playerObj.getZ());
+
 	btCollisionWorld::ClosestRayResultCallback res(btFrom, btTo);
 
 	m_collisionWorld->rayTest(btFrom, btTo, res); // m_btWorld is btDiscreteDynamicsWorld

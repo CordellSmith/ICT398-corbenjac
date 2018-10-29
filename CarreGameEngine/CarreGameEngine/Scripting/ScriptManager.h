@@ -40,10 +40,12 @@
 // Includes
 #include <string>
 #include <map>
+#include <iostream>
 #include "lua.hpp"
 #include <GLM\glm.hpp>
 #include "..\Texture\TextureManager.h"
 #include "..\Common\Structs.h"
+#include "..\AI\Affordance\Affordance.h"
 
 class ScriptManager
 {
@@ -134,11 +136,11 @@ class ScriptManager
 			* @brief Load all affordances
 			*
 			* Loads the base values of each affordance type, currently only 3:
-			* canSit, canStand, canKick of each object type
+			* sitOn, standOn, canKick of each object type
 			*
 			* @return bool - True if load success, else false
 			*/
-		bool LoadAffordanceTable(std::unordered_map<std::string, std::vector<std::pair<std::string, float>>>& m_affordanceTable);
+		bool LoadAffordanceTable(AffordanceData& m_affordanceTable);
 
 	private:
 

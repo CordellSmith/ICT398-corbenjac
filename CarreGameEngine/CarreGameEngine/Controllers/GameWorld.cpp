@@ -145,10 +145,10 @@ void GameWorld::UpdatePhysics()
 			{
 				// Do whatever with information
 				std::cout << "Model Name: " << data->m_name << "\n"
-					<< "ModelName: " << data->m_modelName << "\n"
-					<< "Position x:" << data->m_position.x
-					<< " y: " << data->m_position.x
-					<< " z: " << data->m_position.x << std::endl;
+					<< "Affordances \n"
+					<< "SitOn: " << data->m_affordance->GetSitOn() << "\n"
+					<< "StandOn: " << data->m_affordance->GetStandOn() << "\n"
+					<< "Kick: " << data->m_affordance->GetKick() << std::endl;
 			}
 		}
 	}

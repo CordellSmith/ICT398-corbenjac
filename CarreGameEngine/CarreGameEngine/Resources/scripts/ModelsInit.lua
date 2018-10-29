@@ -12,8 +12,8 @@ AllModels=
 	{
 		lecTheatre=
 		{
-			filePath = "Resources/objects/lecture theatre/LBLT.obj", 
-			scale = "150.0 150.0 150.0", 
+			filePath = "Resources/objects/lecture theatre/LBLT_Complete.obj", 
+			scale = "200.0 150.0 120.0", 
 			pos = "7000.0 0.0 5200", 
 			rot = "0.0 0.0 0.0", 
 			Affordance = "building"
@@ -24,8 +24,8 @@ AllModels=
 		table1=
 		{
 			filePath = "Resources/objects/table/Table.obj", 
-			scale = "20.0 20.0 20.0", 
-			pos = "9880.0 1000.0 10100.0",
+			scale = "800.0 1000.0 800.0", 
+			pos = "0.0 0.0 0.0",
 			rot = "0.0 0.0 0.0", 			
 			Affordance = "table"
 		},
@@ -53,9 +53,9 @@ AllModels=
 	{
 		player=
 		{
-			filePath = "Resources/ai/Person.obj", 
-			scale = "200.0 300.0 200.0", 
-			pos = "14000.0 1200.0 10100.0", 
+			filePath = "Resources/objects/box_stack.obj", 
+			scale = "1.0 1.0 1.0", 
+			pos = "12000.0 1200.0 10100.0", 
 			rot = "0.0 0.0 0.0", 
 			Affordance = "player"
 		},
@@ -93,6 +93,14 @@ AllModels=
 			Affordance = "person"
 		},
 		person2=
+		{
+			filePath = "Resources/ai/Person.obj", 
+			scale = "300.0 400.0 300.0", 
+			pos = "15000.0 0.0 10000.0", 
+			rot = "0.0 0.0 0.0", 
+			Affordance = "person"
+		},
+		person3=
 		{
 			filePath = "Resources/ai/Person.obj", 
 			scale = "300.0 400.0 300.0", 

@@ -199,5 +199,5 @@ protected:
 
 	/// Affordance lookup table
 	/// Look to Typedef this lol
-	std::unordered_map<std::string, std::vector<std::pair<std::string, float>>> m_affordanceTable;
+	AffordanceData* m_affordanceTable;
 };

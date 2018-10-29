@@ -262,7 +262,7 @@ class PhysicsEngine
 			*/
 		void ActivateAllObjects();
 
-		void TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuantizedBvhTree, bool collision, std::string objType);
+		void TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuantizedBvhTree, bool collision, glm::vec3& dimensions, std::string objType);
 
 		btDiscreteDynamicsWorld* GetDynamicsWorld() const { return m_dynamicsWorld; };
 

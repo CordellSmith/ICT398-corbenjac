@@ -216,9 +216,12 @@ void PhysicsEngine::CreateDynamicRigidBody(glm::vec3 &pos, glm::vec3& dimensions
 
 	// Create box shape size of the dimensions of the object
 	btCollisionShape* boxShape = new btBoxShape(btVector3(
-		btScalar(dimensions.x / 2),
+		/*btScalar(dimensions.x / 2),
 		btScalar(dimensions.y / 2),
-		btScalar(dimensions.z / 2))
+		btScalar(dimensions.z / 2))*/
+		btScalar(dimensions.x),
+		btScalar(dimensions.y),
+		btScalar(dimensions.z))
 	);
 
 	// Set shape to object
@@ -251,7 +254,7 @@ void PhysicsEngine::CreateDynamicRigidBody(glm::vec3 &pos, glm::vec3& dimensions
 		objPhysicsData->objType = objType;
 
 		// Mass
-		m_mass = 5;
+		m_mass = 50000;
 
 		// Size of object
 		glm::vec3 size = { 100, 100, 100 };
@@ -262,6 +265,7 @@ void PhysicsEngine::CreateDynamicRigidBody(glm::vec3 &pos, glm::vec3& dimensions
 
 		// Calc center of gravity
 		CalcObjectCenterOfGravity(pointMassData, objPhysicsData);
+		objPhysicsData->combinedCG = glm::vec3(dimensions.x / 2.0f, dimensions.y / 2.0f, dimensions.z / 2.0f);
 
 		// Calc relative positions of pointmass data
 		CalcPointMassRelativePositions(pointMassData, objPhysicsData);
@@ -291,21 +295,6 @@ void PhysicsEngine::CreateDynamicRigidBody(glm::vec3 &pos, glm::vec3& dimensions
 		objRigidBodyData->currLinearVel.x = 0.05;
 
 	m_objectRigidBodyData.push_back(objRigidBodyData);
-
-	m_currState.push_back(objRigidBodyData->currLinearVel);
-	m_currState.push_back(objRigidBodyData->currPos);
-	m_currState.push_back(objRigidBodyData->currAngularVel);
-	m_currState.push_back(objRigidBodyData->angularMomentum);
-
-	m_prevState.push_back(glm::vec3(0));
-	m_prevState.push_back(glm::vec3(0));
-	m_prevState.push_back(glm::vec3(0));
-	m_prevState.push_back(glm::vec3(0));
-
-	m_derivState.push_back(glm::vec3(0));
-	m_derivState.push_back(glm::vec3(0));
-	m_derivState.push_back(glm::vec3(0));
-	m_derivState.push_back(glm::vec3(0));
 }
 
 
@@ -386,23 +375,6 @@ void PhysicsEngine::AddSphere(float radius, glm::vec3 &startPos, CollisionBody* 
 	objRigidBodyData->currPos = startPos;
 	objRigidBodyData->currLinearVel = startVel;
 	m_objectRigidBodyData.push_back(objRigidBodyData);
-
-	/***************************************************/
-	m_currState.push_back(objRigidBodyData->currLinearVel);
-	m_currState.push_back(objRigidBodyData->currPos);
-	m_currState.push_back(objRigidBodyData->currAngularVel);
-	m_currState.push_back(objRigidBodyData->angularMomentum);
-
-	m_prevState.push_back(glm::vec3(0));
-	m_prevState.push_back(glm::vec3(0));
-	m_prevState.push_back(glm::vec3(0));
-	m_prevState.push_back(glm::vec3(0));
-
-	m_derivState.push_back(glm::vec3(0));
-	m_derivState.push_back(glm::vec3(0));
-	m_derivState.push_back(glm::vec3(0));
-	m_derivState.push_back(glm::vec3(0));
-	
 }
 
 // Simulate the dynamic world
@@ -435,25 +407,6 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 	// Collision point data
 	btVector3 ptA = { 0, 0, 0 };
 	btVector3 ptB = { 0, 0, 0 };
-
-	// Update positions of all dynamic objects
-	//for (int j = 0; j < m_dynamicsWorld->getNumCollisionObjects(); j++)
-	//{
-	//	// Get the next object, and activate it
-	//	btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[j];
-	//	btRigidBody* body = btRigidBody::upcast(obj);
-	//	btTransform trans;
-	//	ComputerAI* compAI;
-
-	//	// Reset forces on player object prior to next step simulation
-	//	if (body->getUserIndex() == CAMERA)
-	//	{
-	//		//body->clearForces();
-	//		//btVector3 tempVel = body->getLinearVelocity();
-	//		//body->setLinearVelocity(btVector3(0,-2,0));
-	//		body->setLinearVelocity(btVector3(0, 0, 0));
-	//	}
-
 
 	while (physics_lag_time > delta_t)
 	{
@@ -514,9 +467,6 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 				}
 			}
 
-			//if (pdA->objType == "ball" || pdB->objType == "ball")
-				std::cout << "OBJ1: " << pdA->objType << " collided with OBJ2: " << pdB->objType << std::endl;
-
 			//For each contact point in that manifold
 			for (j = 0; j < numContacts; j++)
 			{
@@ -532,41 +482,87 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			ptA /= numContacts;
 			ptB /= numContacts;
 
-			// Get vector for distance from object center to the average collision point
-			glm::vec3 centerAToCol = glm::vec3(rbA->currPos.x, rbA->currPos.y, rbA->currPos.z) - glm::vec3(ptA.getX(), ptA.getY(), ptA.getZ());
-			glm::vec3 centerBToCol = rbB->currPos - glm::vec3(ptB.getX(), ptB.getY(), ptB.getZ());
+			//if (pdA->objType == "lecTheatre" || pdB->objType == "lecTheatre")
+			//{
+			//	if (pdA->objType == "lecTheatre")
+			//	{
+			//		glm::vec3 centerBToCol = rbB->currPos - glm::vec3(ptB.getX(), ptB.getY(), ptB.getZ());
 
-			// Calculate normal of colliding objects
-			m_normal = centerAToCol - centerBToCol;
-			m_normal = Normalize(m_normal);
+			//		m_normal = centerBToCol;
+			//		m_normal = Normalize(m_normal);
 
-			// Calculate linear impulse
-			btScalar tempImpulse;
+			//		// Calculate linear impulse
+			//		btScalar tempImpulse;
 
-			tempImpulse = DotProduct(rbA->currLinearVel - rbB->currLinearVel, m_normal);
-			tempImpulse *= -(1 + m_epsilon) * pdA->totalMass * pdB->totalMass;
-			tempImpulse /= (pdA->totalMass + pdB->totalMass);
-			m_impulse = tempImpulse * m_normal;
+			//		tempImpulse = DotProduct(rbA->currLinearVel - rbB->currLinearVel, m_normal);
+			//		tempImpulse *= -(1 + m_epsilon) * pdA->totalMass * pdB->totalMass;
+			//		tempImpulse /= (pdA->totalMass + pdB->totalMass);
+			//		m_impulse = tempImpulse * m_normal;
 
-			//btScalar numerator = DotProduct(m_normal, rbA->currLinearVel - rbB->currLinearVel) + (DotProduct(rbA->currAngularVel, CrossProduct(centerAToCol, m_normal))) + (DotProduct(rbB->currAngularVel, CrossProduct(centerBToCol, m_normal)));
-			//numerator *= -(1.0f + m_epsilon);
-			//glm::vec3 denominatorA; // = (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
-			//glm::vec3 transA = CrossProduct(centerAToCol, m_normal);
-			//glm::vec3 transB = CrossProduct(centerBToCol, m_normal);
-			//glm::vec3 negInert = (1.0f / pdA->secondMoment);
-			//denominatorA = CrossProduct(centerAToCol, m_normal) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + CrossProduct(centerBToCol, m_normal) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
-			////denominatorA = glm::vec3(transA.z, transA.y, transA.x) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + glm::vec3(transB.z, transB.y, transB.x) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
-			//denominatorA += (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
-			//glm::vec3 angImpulse = numerator / denominatorA;
-			//angImpulse *= m_normal;
+			//		rbB->currLinearVel = rbB->currLinearVel - (m_impulse / pdB->totalMass);
+			//		//rbB->currLinearVel *= 2;
+			//		rbB->currPos -= m_impulse / pdA->totalMass;
+			//	}
+			//	else
+			//	{
+			//		glm::vec3 centerAToCol = glm::vec3(rbA->currPos.x, rbA->currPos.y, rbA->currPos.z) - glm::vec3(ptA.getX(), ptA.getY(), ptA.getZ());
+			//		//glm::vec3 centerBToCol = rbB->currPos - glm::vec3(ptB.getX(), ptB.getY(), ptB.getZ());
 
-			// Calculate object velocities after collision
-			rbA->currLinearVel = rbA->currLinearVel + (m_impulse / pdA->totalMass);
-			rbB->currLinearVel = rbB->currLinearVel - (m_impulse / pdB->totalMass);
+			//		m_normal = centerAToCol;
+			//		m_normal = Normalize(m_normal);
 
-			// Set new linear velocities to corresponding current values
-			rbA->currPos += m_impulse / pdA->totalMass;
-			rbB->currPos -= m_impulse / pdA->totalMass;
+			//		// Calculate linear impulse
+			//		btScalar tempImpulse;
+
+			//		tempImpulse = DotProduct(rbA->currLinearVel - rbB->currLinearVel, m_normal);
+			//		tempImpulse *= -(1 + m_epsilon) * pdA->totalMass * pdB->totalMass;
+			//		tempImpulse /= (pdA->totalMass + pdB->totalMass);
+			//		m_impulse = tempImpulse * m_normal;
+
+			//		rbA->currLinearVel = rbA->currLinearVel + (m_impulse / pdA->totalMass);
+			//		//rbA->currLinearVel *= 2;
+			//		//rbA->currPos += rbA->currLinearVel;
+			//		//rbA->currPos += m_impulse / pdA->totalMass;
+			//	}
+			//}
+			//else 
+			{
+				// Get vector for distance from object center to the average collision point
+				glm::vec3 centerAToCol = glm::vec3(rbA->currPos.x, rbA->currPos.y, rbA->currPos.z) - glm::vec3(ptA.getX(), ptA.getY(), ptA.getZ());
+				glm::vec3 centerBToCol = rbB->currPos - glm::vec3(ptB.getX(), ptB.getY(), ptB.getZ());
+
+				// Calculate normal of colliding objects
+				m_normal = centerAToCol - centerBToCol;
+				m_normal = Normalize(m_normal);
+
+				// Calculate linear impulse
+				btScalar tempImpulse;
+
+				tempImpulse = DotProduct(rbA->currLinearVel - rbB->currLinearVel, m_normal);
+				tempImpulse *= -(1 + m_epsilon) * pdA->totalMass * pdB->totalMass;
+				tempImpulse /= (pdA->totalMass + pdB->totalMass);
+				m_impulse = tempImpulse * m_normal;
+
+				//btScalar numerator = DotProduct(m_normal, rbA->currLinearVel - rbB->currLinearVel) + (DotProduct(rbA->currAngularVel, CrossProduct(centerAToCol, m_normal))) + (DotProduct(rbB->currAngularVel, CrossProduct(centerBToCol, m_normal)));
+				//numerator *= -(1.0f + m_epsilon);
+				//glm::vec3 denominatorA; // = (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
+				//glm::vec3 transA = CrossProduct(centerAToCol, m_normal);
+				//glm::vec3 transB = CrossProduct(centerBToCol, m_normal);
+				//glm::vec3 negInert = (1.0f / pdA->secondMoment);
+				//denominatorA = CrossProduct(centerAToCol, m_normal) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + CrossProduct(centerBToCol, m_normal) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
+				////denominatorA = glm::vec3(transA.z, transA.y, transA.x) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + glm::vec3(transB.z, transB.y, transB.x) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
+				//denominatorA += (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
+				//glm::vec3 angImpulse = numerator / denominatorA;
+				//angImpulse *= m_normal;
+
+				// Calculate object velocities after collision
+				rbA->currLinearVel = rbA->currLinearVel + (m_impulse / pdA->totalMass);
+				rbB->currLinearVel = rbB->currLinearVel - (m_impulse / pdB->totalMass);
+
+				// Set new linear velocities to corresponding current values
+				rbA->currPos += m_impulse / pdA->totalMass;
+				rbB->currPos -= m_impulse / pdA->totalMass;
+			}
 		}
 
 		//for (i = 0; i < m_objectRigidBodyData.size(); i++)
@@ -691,13 +687,13 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 															temp.getOrigin().getY(),
 															temp.getOrigin().getZ());
 
-				m_objectRigidBodyData[j]->prevPos.x = m_objectRigidBodyData[j]->currPos.x;
+		/*		m_objectRigidBodyData[j]->prevPos.x = m_objectRigidBodyData[j]->currPos.x;
 				m_objectRigidBodyData[j]->prevPos.y = m_objectRigidBodyData[j]->currPos.y;
 				m_objectRigidBodyData[j]->prevPos.z = m_objectRigidBodyData[j]->currPos.z;
 
 				m_objectRigidBodyData[j]->currPos.x = temp.getOrigin().getX();
 				m_objectRigidBodyData[j]->currPos.y = temp.getOrigin().getY();
-				m_objectRigidBodyData[j]->currPos.z = temp.getOrigin().getZ();
+				m_objectRigidBodyData[j]->currPos.z = temp.getOrigin().getZ();*/
 			}
 		}
 
@@ -776,7 +772,7 @@ void PhysicsEngine::ActivateAllObjects()
 	}
 }
 
-void PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuantizedBvhTree, bool collision, std::string objType)
+void PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuantizedBvhTree, bool collision, glm::vec3& dimensions, std::string objType)
 {
 	// Does object data already exist
 	bool objExists = false;
@@ -854,64 +850,18 @@ void PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuant
 
 		// Calc center of gravity
 		CalcObjectCenterOfGravity(pointMassData, objPhysicsData);
+		objPhysicsData->combinedCG = glm::vec3(dimensions.x/2.0f, dimensions.y/2.0f, dimensions.z/2.0f);
 
 		// Calc relative positions of pointmass data
-		CalcPointMassRelativePositions(pointMassData, objPhysicsData);
+		//CalcPointMassRelativePositions(pointMassData, objPhysicsData);
 
 		// Calc second moment of mass (inertia)
-		CalcObjectSecondMoment(objPhysicsData, size);
+		//CalcObjectSecondMoment(objPhysicsData, size);
 
 		// Add object data to vector
 		m_ObjectTypePhysicsData.push_back(objPhysicsData);
 	}
-	//// If object data does not exist, create it
-	//if (!objExists)
-	//{
-	//	// New object data
-	//	ObjectTypePhysicsData* objPhysicsData = new ObjectTypePhysicsData();
-
-	//	// Set type of object
-	//	objPhysicsData->objType = objType;
-
-	//	// Mass
-	//	m_mass = 50000000;
-
-	//	// Size of object
-	//	glm::vec3 size = { 10, 10, 10 };
-
-	//	// Make new PointMass data and initialize it
-	//	std::vector<PointMass> pointMassData;
-	//	InitializePointMass(pointMassData, m_mass, size);
-
-	//	// Calc center of gravity
-	//	CalcObjectCenterOfGravity(pointMassData, objPhysicsData);
-
-	//	// Calc relative positions of pointmass data
-	//	CalcPointMassRelativePositions(pointMassData, objPhysicsData);
-
-	//m_trianglemeshs.push_back(trimesh);
-	//m_triangleMeshBodies.push_back(body);
 	colObject->setUserIndex(MESH);
-	//body->setContactProcessingThreshold(BT_LARGE_FLOAT);
-	//m_dynamicsWorld->addRigidBody(body);
-
-	//std::vector< btVector3* > tmp;
-	//m_vertices.push_back(tmp);
-	//m_vertices[m_triangleMeshBodies.size() - 1].push_back(&p0);
-	//m_vertices[m_triangleMeshBodies.size() - 1].push_back(&p1);
-	//m_vertices[m_triangleMeshBodies.size() - 1].push_back(&p2);
-
-	//if (collision)
-		
-	//return m_triangleMeshBodies.size() - 1;
-	
-
-	//	// Calc second moment of mass (inertia)
-	//	CalcObjectSecondMoment(objPhysicsData, size);
-
-	//	// Add object data to vector
-	//	m_ObjectTypePhysicsData.push_back(objPhysicsData);
-	//}
 
 	// Add object to collision world
 	m_collisionWorld->addCollisionObject(colObject);
@@ -922,22 +872,6 @@ void PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuant
 
 	objRigidBodyData->currPos = glm::vec3(modelMesh[0].GetPosition().x, modelMesh[0].GetPosition().y, modelMesh[0].GetPosition().z);
 	m_objectRigidBodyData.push_back(objRigidBodyData);
-
-	/***************************************************/
-	m_currState.push_back(objRigidBodyData->currLinearVel);
-	m_currState.push_back(objRigidBodyData->currPos);
-	m_currState.push_back(objRigidBodyData->currAngularVel);
-	m_currState.push_back(objRigidBodyData->angularMomentum);
-
-	m_prevState.push_back(glm::vec3(0));
-	m_prevState.push_back(glm::vec3(0));
-	m_prevState.push_back(glm::vec3(0));
-	m_prevState.push_back(glm::vec3(0));
-
-	m_derivState.push_back(glm::vec3(0));
-	m_derivState.push_back(glm::vec3(0));
-	m_derivState.push_back(glm::vec3(0));
-	m_derivState.push_back(glm::vec3(0));
 }
 
 void PhysicsEngine::InitDebugDraw()

@@ -105,7 +105,7 @@ void GameWorld::UpdatePhysics()
 		//glm::vec3 updRotation = BttoGlm(m_collisionBodies->at(i)->m_rotation);
 		
 		glm::vec3 updPosition = m_collisionBodies->at(i)->m_position;
-		glm::vec3 updRotation  =m_collisionBodies->at(i)->m_rotation;
+		glm::vec3 updRotation = m_collisionBodies->at(i)->m_rotation;
 
 		// Search through map using find. If found, update that objects position
 		m_gameAssets.find(m_collisionBodies->at(i)->m_modelName)->second->GetModel()->SetPosition(updPosition);

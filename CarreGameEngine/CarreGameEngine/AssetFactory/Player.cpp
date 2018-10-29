@@ -81,11 +81,21 @@ void Player::ThrowBall(float time, Camera* cam)
 	// Add crates sphere shape rigid body
 	//btRigidBody* sphere = m_physicsWorld->AddSphere(110.0, camPos, "ball");
 	//btRigidBody* sphere = m_physicsWorld->AddSphere(110.0, camPos, colBody);
-	m_physicsWorld->AddSphere(110.0, camPos, colBody, look / 10000.0f, "ball");
+	m_physicsWorld->AddSphere(40.0, camPos, colBody, Normalize(look) / 10.0f, "ball");
 	//m_physicsWorld->CreateDynamicRigidBody(camPos, glm::vec3(500, 500, 500), colBody, "ball");
 	// Add linear velocity to the sphere
 	//sphere->setLinearVelocity(btVector3(look.x, look.y, look.z));
 	count++;
 	// Add to our array of collision bodies
 	m_collisionBodies->push_back(colBody);
+}
+
+glm::vec3 Player::Normalize(glm::vec3 vec)
+{
+	btScalar length = sqrt((vec.x*vec.x) + (vec.y*vec.y) + (vec.z * vec.z));
+
+	if (length == 0)
+		return glm::vec3(0);
+	else
+		return glm::vec3(vec.x / length, vec.y / length, vec.z / length);
 }

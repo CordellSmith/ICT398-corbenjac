@@ -228,15 +228,15 @@ void GameControlEngine::InitializePhysics()
 
 		glm::vec3 objRigidBodyPosition, objRigidBodyRotation;
 
+		objRigidBodyPosition = glm::vec3(itr->second->GetPosition());
+		objRigidBodyRotation = glm::vec3(itr->second->GetRotation());
+
+		Affordance* affordance = new Affordance(itr->second->GetAssetName());
+		CollisionBody* colBody = new CollisionBody(modelsItr->second.objectName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
+
 		if (itr->second->GetAssetName() == "player")
 		{
-			objRigidBodyPosition = glm::vec3(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
-			objRigidBodyRotation = glm::vec3(m_player->GetRotation().x, m_player->GetRotation().y, m_player->GetRotation().z);
 			
-			Affordance* affordance = new Affordance(itr->second->GetAssetName());
-
-			CollisionBody* colBody = new CollisionBody(modelsItr->second.objectName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
-
 			// Create camera capsule to collide with objects
 			m_physicsWorld->CreatePlayerControlledRigidBody(objRigidBodyPosition);
 			m_collisionBodies.push_back(colBody);
@@ -245,16 +245,6 @@ void GameControlEngine::InitializePhysics()
 		
 		if (itr->second->GetAssetName() == "lecTheatre")
 		{
-			// Convert from glm::vec3 to Bullets btVector3
-			objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
-			objRigidBodyRotation = glm::vec3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
-			
-			std::cout << "Physics Init " << itr->second->GetAssetName() << ": " << itr->second->GetModel()->GetMeshBatch().size() << " and " << itr->second->GetModel()->GetMeshBatch().size() << std::endl;
-
-			Affordance* affordance = new Affordance(itr->second->GetAssetName());
-
-			CollisionBody* colBody = new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
-
 			/// 15/10/18 CSmith Debug Draw
 			/// 16/10/18		Debug Draw almost working
 			///					Mesh collider with LBLT is working
@@ -275,14 +265,6 @@ void GameControlEngine::InitializePhysics()
 
 		if (itr->second->GetAssetName() == "ball")
 		{
-			// Have to convert from glm::vec3 to Bullets btVector3
-			objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
-			objRigidBodyRotation = glm::vec3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
-			
-			Affordance* affordance = new Affordance(itr->second->GetAssetName());
-
-			CollisionBody* colBody = new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
-
 			m_physicsWorld->AddSphere(110.0, objRigidBodyPosition, colBody, glm::vec3(0), itr->second->GetAssetName());
 
 			// Add to our array of collision bodies
@@ -295,23 +277,6 @@ void GameControlEngine::InitializePhysics()
 
 		if (itr->second->GetAssetName() == "person")
 		{
-			// Creates 5 chairs (testing)
-			/*for (int i = 0; i < 1; i++)
-			{
-				objRigidBodyPosition = glm::vec3(
-					itr->second->GetPosition().x + 100 * i, 
-					itr->second->GetPosition().y + 1500 * i, 
-					itr->second->GetPosition().z + 100 * i
-				);
-				m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), "chair");
-				m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));*/
-
-			// 3 Agents (changed to 1 because of Zfighting)
-			for (size_t i = 0; i < 1; i++)
-			{
-				objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x + (i * 100), itr->second->GetPosition().y, itr->second->GetPosition().z + (i * 100));
-				objRigidBodyRotation = glm::vec3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
-
 				// Create UNIQUE NAME for AI
 				std::string uniqueName = modelsItr->second.objectName;
 
@@ -335,7 +300,6 @@ void GameControlEngine::InitializePhysics()
 				m_agents.push_back(AI);
 
 				std::cout << uniqueName << " Loaded" << std::endl;
-			}
 			continue;
 		}
 /*
@@ -462,12 +426,6 @@ void GameControlEngine::InitializePhysics()
 		//m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), itr->first);
 		//m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 
-		objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
-		objRigidBodyRotation = glm::vec3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
-		
-		Affordance* affordance = new Affordance(itr->second->GetAssetName());
-
-		CollisionBody* colBody = new CollisionBody(itr->second->GetAssetName(), itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance);
 
 		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody, itr->second->GetAssetName());
 

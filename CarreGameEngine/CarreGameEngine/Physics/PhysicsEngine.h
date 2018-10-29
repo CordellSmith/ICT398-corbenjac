@@ -65,6 +65,10 @@
 * @version 2.6	Going to try simplify my code to just do linear collision resolutions. Adding rotations in at this point isn't looking possible, and still trying to successfully implement
 *				the working physics code I had on another project. Got linear physics partially implemented, but with so many collisions, the game is freezing. Need to lower the number
 *				of objects being loaded to continue testing.
+*
+* @date 29/10/2018
+* @version 2.7	Simplified code back to what it was when I first got it working. Linear collisions are working for simple shapes, but giving odd results for mesh shapes. Going to stick with
+*				this and merge into master.
 */
 
 #ifndef PHYSICSENGINE_H
@@ -264,7 +268,9 @@ class PhysicsEngine
 
 		void TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuantizedBvhTree, bool collision, glm::vec3& dimensions, std::string objType);
 
-		btDiscreteDynamicsWorld* GetDynamicsWorld() const { return m_dynamicsWorld; };
+		//btDiscreteDynamicsWorld* GetDynamicsWorld() const { return m_dynamicsWorld; };
+
+		btCollisionWorld* GetDynamicsWorld2() const { return m_collisionWorld; };
 
 		btAlignedObjectArray<btCollisionShape*>& GetCollisionShapes() { return m_collisionShapes; };
 
@@ -416,7 +422,7 @@ class PhysicsEngine
 		bool m_isDynamic;
 
 			/// Dynamic world
-		btDiscreteDynamicsWorld* m_dynamicsWorld;
+		//btDiscreteDynamicsWorld* m_dynamicsWorld;
 
 			/// Array of collision shapes
 		btAlignedObjectArray<btCollisionShape*> m_collisionShapes;

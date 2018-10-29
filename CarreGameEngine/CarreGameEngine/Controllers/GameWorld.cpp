@@ -123,15 +123,16 @@ void GameWorld::UpdatePhysics()
 		camDirection.x, 
 		camDirection.y,
 		camDirection.z));
-	//m_physicsWorld->GetDynamicsWorld()->rayTest(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z), rayCallback);
+	m_physicsWorld->GetDynamicsWorld2()->rayTest(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z), rayCallback);
 
-	const btRigidBody* body;
+	const btCollisionObject* body;
 	CollisionBody* data;
 
 	if (rayCallback.hasHit())
 	{
 		// Upcast the collision object to btRigidBody where the user pointer function is
-		body = btRigidBody::upcast(rayCallback.m_collisionObject);
+		body = rayCallback.m_collisionObject;
+		//body = btRigidBody::upcast(rayCallback.m_collisionObject);
 
 		// Check if the body is not null
 		if (body != NULL)

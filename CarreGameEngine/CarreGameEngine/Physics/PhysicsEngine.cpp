@@ -29,7 +29,7 @@ PhysicsEngine::PhysicsEngine()
 	m_collisionWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
 	// Initialize epsilon
-	m_epsilon = .5;
+	m_epsilon = .85;
 
 	count = 0;
 	delta_t = 0.02;
@@ -141,7 +141,7 @@ void PhysicsEngine::CreatePlayerControlledRigidBody(glm::vec3 &playerObj)
 
 	// Add object to collision world
 	colObject->setUserIndex(CAMERA);
-	//m_collisionWorld->addCollisionObject(colObject);
+	m_collisionWorld->addCollisionObject(colObject);
 
 	// Add object rigid body data to vector
 	ObjectRigidBodyData* objRigidBodyData = new ObjectRigidBodyData();
@@ -586,10 +586,12 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 		{
 			// Get the next object, and activate it
 			btCollisionObject* obj = m_collisionWorld->getCollisionObjectArray()[j];
-			btTransform temp = obj->getWorldTransform();
-			btVector3 temp2 = temp.getOrigin();
+			btTransform trans = obj->getWorldTransform();
+			btVector3 temp2 = trans.getOrigin();
 			//btRigidBody* body = btRigidBody::upcast(obj);
 			//btTransform trans;
+			if (obj->getUserIndex() == MESH)
+				std::cout << trans.getOrigin().getX() << " " << trans.getOrigin().getY() << " " << trans.getOrigin().getZ() << std::endl;
 
 			// Reset forces on player object prior to next step simulation
 			if (obj->getUserIndex() == CAMERA)
@@ -666,34 +668,63 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 				// Update rigid body location for drawing
 				//body->applyCentralForce(m_newForce);
 				//m_playerObject = trans.getOrigin();
-				playerObj = m_playerObject;
+				//playerObj = m_playerObject;
 			}
 			else
 			{
-				// Update object positions for drawing
-				//collisionBodies[j]->m_position.x = (trans.getOrigin().getX());
-				//collisionBodies[j]->m_position.y = (trans.getOrigin().getY());
-				//collisionBodies[j]->m_position.z = (trans.getOrigin().getZ());
-				//temp.setOrigin(btVector3(m_currState[j * NUMSTATE + 1].x, m_currState[j * NUMSTATE + 1].y, m_currState[j * NUMSTATE + 1].z));
-				//obj->setWorldTransform(temp);
+				// Collision body has AI
+				if (collisionBodies[j]->m_AI != NULL)
+				{
+					// Update state
+					collisionBodies[j]->m_AI->Update();
 
-				temp2.setValue(	temp2.getX() + m_objectRigidBodyData[j]->currLinearVel.x,
-								temp2.getY() + m_objectRigidBodyData[j]->currLinearVel.y,
-								temp2.getZ() + m_objectRigidBodyData[j]->currLinearVel.z);
-				temp.setOrigin(temp2);
-				obj->setWorldTransform(temp);
+					// Update the physics collision object position
+					trans.getOrigin().setX(collisionBodies[j]->m_AI->GetPosition().x);
+					trans.getOrigin().setY(collisionBodies[j]->m_AI->GetPosition().y);
+					trans.getOrigin().setZ(collisionBodies[j]->m_AI->GetPosition().z);
 
-				collisionBodies[j]->m_position = glm::vec3(	temp.getOrigin().getX(),
-															temp.getOrigin().getY(),
-															temp.getOrigin().getZ());
+					// Update the object positions for drawing
+					//collisionBodies[j]->m_position.setX(collisionBodies[j]->m_AI->GetPosition().x);
+					//collisionBodies[j]->m_position.setY(collisionBodies[j]->m_AI->GetPosition().y);
+					//collisionBodies[j]->m_position.setZ(collisionBodies[j]->m_AI->GetPosition().z);
+					collisionBodies[j]->m_position = collisionBodies[j]->m_AI->GetPosition();
+					// Update the object rotations for drawing
+					//collisionBodies[j]->m_rotation.setX(collisionBodies[j]->m_AI->GetRotation().x);
+					//collisionBodies[j]->m_rotation.setY(collisionBodies[j]->m_AI->GetRotation().y);
+					//collisionBodies[j]->m_rotation.setZ(collisionBodies[j]->m_AI->GetRotation().z);
+					collisionBodies[j]->m_rotation = collisionBodies[j]->m_AI->GetRotation();
+					obj->setWorldTransform(trans);
+				}
+				else
+				{
+					// Update object positions for drawing
+					//collisionBodies[j]->m_position.x = (trans.getOrigin().getX());
+					//collisionBodies[j]->m_position.y = (trans.getOrigin().getY());
+					//collisionBodies[j]->m_position.z = (trans.getOrigin().getZ());
+					//temp.setOrigin(btVector3(m_currState[j * NUMSTATE + 1].x, m_currState[j * NUMSTATE + 1].y, m_currState[j * NUMSTATE + 1].z));
+					//obj->setWorldTransform(temp);
 
-		/*		m_objectRigidBodyData[j]->prevPos.x = m_objectRigidBodyData[j]->currPos.x;
-				m_objectRigidBodyData[j]->prevPos.y = m_objectRigidBodyData[j]->currPos.y;
-				m_objectRigidBodyData[j]->prevPos.z = m_objectRigidBodyData[j]->currPos.z;
+					temp2.setValue(temp2.getX() + m_objectRigidBodyData[j]->currLinearVel.x,
+						temp2.getY() + m_objectRigidBodyData[j]->currLinearVel.y,
+						temp2.getZ() + m_objectRigidBodyData[j]->currLinearVel.z);
+					/*temp2.setValue(m_objectRigidBodyData[j]->currPos.x + m_objectRigidBodyData[j]->currLinearVel.x,
+						m_objectRigidBodyData[j]->currPos.y + m_objectRigidBodyData[j]->currLinearVel.y,
+						m_objectRigidBodyData[j]->currPos.z + m_objectRigidBodyData[j]->currLinearVel.z);*/
+					trans.setOrigin(temp2);
+					obj->setWorldTransform(trans);
 
-				m_objectRigidBodyData[j]->currPos.x = temp.getOrigin().getX();
-				m_objectRigidBodyData[j]->currPos.y = temp.getOrigin().getY();
-				m_objectRigidBodyData[j]->currPos.z = temp.getOrigin().getZ();*/
+					collisionBodies[j]->m_position = glm::vec3(trans.getOrigin().getX(),
+						trans.getOrigin().getY(),
+						trans.getOrigin().getZ());
+
+					/*		m_objectRigidBodyData[j]->prevPos.x = m_objectRigidBodyData[j]->currPos.x;
+							m_objectRigidBodyData[j]->prevPos.y = m_objectRigidBodyData[j]->currPos.y;
+							m_objectRigidBodyData[j]->prevPos.z = m_objectRigidBodyData[j]->currPos.z;
+
+							m_objectRigidBodyData[j]->currPos.x = temp.getOrigin().getX();
+							m_objectRigidBodyData[j]->currPos.y = temp.getOrigin().getY();
+							m_objectRigidBodyData[j]->currPos.z = temp.getOrigin().getZ();*/
+				}
 			}
 		}
 
@@ -763,13 +794,13 @@ void PhysicsEngine::CreateHeightfieldTerrainShape()
 
 void PhysicsEngine::ActivateAllObjects()
 {
-	// Loop through every rigid body object
-	for (int j = m_dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
-	{
-		// Get the next object, and activate it
-		btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[j];
-		obj->forceActivationState(DISABLE_DEACTIVATION);
-	}
+	//// Loop through every rigid body object
+	//for (int j = m_dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
+	//{
+	//	// Get the next object, and activate it
+	//	btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[j];
+	//	obj->forceActivationState(DISABLE_DEACTIVATION);
+	//}
 }
 
 void PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuantizedBvhTree, bool collision, glm::vec3& dimensions, std::string objType)
@@ -809,9 +840,13 @@ void PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuant
 
 	btTransform	trans;
 	trans.setIdentity();
+	btVector3 temp = btVector3(modelMesh[0].GetPosition().x, modelMesh[0].GetPosition().y, modelMesh[0].GetPosition().z);
+	colObject->getWorldTransform().setOrigin(temp);
 
 	// Set origin to the position of the object (whatever object is being passed in)
-	trans.setOrigin(btVector3(modelMesh[0].GetPosition().x, modelMesh[0].GetPosition().y, modelMesh[0].GetPosition().z));
+	//trans.setOrigin(btVector3(modelMesh[0].GetPosition().x, modelMesh[0].GetPosition().y, modelMesh[0].GetPosition().z));
+
+	std::cout << trans.getOrigin().getX() << " " << trans.getOrigin().getY() << " " << trans.getOrigin().getZ() << std::endl;
 
 	// Set trimesh scale
 	trimesh->setScaling(btVector3(m_scale.x, m_scale.y, m_scale.z));

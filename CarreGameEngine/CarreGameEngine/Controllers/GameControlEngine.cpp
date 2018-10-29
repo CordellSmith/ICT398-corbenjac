@@ -311,7 +311,7 @@ void GameControlEngine::InitializePhysics()
 			{
 				objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x + (i * 100), itr->second->GetPosition().y, itr->second->GetPosition().z + (i * 100));
 				objRigidBodyRotation = glm::vec3(itr->second->GetRotation().x, itr->second->GetRotation().y, itr->second->GetRotation().z);
-					
+
 				// Create UNIQUE NAME for AI
 				std::string uniqueName = modelsItr->second.objectName;
 
@@ -335,6 +335,7 @@ void GameControlEngine::InitializePhysics()
 				m_agents.push_back(AI);
 
 				std::cout << uniqueName << " Loaded" << std::endl;
+			}
 			continue;
 		}
 /*

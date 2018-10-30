@@ -55,24 +55,19 @@ public:
 
 /*****************************************Class Separator******************************************/
 
-class IdleState : public State<ComputerAI>
-{
+class EmotionsState : public State <ComputerAI> {
 public:
 	void Enter(ComputerAI* compAI);
 	void Execute(ComputerAI* compAI);
 	void Exit(ComputerAI* compAI) {};
-
-	bool isMoving;
-	std::vector<glm::vec3> m_waypoints;
-	glm::vec3 currTargetPos;
-};
+}
 
 /*****************************************Class Separator******************************************/
-
 
 typedef Singleton<IdleState> m_idleState;
 typedef Singleton<GlobalState> m_globalState;
 typedef Singleton<StartState> m_startState;
 typedef Singleton<MoveState> m_moveState;
+typedef Singleton<EmotionsState> m_EmotionsState;
 
 #endif

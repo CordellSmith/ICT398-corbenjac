@@ -19,9 +19,9 @@ void Emotion::AddNegative(int val) {
 }
 
 bool Emotion::isPositive() {
-	return m_value > 0;
+	return m_value > 25;
 }
 
 bool Emotion::isNegative() {
-	return m_value < 0;
+	return m_value < -25;
 }

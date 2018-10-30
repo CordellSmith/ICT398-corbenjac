@@ -51,22 +51,42 @@ void MoveState::Exit(ComputerAI* compAI)
 
 void StartState::Execute(ComputerAI* compAI)
 {
-	compAI->GetFSM()->ChangeState(&m_moveState::GetInstance());
+	compAI->GetFSM()->ChangeState(&m_EmotionsState::GetInstance());
 }
 
 /*****************************************Class Separator******************************************/
 
-void IdleState::Enter(ComputerAI* compAI)
-{
-	compAI->SetVelocity(glm::vec3(0));
+void EmotionsState::Enter(ComputerAI* compAI) {
+
 }
 
-void IdleState::Execute(ComputerAI* compAI)
-{
+void EmotionsState::Execute(ComputerAI* compAI) {
+	glm::vec3 tempVel = compAI->GetVelocity();
+	
+	if (tempVel.x == 0 && tempVel.z == 0) //choose a new waypoint
+	{
+		compAI->SetVelocity(glm::vec3(50, 0, 0));
+		int pos = rand() % compAI->GetWaypoints().size();
+		compAI->SetTargetWaypoint(pos);
+	}
 
-	// Change to move state if player moves away
-	//if ()
-	//{
-	//	compAI->GetFSM()->ChangeState(&m_moveState::GetInstance());
-	//}
+	//if happy or fearful move faster
+	if (compAI->GetEmotionalState().isFear() || compAI->GetEmotionalState().isJoy()) {
+		compAI->SetVelocity(glm::vec3(75, 0, 0));
+	}
+	//if amgry/sad/anticipating, move slower
+	if (compAI->GetEmotionalState().isAnger() || compAI->GetEmotionalState().isSad() || compAI->GetEmotionalState().isAnticipation()) {
+		compAI->SetVelocity(glm::vec3(25, 0, 0));
+	}
+	//if surprised have a 25% chance to change directions
+	if (compAI->GetEmotionalState().isSurprise() && (rand() % 100 > 75)) { 
+		int pos = rand() % compAI->GetWaypoints().size();
+		compAI->SetTargetWaypoint(pos);
+	}
+
+	compAI->MoveTo(compAI, compAI->GetTargetWaypoint());
+}
+
+void EmotionsState::Exit(ComputerAI* compAI) {
+
 }

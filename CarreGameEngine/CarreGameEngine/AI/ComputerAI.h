@@ -220,6 +220,8 @@ class ComputerAI
 
 		float GetEnergy() { return m_energy; }
 
+		EmotionalState& GetEmotionalState() { return m_emotions; }
+
 	protected:
 		/// Return an instance of the current FSM state
 		StateMachine<ComputerAI>* m_computerAIFSM;

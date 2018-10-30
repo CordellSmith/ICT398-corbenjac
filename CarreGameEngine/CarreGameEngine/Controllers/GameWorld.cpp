@@ -81,15 +81,13 @@ void GameWorld::UpdatePhysics()
 {
 	// Update physicsWorld
 	// TODO: Make this better (Jack)
+	
 	glm::vec3 bt_playerPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
-
-	//std::cout << bt_playerPos.y << " ";
 
 	// Set updated camera location
 	//m_camera->SetPosition(glm::vec3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z));
 		
 	m_physicsWorld->Simulate(*m_collisionBodies, bt_playerPos);
-
 	// Draw each object at the updated positions based on physics simulation
 	std::multimap<std::string, IGameAsset*>::iterator itr;
 	ComputerAI* compAI;
@@ -97,17 +95,9 @@ void GameWorld::UpdatePhysics()
 	// Loop through all the rigid bodies to update their position
 	for (size_t i = 0; i < m_collisionBodies->size(); i++)
 	{
-		/*glm::vec3 updPosition = glm::vec3(
-			GetCollisionBodies()[i]->m_position.x,
-			GetCollisionBodies()[i]->m_position.y,
-			GetCollisionBodies()[i]->m_position.z);*/
-
-		//glm::vec3 updPosition = BttoGlm(m_collisionBodies->at(i)->m_position);
-		//glm::vec3 updRotation = BttoGlm(m_collisionBodies->at(i)->m_rotation);
-		
 		glm::vec3 updPosition = m_collisionBodies->at(i)->m_position;
 		glm::vec3 updRotation = m_collisionBodies->at(i)->m_rotation;
-
+		
 		// Search through map using find. If found, update that objects position
 		m_gameAssets.find(m_collisionBodies->at(i)->m_modelName)->second->GetModel()->SetPosition(updPosition);
 		m_gameAssets.find(m_collisionBodies->at(i)->m_modelName)->second->GetModel()->SetRotation(updRotation);
@@ -125,7 +115,7 @@ void GameWorld::UpdatePhysics()
 		camDirection.y,
 		camDirection.z));
 	m_physicsWorld->GetDynamicsWorld()->rayTest(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z), rayCallback);
-
+	
 	const btCollisionObject* body;
 	CollisionBody* data;
 
@@ -145,11 +135,11 @@ void GameWorld::UpdatePhysics()
 			if (data != NULL)
 			{
 				// Do whatever with information
-				/*std::cout << "Model Name: " << data->m_name << "\n"
-					<< "Affordances \n"
-					<< "SitOn: " << data->m_affordance->GetSitOn() << "\n"
-					<< "StandOn: " << data->m_affordance->GetStandOn() << "\n"
-					<< "Kick: " << data->m_affordance->GetKick() << std::endl;*/
+				//std::cout << "Model Name: " << data->m_name << "\n"
+				//	<< "Affordances \n"
+				//	<< "SitOn: " << data->m_affordance->GetSitOn() << "\n"
+				//	<< "StandOn: " << data->m_affordance->GetStandOn() << "\n"
+				//	<< "Kick: " << data->m_affordance->GetKick() << std::endl;
 			}
 		}
 	}

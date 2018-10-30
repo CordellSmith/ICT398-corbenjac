@@ -31,9 +31,14 @@ public:
 	const void InitBaseAffordances(const AffordanceData& affordanceData, std::vector<CollisionBody*>& collisionBodies);
 
 	const float& GetSitOn() { return m_sitOn; }
-	const float& GetStandOn() { return m_standOn; }
-	const float& GetKick() { return m_kick; }
+	void SetSitOn(const float& value) { m_sitOn = value; }
 
+	const float& GetStandOn() { return m_standOn; }
+	void SetStandOn(const float& value) { m_standOn = value; }
+
+	const float& GetKick() { return m_kick; }
+	void SetKick(const float& value) { m_kick = value; }
+	
 protected:
 	/// Affordances and corresponding value
 	float m_sitOn, m_standOn, m_kick;

@@ -229,8 +229,8 @@ void GameControlEngine::InitializePhysics()
 
 		glm::vec3 objRigidBodyPosition, objRigidBodyRotation;
 
-		objRigidBodyPosition = glm::vec3(itr->second->GetPosition());
-		objRigidBodyRotation = glm::vec3(itr->second->GetRotation());
+		objRigidBodyPosition = itr->second->GetPosition();
+		objRigidBodyRotation = itr->second->GetRotation();
 
 		// Create UNIQUE NAME
 		std::string uniqueName = modelsItr->second.objectName;
@@ -240,7 +240,6 @@ void GameControlEngine::InitializePhysics()
 
 		if (itr->second->GetAssetName() == "player")
 		{
-			
 			// Create camera capsule to collide with objects
 			m_physicsWorld->CreatePlayerControlledRigidBody(objRigidBodyPosition);
 			m_collisionBodies.push_back(colBody);
@@ -248,7 +247,7 @@ void GameControlEngine::InitializePhysics()
 		}
 		
 		if (itr->second->GetAssetName() == "lecTheatre")
-		{
+		{			
 			/// 15/10/18 CSmith Debug Draw
 			/// 16/10/18		Debug Draw almost working
 			///					Mesh collider with LBLT is working
@@ -256,12 +255,8 @@ void GameControlEngine::InitializePhysics()
 			///					Important: used to get model matrix for debug draw lines
 			m_physicsWorld->ParseModel(itr->second->GetModel());
 			// Debug draw is also used here
-
-			//m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, false, "lecTheatre");
-			//m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
 			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, itr->second->GetDimensons(), itr->second->GetAssetName());
 			m_collisionBodies.push_back(colBody);
-
 			// This has to be called after the mesh data is passed in
 			m_physicsWorld->InitDebugDraw();
 			continue;
@@ -270,29 +265,19 @@ void GameControlEngine::InitializePhysics()
 		if (itr->second->GetAssetName() == "ball")
 		{
 			m_physicsWorld->AddSphere(110.0, objRigidBodyPosition, colBody, glm::vec3(0), itr->second->GetAssetName());
-
-			// Add to our array of collision bodies
-			//m_collisionBodyPos.push_back(objRigidBodyPosition);
-			//m_physicsWorld->AddSphere(110.0, objRigidBodyPosition, colBody);
-
 			m_collisionBodies.push_back(colBody);
 			continue;
 		}
 
 		if (itr->second->GetAssetName() == "person")
 		{
-			// Create UNIQUE NAME for AI
-			std::string uniqueName = modelsItr->second.objectName;
-			
 			// Create a new AI with position
 			ComputerAI* AI = new ComputerAI(itr->second->GetPosition());
-
+			// Parse array of collision bodies to AI
+			AI->SetCollisionBodies(m_collisionBodies);
 			// Give it to person
 			itr->second->SetAI(AI);
 
-			// Create affordance for AI
-			Affordance* affordance = new Affordance(uniqueName);
-			
 			// Create a collision body object with AI
 			CollisionBody* colBody = new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance, AI);
 
@@ -304,6 +289,7 @@ void GameControlEngine::InitializePhysics()
 			// Add to all AI
 			m_agents.push_back(AI);
 
+			std::cout << uniqueName << " Loaded" << std::endl;
 			continue;
 		}
 
@@ -311,14 +297,7 @@ void GameControlEngine::InitializePhysics()
 		///			03/10/18 -- Start
 		///			09/10/18 -- Only generating box shape rigid objects, removed name specific code
 		///			20/10/18 -- CreateDynamicRigidBody() now takes the models dimensions to create a more accurate size bounding box
-
-		//objRigidBodyPosition = glm::vec3(itr->second->GetPosition().x, itr->second->GetPosition().y, itr->second->GetPosition().z);
-		//m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), itr->first);
-		//m_collisionBodies.push_back(new CollisionBody(itr->second->GetAssetName(), objRigidBodyPosition));
-
-
 		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody, itr->second->GetAssetName());
-
 		m_collisionBodies.push_back(colBody);
 	}
 
@@ -328,7 +307,7 @@ void GameControlEngine::InitializePhysics()
 	affordance.InitBaseAffordances(*m_affordanceTable, m_collisionBodies);
 
 	// Parse physics data to player
-	m_player->ParsePhysics(*m_physicsWorld, m_collisionBodies);
+	m_player->ParsePhysics(*m_physicsWorld, m_collisionBodies);	
 
 	// Activate all rigid body objects
 	//m_physicsWorld->ActivateAllObjects();

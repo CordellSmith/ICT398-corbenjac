@@ -27,6 +27,8 @@ class ComputerAI;
 #include <time.h>
 #include "Emotions\EmotionalState.h"
 
+class CollisionBody;
+
 struct Trait
 {
 	std::string m_name;
@@ -199,9 +201,9 @@ class ComputerAI
 			*
 			* @param compAI - AI that is moving
 			*
-			* @return bool - True if at position, false otherwise
+			* @return void
 			*/
-		bool MoveTo(ComputerAI* compAI, glm::vec3 targetPos);
+		void MoveTo(ComputerAI* compAI, glm::vec3 targetPos);
 
 			/**
 			* @brief Return FSM
@@ -215,10 +217,22 @@ class ComputerAI
 		std::vector<glm::vec3> MakeWaypoints();
 		std::vector<glm::vec3> GetWaypoints() { return m_waypoints; }
 
-		void SetTargetWaypoint(int waypoint);
-		glm::vec3& GetTargetWaypoint();
+		void SetMoveToTarget(glm::vec3 target);
+		glm::vec3& GetMoveToTarget();
 
-		float GetEnergy() { return m_energy; }
+		const float& GetEnergy() { return m_energy; }
+		void SetEnergy(const float& energy) { m_energy = energy; }
+
+		const bool& HasArrived() { return m_hasArrived; }
+		void SetHasArrived(const bool& value) { m_hasArrived = value; }
+
+		
+		void SetCollisionBodies(std::vector<CollisionBody*>& collisionBodies) { m_collisionBodies = &collisionBodies; }
+
+		glm::vec3 LocateObject();
+
+		CollisionBody* GetFocusObj() { return m_focusObj; }
+		void SetFocusObj(CollisionBody* colObj) { m_focusObj = colObj; }
 
 	protected:
 		/// Return an instance of the current FSM state
@@ -245,8 +259,8 @@ class ComputerAI
 		/// Vector of waypoints
 		std::vector<glm::vec3> m_waypoints;
 
-
-		int targetWaypoint;
+		/// Move to target
+		glm::vec3 m_target;
 
 		/// CSmith 23/10/18 Emotion Engine / Personality and Traits
 		/// Personality
@@ -254,6 +268,9 @@ class ComputerAI
 
 		/// Emotions
 		EmotionalState m_emotions;
+
+		/// Keeping track of collision bodies
+		std::vector<CollisionBody*>* m_collisionBodies;
 
 		/// Energy
 		float m_energy;
@@ -263,5 +280,11 @@ class ComputerAI
 
 		/// Strength
 		float m_strength;
+
+		/// Has Arrived
+		bool m_hasArrived;
+
+		/// Focus Object
+		CollisionBody* m_focusObj;
 };
 #endif

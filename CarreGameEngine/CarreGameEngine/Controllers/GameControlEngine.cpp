@@ -281,7 +281,6 @@ void GameControlEngine::InitializePhysics()
 
 		if (itr->second->GetAssetName() == "person")
 		{
-			continue;
 			// Create UNIQUE NAME for AI
 			std::string uniqueName = modelsItr->second.objectName;
 			

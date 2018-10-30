@@ -640,7 +640,6 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			btTransform trans = obj->getWorldTransform();
 			btVector3 tempPos = trans.getOrigin();
 
-			//std::cout << tempPos.getX() << " " << tempPos.getY() << " " << tempPos.getZ() << std::endl;
 			// Reset forces on player object prior to next step simulation
 			if (obj->getUserIndex() == CAMERA)
 			{
@@ -650,45 +649,28 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			// Check to see if player object
 			if (obj->getUserIndex() == CAMERA)
 			{
-				// If floor height gets higher
-				if (res.m_hitPointWorld.getY() > (m_floorHeight + 10) && res.m_collisionObject->getCollisionShape()->getName())
+				// If there is a change in the floor height
+				if ((res.m_hitPointWorld.getY() > (m_floorHeight + 10) || res.m_hitPointWorld.getY() < (m_floorHeight - 10)) && res.m_collisionObject->getCollisionShape()->getName())
 				{
 					// New floor height is set to current ray hit value
 					m_floorHeight = res.m_hitPointWorld.getY();
 
-					// Move player position up
+					// Move player y position to floor height, plus some to be above the floor
 					m_playerObject.y = m_floorHeight + 800;
 
 					// Set new origin
 					tempPos.setY(m_playerObject.y);
 					obj->getWorldTransform().setOrigin(tempPos);
-
-					// Set new position of player
-					playerObj.y = obj->getWorldTransform().getOrigin().getY();
-					collisionBodies[j]->m_position.y = obj->getWorldTransform().getOrigin().getY();
 				}
 
-				// If floor height gets lower
-				if (res.m_hitPointWorld.getY() < (m_floorHeight - 10))
-				{
-					// New floor height is set to current ray hit value
-					m_floorHeight = res.m_hitPointWorld.getY();
-
-					// Move player position up
-					m_playerObject.y = m_floorHeight + 800;
-
-					// Set new origin
-					tempPos.setY(m_playerObject.y);
-					obj->getWorldTransform().setOrigin(tempPos);
-
-					// Set new position of player
-					playerObj.y = obj->getWorldTransform().getOrigin().getY();
-					collisionBodies[j]->m_position.y = obj->getWorldTransform().getOrigin().getY();
-				}
+				// Update player position
+				playerObj.y = obj->getWorldTransform().getOrigin().getY();
+				collisionBodies[j]->m_position.y = obj->getWorldTransform().getOrigin().getY();
 			}
+			// Non player objects
 			else
 			{
-				// Collision body has AI
+				// Object has AI
 				if (collisionBodies[j]->m_AI != NULL)
 				{
 					// Update AI state

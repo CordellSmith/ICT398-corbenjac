@@ -139,13 +139,9 @@ void PhysicsEngine::CreatePlayerControlledRigidBody(glm::vec3 &playerObj)
 	// Create box shape and add to shape array
 	btCollisionShape* camShape = new btCapsuleShape(100, 200);
 
-	// Create a dynamic object
-	btTransform startTransform;
-	startTransform.setIdentity();
-
 	// Set origin of body
 	btVector3 temp = btVector3(playerObj.x, playerObj.y, playerObj.z);
-	startTransform.setOrigin(temp);
+	colObject->getWorldTransform().setOrigin(temp);
 
 	// Set shape to object
 	colObject->setCollisionShape(camShape);
@@ -371,7 +367,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 
 	// Ray from player to player look direction
 	btVector3 btFrom(playerObj.x, playerObj.y, playerObj.z);
-	btVector3 btTo(playerObj.z, -3000.0f, playerObj.z);
+	btVector3 btTo(playerObj.x, -3000.0f, playerObj.z);
 
 	// Get closest result
 	btCollisionWorld::ClosestRayResultCallback res(btFrom, btTo);
@@ -631,7 +627,6 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			m_derivState[4 * i + 1] = UpdateBodyPos(i);
 			m_derivState[4 * i + 2] = calc
 			m_derivState[4 * i + 3] = calcTorque();
->>>>>>> origin/temp-master
 		}
 
 		// Perform explicit euler
@@ -645,6 +640,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			btTransform trans = obj->getWorldTransform();
 			btVector3 tempPos = trans.getOrigin();
 
+			//std::cout << tempPos.getX() << " " << tempPos.getY() << " " << tempPos.getZ() << std::endl;
 			// Reset forces on player object prior to next step simulation
 			if (obj->getUserIndex() == CAMERA)
 			{
@@ -654,7 +650,41 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			// Check to see if player object
 			if (obj->getUserIndex() == CAMERA)
 			{
+				// If floor height gets higher
+				if (res.m_hitPointWorld.getY() > (m_floorHeight + 10) && res.m_collisionObject->getCollisionShape()->getName())
+				{
+					// New floor height is set to current ray hit value
+					m_floorHeight = res.m_hitPointWorld.getY();
 
+					// Move player position up
+					m_playerObject.y = m_floorHeight + 800;
+
+					// Set new origin
+					tempPos.setY(m_playerObject.y);
+					obj->getWorldTransform().setOrigin(tempPos);
+
+					// Set new position of player
+					playerObj.y = obj->getWorldTransform().getOrigin().getY();
+					collisionBodies[j]->m_position.y = obj->getWorldTransform().getOrigin().getY();
+				}
+
+				// If floor height gets lower
+				if (res.m_hitPointWorld.getY() < (m_floorHeight - 10))
+				{
+					// New floor height is set to current ray hit value
+					m_floorHeight = res.m_hitPointWorld.getY();
+
+					// Move player position up
+					m_playerObject.y = m_floorHeight + 800;
+
+					// Set new origin
+					tempPos.setY(m_playerObject.y);
+					obj->getWorldTransform().setOrigin(tempPos);
+
+					// Set new position of player
+					playerObj.y = obj->getWorldTransform().getOrigin().getY();
+					collisionBodies[j]->m_position.y = obj->getWorldTransform().getOrigin().getY();
+				}
 			}
 			else
 			{
@@ -678,6 +708,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 					// Set new position
 					obj->setWorldTransform(trans);
 				}
+				// Every other object
 				else
 				{
 					// Set new position

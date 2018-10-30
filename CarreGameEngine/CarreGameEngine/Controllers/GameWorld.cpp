@@ -81,8 +81,9 @@ void GameWorld::UpdatePhysics()
 {
 	// Update physicsWorld
 	// TODO: Make this better (Jack)
-	
 	glm::vec3 bt_playerPos(m_player->GetPosition().x, m_player->GetPosition().y, m_player->GetPosition().z);
+
+	//std::cout << bt_playerPos.y << " ";
 
 	// Set updated camera location
 	//m_camera->SetPosition(glm::vec3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z));
@@ -144,15 +145,15 @@ void GameWorld::UpdatePhysics()
 			if (data != NULL)
 			{
 				// Do whatever with information
-				std::cout << "Model Name: " << data->m_name << "\n"
+				/*std::cout << "Model Name: " << data->m_name << "\n"
 					<< "Affordances \n"
 					<< "SitOn: " << data->m_affordance->GetSitOn() << "\n"
 					<< "StandOn: " << data->m_affordance->GetStandOn() << "\n"
-					<< "Kick: " << data->m_affordance->GetKick() << std::endl;
+					<< "Kick: " << data->m_affordance->GetKick() << std::endl;*/
 			}
 		}
 	}
 
-	m_player->SetPosition(glm::vec3(bt_playerPos.x, bt_playerPos.y, bt_playerPos.z));
+	m_player->SetPosition(bt_playerPos);
 	//std::cout << m_player->GetPosition().x << " " << m_player->GetPosition().y << " " << m_player->GetPosition().z << std::endl;
 }

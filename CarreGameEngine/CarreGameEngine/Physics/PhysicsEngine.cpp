@@ -802,12 +802,8 @@ void PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuant
 	// Add object rigid body data to vector
 	ObjectRigidBodyData* objRigidBodyData = new ObjectRigidBodyData();
 	objRigidBodyData->objType = objType;
-<<<<<<< HEAD
 
 	objRigidBodyData->currPos = modelMesh[0].GetPosition();
-=======
-	objRigidBodyData->currPos = glm::vec3(modelMesh[0].GetPosition().x, modelMesh[0].GetPosition().y, modelMesh[0].GetPosition().z);
->>>>>>> origin/temp-master
 	m_objectRigidBodyData.push_back(objRigidBodyData);
 }
 

@@ -529,7 +529,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			//	}
 			//}
 			//else 
-			{
+			
 				// Get vector for distance from object center to the average collision point
 				glm::vec3 centerAToCol = glm::vec3(rbA->currPos.x, rbA->currPos.y, rbA->currPos.z) - glm::vec3(ptA.getX(), ptA.getY(), ptA.getZ());
 				glm::vec3 centerBToCol = rbB->currPos - glm::vec3(ptB.getX(), ptB.getY(), ptB.getZ());
@@ -565,7 +565,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 				// Set new linear velocities to corresponding current values
 				rbA->currPos += m_impulse / pdA->totalMass;
 				rbB->currPos -= m_impulse / pdA->totalMass;
-			}
+			
 		}
 
 		//for (i = 0; i < m_objectRigidBodyData.size(); i++)
@@ -904,7 +904,7 @@ void PhysicsEngine::TriangleMeshTest(std::vector<Mesh> &modelMesh, bool useQuant
 	ObjectRigidBodyData* objRigidBodyData = new ObjectRigidBodyData();
 	objRigidBodyData->objType = objType;
 
-	objRigidBodyData->currPos = glm::vec3(modelMesh[0].GetPosition().x, modelMesh[0].GetPosition().y, modelMesh[0].GetPosition().z);
+	objRigidBodyData->currPos = modelMesh[0].GetPosition();
 	m_objectRigidBodyData.push_back(objRigidBodyData);
 }
 

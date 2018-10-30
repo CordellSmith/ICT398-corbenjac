@@ -76,7 +76,7 @@ AllModels=
 		ball=
 		{
 			filePath = "Resources/objects/ball/ball.obj", 
-			scale = "1.0 1.0 1.0", 
+			scale = "0.5 0.5 0.5", 
 			pos = "14000.0 1500.0 10100.0", 
 			rot = "0.0 0.0 0.0", 
 			Affordance = "ball"

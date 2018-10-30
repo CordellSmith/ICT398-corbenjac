@@ -304,7 +304,6 @@ void GameControlEngine::InitializePhysics()
 			// Add to all AI
 			m_agents.push_back(AI);
 
-			std::cout << uniqueName << " Loaded" << std::endl;
 			continue;
 		}
 

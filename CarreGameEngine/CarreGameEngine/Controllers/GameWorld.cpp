@@ -123,7 +123,7 @@ void GameWorld::UpdatePhysics()
 		camDirection.x, 
 		camDirection.y,
 		camDirection.z));
-	m_physicsWorld->GetDynamicsWorld2()->rayTest(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z), rayCallback);
+	m_physicsWorld->GetDynamicsWorld()->rayTest(btVector3(m_camera->GetPosition().x, m_camera->GetPosition().y, m_camera->GetPosition().z), btVector3(camDirection.x, camDirection.y, camDirection.z), rayCallback);
 
 	const btCollisionObject* body;
 	CollisionBody* data;

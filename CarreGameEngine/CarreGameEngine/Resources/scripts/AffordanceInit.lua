@@ -17,7 +17,7 @@ AffordanceTable=
 	table=
 	{
 		{
-			sitOn = 80.0,
+			sitOn = 50.0,
 			standOn = 50.0,
 			kick = 10.0
 		}

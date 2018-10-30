@@ -36,7 +36,7 @@ AllModels=
 		{
 			filePath = "Resources/objects/chair/office_chair.obj", 
 			scale = "300.0 300.0 300.0", 
-			pos = "9600.0 1000.0 10100.0", 
+			pos = "12000.0 100.0 10100.0", 
 			rot = "0.0 0.0 0.0", 
 			Affordance = "chair"
 		},
@@ -44,7 +44,7 @@ AllModels=
 		{
 			filePath = "Resources/objects/chair/office_chair.obj", 
 			scale = "300.0 300.0 300.0", 
-			pos = "9600.0 1000.0 10500.0", 
+			pos = "14000.0 100.0 6000.0", 
 			rot = "0.0 0.0 0.0", 
 			Affordance = "chair"
 		},

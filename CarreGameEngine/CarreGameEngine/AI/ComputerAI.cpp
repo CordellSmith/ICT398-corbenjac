@@ -6,6 +6,7 @@
 // Includes
 #include "ComputerAI.h"
 #include "AllStatesFSM.h"
+#include "..\Physics\PhysicsEngine.h"
 
 // Default constructor
 ComputerAI::ComputerAI()
@@ -21,7 +22,12 @@ ComputerAI::ComputerAI()
 	this->m_currVel = glm::vec3(0, 0, 0);
 	this->m_health = 100;
 	this->m_maxHealth = 100;
+	this->m_energy = 100;
+	this->m_speed = 100;
+	this->m_strength = 100;
 	this->m_isDead = false;
+
+	this->m_emotions = EmotionalState();
 
 	MakeWaypoints();
 }
@@ -40,8 +46,13 @@ ComputerAI::ComputerAI(glm::vec3 pos)
 	this->m_currVel = glm::vec3(0, 0, 0);
 	this->m_health = 100;
 	this->m_maxHealth = 100;
+	this->m_energy = 100;
+	this->m_speed = 100;
+	this->m_strength = 100;
 	this->m_isDead = false;
 
+	this->m_emotions = EmotionalState();
+	
 	MakeWaypoints();
 }
 
@@ -128,8 +139,19 @@ glm::vec3 ComputerAI::GetRotation()
 	return m_currRot;
 }
 
+
+void ComputerAI::SetMoveToTarget(glm::vec3 target) 
+{
+	m_target = target;
+}
+
+glm::vec3& ComputerAI::GetMoveToTarget()
+{
+	return m_target;
+}
+
 // Move to a location
-bool ComputerAI::MoveTo(ComputerAI* compAI, glm::vec3 targetPos)
+void ComputerAI::MoveTo(ComputerAI* compAI, glm::vec3 targetPos)
 {
 	//glm::vec3 targetPos(1000, 1000);
 	glm::vec3 currVel = compAI->GetVelocity();
@@ -140,9 +162,10 @@ bool ComputerAI::MoveTo(ComputerAI* compAI, glm::vec3 targetPos)
 	glm::vec3 toTarget = glm::normalize(toTarget2);
 	if ((toTarget2.x < 10 && toTarget2.x > -10) && (toTarget2.z < 10 && toTarget2.z > -10))
 	{
-		//std::cout << "here 0" << std::endl;
-		compAI->SetVelocity(glm::vec3(0, 0, 0));
-		return true;
+		compAI->SetVelocity(glm::vec3(0));
+		compAI->SetHasArrived(true);
+
+		return;
 	}
 
 	// Calculate new velocity and new position
@@ -159,30 +182,19 @@ bool ComputerAI::MoveTo(ComputerAI* compAI, glm::vec3 targetPos)
 	glm::vec3 toRealTarget2 = glm::normalize(toRealTarget);
 	if (toRealTarget2.x == 0 && toRealTarget2.z == 0)
 	{
-		//std::cout << "here 1" << std::endl;
 		currPos = realTargetPos;
 		compAI->SetPosition(currPos);
-		compAI->SetVelocity(glm::vec3(0, 0, 0));
-		return true;
+		compAI->SetVelocity(glm::vec3(0));
+		compAI->SetHasArrived(true);
+
+		return;
 	}
 	
-	//std::cout << toRealTarget2 << " : " << toTarget << std::endl;
-
-	//// Check to see whether newPos has passed the realTargetPos
-	//float dp = toRealTarget2.Dot(toRealTarget2, toTarget);
-	//if (dp < 0.0)
-	//{
-	//	std::cout << "here 2" << std::endl;
-	//	currPos = realTargetPos;
-	//	compAI->SetPosition(currPos);
-	//	compAI->SetVelocity(glm::vec3(0, 0));
-	//	return true;
-	//}
-
-	// newPos has not yet passed realTargetPos
 	currPos = newPos;
 	compAI->SetPosition(currPos);
-	return false;
+
+	compAI->m_energy -= 0.01;
+	//std::cout << compAI->m_energy << std::endl;
 }
 
 std::vector<glm::vec3> ComputerAI::MakeWaypoints()
@@ -201,11 +213,36 @@ std::vector<glm::vec3> ComputerAI::MakeWaypoints()
 	return this->m_waypoints;
 }
 
-void ComputerAI::SetTargetWaypoint(int waypoint) {
-	targetWaypoint = waypoint;
+glm::vec3 ComputerAI::LocateObject()
+{
+	// Temp dynamic array used for randomness
+	std::vector<CollisionBody*> temp;
+
+	for (size_t i = 0; i < m_collisionBodies->size(); i++)
+	{
+		// Iterate through dynamic objects and check its SitOn affordance
+		if (m_collisionBodies->at(i)->m_affordance->GetSitOn() > 50.0f)
+		{
+			// Add the chairs position to temporary array
+			temp.push_back(m_collisionBodies->at(i));
+		}
+	}
+
+	if (temp.size() == 0)
+	{
+		// If no available chairs, return its own location and stand still
+		return this->GetPosition();
+	}
+	else
+	{
+		// Select a random object from the temporary array
+		int pos = rand() % temp.size();
+
+		// Set the object to be moving towards (used to update affordance of that object)
+		SetFocusObj(temp.at(pos));
+
+		// Return its location
+		return BttoGlm(m_focusObj->m_position);
+	}
 }
 
-glm::vec3 & ComputerAI::GetTargetWaypoint()
-{
-	return m_waypoints[targetWaypoint];
-}

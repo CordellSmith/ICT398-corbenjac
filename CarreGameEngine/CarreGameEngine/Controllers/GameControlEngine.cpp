@@ -270,6 +270,8 @@ void GameControlEngine::InitializePhysics()
 		{
 			// Create a new AI with position
 			ComputerAI* AI = new ComputerAI(itr->second->GetPosition());
+			// Parse array of collision bodies to AI
+			AI->SetCollisionBodies(m_collisionBodies);
 			// Give it to person
 			itr->second->SetAI(AI);
 
@@ -303,6 +305,9 @@ void GameControlEngine::InitializePhysics()
 
 	// Parse physics data to player
 	m_player->ParsePhysics(*m_physicsWorld, m_collisionBodies);
+
+	// Parse collision body information to ComputerAI
+	
 
 	// Activate all rigid body objects
 	m_physicsWorld->ActivateAllObjects();

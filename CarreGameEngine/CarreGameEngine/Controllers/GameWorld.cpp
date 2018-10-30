@@ -134,11 +134,11 @@ void GameWorld::UpdatePhysics()
 			if (data != NULL)
 			{
 				// Do whatever with information
-				std::cout << "Model Name: " << data->m_name << "\n"
-					<< "Affordances \n"
-					<< "SitOn: " << data->m_affordance->GetSitOn() << "\n"
-					<< "StandOn: " << data->m_affordance->GetStandOn() << "\n"
-					<< "Kick: " << data->m_affordance->GetKick() << std::endl;
+				//std::cout << "Model Name: " << data->m_name << "\n"
+				//	<< "Affordances \n"
+				//	<< "SitOn: " << data->m_affordance->GetSitOn() << "\n"
+				//	<< "StandOn: " << data->m_affordance->GetStandOn() << "\n"
+				//	<< "Kick: " << data->m_affordance->GetKick() << std::endl;
 			}
 		}
 	}

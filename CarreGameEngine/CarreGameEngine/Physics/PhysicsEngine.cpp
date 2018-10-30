@@ -365,15 +365,34 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 	game_time += 1.0;
 	physics_lag_time += (game_time - prev_game_time);
 
-	// Ray from player to player look direction
+	// Ray from player position to directly down
 	btVector3 btFrom(playerObj.x, playerObj.y, playerObj.z);
 	btVector3 btTo(playerObj.x, -3000.0f, playerObj.z);
 
-	// Get closest result
+	// Get closest result (if any)
 	btCollisionWorld::ClosestRayResultCallback res(btFrom, btTo);
 
-	// Get data from closest object
+	// Get data from closest object (if any)
 	m_collisionWorld->rayTest(btFrom, btTo, res); 
+
+	// Ray from player position to positive and negaitve XZ directions
+	btVector3 btFromPlayer(playerObj.x, playerObj.y + 1500, playerObj.z);
+	btVector3 btToPosX(playerObj.x + 400, playerObj.y + 1500, playerObj.z);
+	btVector3 btToNegX(playerObj.x - 400, playerObj.y + 1500, playerObj.z);
+	btVector3 btToPosZ(playerObj.x, playerObj.y + 1500, playerObj.z + 400);
+	btVector3 btToNegZ(playerObj.x, playerObj.y + 1500, playerObj.z - 400);
+
+	// Get closest result (if any) for all 4 directions
+	btCollisionWorld::ClosestRayResultCallback posX(btFromPlayer, btToPosX);
+	btCollisionWorld::ClosestRayResultCallback negX(btFromPlayer, btToNegX);
+	btCollisionWorld::ClosestRayResultCallback posZ(btFromPlayer, btToPosZ);
+	btCollisionWorld::ClosestRayResultCallback negZ(btFromPlayer, btToNegZ);
+
+	// Get data from closest object (if any)
+	m_collisionWorld->rayTest(btFrom, btToPosX, posX);
+	m_collisionWorld->rayTest(btFrom, btToNegX, negX);
+	m_collisionWorld->rayTest(btFrom, btToPosZ, posZ);
+	m_collisionWorld->rayTest(btFrom, btToNegZ, negZ);
 	
 	// Number of collisions detected
 	int numManifolds = 0;
@@ -470,87 +489,6 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			ptA /= numContacts;
 			ptB /= numContacts;
 
-			//if (pdA->objType == "lecTheatre" || pdB->objType == "lecTheatre")
-			//{
-			//	if (pdA->objType == "lecTheatre")
-			//	{
-			//		glm::vec3 centerBToCol = rbB->currPos - glm::vec3(ptB.getX(), ptB.getY(), ptB.getZ());
-
-			//		m_normal = centerBToCol;
-			//		m_normal = Normalize(m_normal);
-
-			//		// Calculate linear impulse
-			//		btScalar tempImpulse;
-
-			//		tempImpulse = DotProduct(rbA->currLinearVel - rbB->currLinearVel, m_normal);
-			//		tempImpulse *= -(1 + m_epsilon) * pdA->totalMass * pdB->totalMass;
-			//		tempImpulse /= (pdA->totalMass + pdB->totalMass);
-			//		m_impulse = tempImpulse * m_normal;
-
-			//		rbB->currLinearVel = rbB->currLinearVel - (m_impulse / pdB->totalMass);
-			//		//rbB->currLinearVel *= 2;
-			//		rbB->currPos -= m_impulse / pdA->totalMass;
-			//	}
-			//	else
-			//	{
-			//		glm::vec3 centerAToCol = glm::vec3(rbA->currPos.x, rbA->currPos.y, rbA->currPos.z) - glm::vec3(ptA.getX(), ptA.getY(), ptA.getZ());
-			//		//glm::vec3 centerBToCol = rbB->currPos - glm::vec3(ptB.getX(), ptB.getY(), ptB.getZ());
-
-			//		m_normal = centerAToCol;
-			//		m_normal = Normalize(m_normal);
-
-			//		// Calculate linear impulse
-			//		btScalar tempImpulse;
-
-			//		tempImpulse = DotProduct(rbA->currLinearVel - rbB->currLinearVel, m_normal);
-			//		tempImpulse *= -(1 + m_epsilon) * pdA->totalMass * pdB->totalMass;
-			//		tempImpulse /= (pdA->totalMass + pdB->totalMass);
-			//		m_impulse = tempImpulse * m_normal;
-
-			//		rbA->currLinearVel = rbA->currLinearVel + (m_impulse / pdA->totalMass);
-			//		//rbA->currLinearVel *= 2;
-			//		//rbA->currPos += rbA->currLinearVel;
-			//		//rbA->currPos += m_impulse / pdA->totalMass;
-			//	}
-			//}
-			//else 
-			{
-				// Get vector for distance from object center to the average collision point
-				glm::vec3 centerAToCol = glm::vec3(rbA->currPos.x, rbA->currPos.y, rbA->currPos.z) - glm::vec3(ptA.getX(), ptA.getY(), ptA.getZ());
-				glm::vec3 centerBToCol = rbB->currPos - glm::vec3(ptB.getX(), ptB.getY(), ptB.getZ());
-
-				// Calculate normal of colliding objects
-				m_normal = centerAToCol - centerBToCol;
-				m_normal = Normalize(m_normal);
-
-				// Calculate linear impulse
-				btScalar tempImpulse;
-
-				tempImpulse = DotProduct(rbA->currLinearVel - rbB->currLinearVel, m_normal);
-				tempImpulse *= -(1 + m_epsilon) * pdA->totalMass * pdB->totalMass;
-				tempImpulse /= (pdA->totalMass + pdB->totalMass);
-				m_impulse = tempImpulse * m_normal;
-
-				//btScalar numerator = DotProduct(m_normal, rbA->currLinearVel - rbB->currLinearVel) + (DotProduct(rbA->currAngularVel, CrossProduct(centerAToCol, m_normal))) + (DotProduct(rbB->currAngularVel, CrossProduct(centerBToCol, m_normal)));
-				//numerator *= -(1.0f + m_epsilon);
-				//glm::vec3 denominatorA; // = (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
-				//glm::vec3 transA = CrossProduct(centerAToCol, m_normal);
-				//glm::vec3 transB = CrossProduct(centerBToCol, m_normal);
-				//glm::vec3 negInert = (1.0f / pdA->secondMoment);
-				//denominatorA = CrossProduct(centerAToCol, m_normal) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + CrossProduct(centerBToCol, m_normal) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
-				////denominatorA = glm::vec3(transA.z, transA.y, transA.x) * (1.0f / pdA->secondMoment) * CrossProduct(centerAToCol, m_normal) + glm::vec3(transB.z, transB.y, transB.x) * (1.0f / pdB->secondMoment) * CrossProduct(centerBToCol, m_normal);
-				//denominatorA += (1.0 / pdA->totalMass) + (1.0 / pdB->totalMass);
-				//glm::vec3 angImpulse = numerator / denominatorA;
-				//angImpulse *= m_normal;
-
-				// Calculate object velocities after collision
-				rbA->currLinearVel = rbA->currLinearVel + (m_impulse / pdA->totalMass);
-				rbB->currLinearVel = rbB->currLinearVel - (m_impulse / pdB->totalMass);
-
-				// Set new linear velocities to corresponding current values
-				rbA->currPos += m_impulse / pdA->totalMass;
-				rbB->currPos -= m_impulse / pdA->totalMass;
-			}
 			// Get vector for distance from object center to the average collision point
 			glm::vec3 centerAToCol = glm::vec3(rbA->currPos.x, rbA->currPos.y, rbA->currPos.z) - glm::vec3(ptA.getX(), ptA.getY(), ptA.getZ());
 			glm::vec3 centerBToCol = rbB->currPos - glm::vec3(ptB.getX(), ptB.getY(), ptB.getZ());
@@ -640,17 +578,25 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			btTransform trans = obj->getWorldTransform();
 			btVector3 tempPos = trans.getOrigin();
 
-			// Reset forces on player object prior to next step simulation
+			// Temporary variable holding old player position
+			glm::vec3 tempPlayer;
+
+			// Set new position of camera based on user input in XZ plane
 			if (obj->getUserIndex() == CAMERA)
 			{
+				// Set old (current) value
+				tempPlayer = m_playerObject;
 
+				// Set XZ position
+				m_playerObject.x = playerObj.x;
+				m_playerObject.z = playerObj.z;
 			}
 
 			// Check to see if player object
 			if (obj->getUserIndex() == CAMERA)
 			{
 				// If there is a change in the floor height
-				if ((res.m_hitPointWorld.getY() > (m_floorHeight + 10) || res.m_hitPointWorld.getY() < (m_floorHeight - 10)) && res.m_collisionObject->getCollisionShape()->getName())
+				if ((res.m_hitPointWorld.getY() > (m_floorHeight + 10) || res.m_hitPointWorld.getY() < (m_floorHeight - 10)) && res.m_collisionObject->getUserIndex() == MESH)
 				{
 					// New floor height is set to current ray hit value
 					m_floorHeight = res.m_hitPointWorld.getY();
@@ -663,9 +609,33 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 					obj->getWorldTransform().setOrigin(tempPos);
 				}
 
-				// Update player position
+				// Set new Y position of player
 				playerObj.y = obj->getWorldTransform().getOrigin().getY();
 				collisionBodies[j]->m_position.y = obj->getWorldTransform().getOrigin().getY();
+
+				// If player is too close to a wall, move them to previous position
+				if(posX.hasHit() || posZ.hasHit() || negX.hasHit() || negZ.hasHit())
+				{
+					// Move to previous position for direction/s that is too close to wall
+					if (posX.hasHit() && posX.m_collisionObject->getUserIndex() == MESH)
+						m_playerObject.x = tempPlayer.x;
+					if (posZ.hasHit() && posZ.m_collisionObject->getUserIndex() == MESH)
+						m_playerObject.z = tempPlayer.z;
+					if (negX.hasHit() && negX.m_collisionObject->getUserIndex() == MESH)
+						m_playerObject.x = tempPlayer.x;
+					if (negZ.hasHit() && negZ.m_collisionObject->getUserIndex() == MESH)
+						m_playerObject.z = tempPlayer.z;
+
+					// Set new origin
+					tempPos = btVector3(m_playerObject.x, m_playerObject.y, m_playerObject.z);
+					obj->getWorldTransform().setOrigin(tempPos);
+
+					// Set new XZ position of player
+					playerObj = glm::vec3(obj->getWorldTransform().getOrigin().getX(),
+						obj->getWorldTransform().getOrigin().getY(),
+						obj->getWorldTransform().getOrigin().getZ());
+					collisionBodies[j]->m_position = playerObj;
+				}
 			}
 			// Non player objects
 			else

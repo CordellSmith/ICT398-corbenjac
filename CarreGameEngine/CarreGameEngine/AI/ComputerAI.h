@@ -219,6 +219,8 @@ class ComputerAI
 		glm::vec3& GetTargetWaypoint();
 
 		float GetEnergy() { return m_energy; }
+		void UseEnergy(float val) { m_energy -= val; }
+		void GainEnergy(float val) { m_energy += val; }
 
 		EmotionalState& GetEmotionalState() { return m_emotions; }
 

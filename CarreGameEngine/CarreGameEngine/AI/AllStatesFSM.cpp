@@ -61,10 +61,9 @@ void EmotionsState::Enter(ComputerAI* compAI) {
 }
 
 void EmotionsState::Execute(ComputerAI* compAI) {
-	glm::vec3 tempVel = compAI->GetVelocity();
 	
-	if (tempVel.x == 0 && tempVel.z == 0) //choose a new waypoint
-	{
+	glm::vec3 tempVel = compAI->GetVelocity();
+	if (tempVel.x == 0 && tempVel.z == 0){
 		compAI->SetVelocity(glm::vec3(50, 0, 0));
 		int pos = rand() % compAI->GetWaypoints().size();
 		compAI->SetTargetWaypoint(pos);

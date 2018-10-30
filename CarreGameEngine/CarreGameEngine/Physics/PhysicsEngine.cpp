@@ -474,7 +474,6 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			ptA /= numContacts;
 			ptB /= numContacts;
 
-<<<<<<< HEAD
 			//if (pdA->objType == "lecTheatre" || pdB->objType == "lecTheatre")
 			//{
 			//	if (pdA->objType == "lecTheatre")
@@ -519,7 +518,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 			//	}
 			//}
 			//else 
-			
+			{
 				// Get vector for distance from object center to the average collision point
 				glm::vec3 centerAToCol = glm::vec3(rbA->currPos.x, rbA->currPos.y, rbA->currPos.z) - glm::vec3(ptA.getX(), ptA.getY(), ptA.getZ());
 				glm::vec3 centerBToCol = rbB->currPos - glm::vec3(ptB.getX(), ptB.getY(), ptB.getZ());
@@ -555,8 +554,7 @@ void PhysicsEngine::Simulate(std::vector<CollisionBody*>& collisionBodies, glm::
 				// Set new linear velocities to corresponding current values
 				rbA->currPos += m_impulse / pdA->totalMass;
 				rbB->currPos -= m_impulse / pdA->totalMass;
-			
-=======
+			}
 			// Get vector for distance from object center to the average collision point
 			glm::vec3 centerAToCol = glm::vec3(rbA->currPos.x, rbA->currPos.y, rbA->currPos.z) - glm::vec3(ptA.getX(), ptA.getY(), ptA.getZ());
 			glm::vec3 centerBToCol = rbB->currPos - glm::vec3(ptB.getX(), ptB.getY(), ptB.getZ());

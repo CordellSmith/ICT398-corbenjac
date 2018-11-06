@@ -9,49 +9,57 @@ AffordanceTable=
 	building=
 	{
 		{
-			canSit = 0.0,
-			canStand = 0.0,
-			canKick = 0.0
+			sitOn = 0.0,
+			standOn = 0.0,
+			kick = 0.0
 		}
 	},
 	table=
 	{
 		{
-			canSit = 80.0,
-			canStand = 50.0,
-			canKick = 10.0
+			sitOn = 80.0,
+			standOn = 50.0,
+			kick = 10.0
 		}
 	},
 	chair=
 	{
 		{
-			canSit = 100.0,
-			canStand = 90.0,
-			canKick = 60.0
+			sitOn = 100.0,
+			standOn = 90.0,
+			kick = 60.0
 		}
 	},
 	player=
 	{
 		{
-			canSit = 0.0,
-			canStand = 0.0,
-			canKick = 0.0
+			sitOn = 0.0,
+			standOn = 0.0,
+			kick = 0.0
 		}
 	},
 	crate=
 	{
 		{
-			canSit = 0.0,
-			canStand = 0.0,
-			canKick = 0.0
+			sitOn = 40.0,
+			standOn = 30.0,
+			kick = 0.0
 		}
 	},
 	ball=
 	{
 		{
-			canSit = 0.0,
-			canStand = 0.0,
-			canKick = 0.0
+			sitOn = 0.0,
+			standOn = 0.0,
+			kick = 100.0
+		}
+	},
+	person=
+	{
+		{
+			sitOn = 0.0,
+			standOn = 0.0,
+			kick = 50.0
 		}
 	},
 }

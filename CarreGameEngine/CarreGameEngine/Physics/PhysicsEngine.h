@@ -59,16 +59,15 @@
 // Includes
 #include <vector>
 #include <fstream>	// Used for testing of heightfield terrain shape (will be removed later)
+#include <cmath>
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision\CollisionShapes\btHeightfieldTerrainShape.h"
 #include "..\Common\Vertex3.h"
 #include "..\Common\MyMath.h"
 #include "..\AssetFactory\Model.h"
+#include "..\..\Dependencies\GLM\include\GLM\vec3.hpp"
+#include "..\AI\Affordance\Affordance.h"
 #include "DebugDraw.h"
-#include <cmath>
-#include "../../Dependencies/GLM/include/GLM/vec3.hpp"
-#include "../AI/Affordance/Affordance.h"
-
 
 /*************************************NEW**************************************/
 ///  Struct of point mass data for an object (for determining cente of gravity and other info)

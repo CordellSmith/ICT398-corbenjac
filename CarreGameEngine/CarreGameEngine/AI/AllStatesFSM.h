@@ -64,9 +64,19 @@ public:
 
 /*****************************************Class Separator******************************************/
 
+class TiredState : public State<ComputerAI>
+{
+public:
+	void Enter(ComputerAI* compAI);
+	void Execute(ComputerAI* compAI);
+	void Exit(ComputerAI* compAI) {};
+};
+
 typedef Singleton<GlobalState> m_globalState;
 typedef Singleton<StartState> m_startState;
 typedef Singleton<MoveState> m_moveState;
+typedef Singleton<TiredState> m_tiredState;
 typedef Singleton<EmotionsState> m_EmotionsState;
+
 
 #endif

@@ -13,7 +13,7 @@ AllModels=
 		lecTheatre=
 		{
 			filePath = "Resources/objects/lecture theatre/LBLT_Complete.obj", 
-			scale = "200.0 150.0 120.0", 
+			scale = "200.0 150.0 150.0", 
 			pos = "7000.0 0.0 5200", 
 			rot = "0.0 0.0 0.0", 
 			Affordance = "building"
@@ -36,7 +36,7 @@ AllModels=
 		{
 			filePath = "Resources/objects/chair/office_chair.obj", 
 			scale = "300.0 300.0 300.0", 
-			pos = "9600.0 1000.0 10100.0", 
+			pos = "12000.0 100.0 10100.0", 
 			rot = "0.0 0.0 0.0", 
 			Affordance = "chair"
 		},
@@ -44,7 +44,7 @@ AllModels=
 		{
 			filePath = "Resources/objects/chair/office_chair.obj", 
 			scale = "300.0 300.0 300.0", 
-			pos = "9600.0 1000.0 10500.0", 
+			pos = "14000.0 100.0 6000.0", 
 			rot = "0.0 0.0 0.0", 
 			Affordance = "chair"
 		},
@@ -76,7 +76,7 @@ AllModels=
 		ball=
 		{
 			filePath = "Resources/objects/ball/ball.obj", 
-			scale = "1.0 1.0 1.0", 
+			scale = "0.5 0.5 0.5", 
 			pos = "14000.0 1500.0 10100.0", 
 			rot = "0.0 0.0 0.0", 
 			Affordance = "ball"

@@ -224,10 +224,13 @@ void GameControlEngine::InitializePhysics()
 
 	for (itr = m_assetFactory->GetAssets().begin(); itr != m_assetFactory->GetAssets().end(); itr++, modelsItr++)
 	{
-		btVector3 objRigidBodyPosition, objRigidBodyRotation;
+		if (itr->second->GetAssetName() == "ball")
+			continue;
 
-		objRigidBodyPosition = GlmtoBt(itr->second->GetPosition());
-		objRigidBodyRotation = GlmtoBt(itr->second->GetRotation());
+		glm::vec3 objRigidBodyPosition, objRigidBodyRotation;
+
+		objRigidBodyPosition = itr->second->GetPosition();
+		objRigidBodyRotation = itr->second->GetRotation();
 
 		// Create UNIQUE NAME
 		std::string uniqueName = modelsItr->second.objectName;
@@ -252,7 +255,7 @@ void GameControlEngine::InitializePhysics()
 			///					Important: used to get model matrix for debug draw lines
 			m_physicsWorld->ParseModel(itr->second->GetModel());
 			// Debug draw is also used here
-			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, false);
+			m_physicsWorld->TriangleMeshTest(itr->second->GetModel()->GetMeshBatch(), true, itr->second->GetDimensons(), itr->second->GetAssetName());
 			m_collisionBodies.push_back(colBody);
 			// This has to be called after the mesh data is passed in
 			m_physicsWorld->InitDebugDraw();
@@ -261,7 +264,7 @@ void GameControlEngine::InitializePhysics()
 
 		if (itr->second->GetAssetName() == "ball")
 		{
-			m_physicsWorld->AddSphere(110.0, objRigidBodyPosition, colBody);
+			m_physicsWorld->AddSphere(110.0, objRigidBodyPosition, colBody, glm::vec3(0), itr->second->GetAssetName());
 			m_collisionBodies.push_back(colBody);
 			continue;
 		}
@@ -270,6 +273,8 @@ void GameControlEngine::InitializePhysics()
 		{
 			// Create a new AI with position
 			ComputerAI* AI = new ComputerAI(itr->second->GetPosition());
+			// Parse array of collision bodies to AI
+			AI->SetCollisionBodies(m_collisionBodies);
 			// Give it to person
 			itr->second->SetAI(AI);
 
@@ -277,7 +282,7 @@ void GameControlEngine::InitializePhysics()
 			CollisionBody* colBody = new CollisionBody(uniqueName, itr->second->GetAssetName(), objRigidBodyPosition, objRigidBodyRotation, affordance, AI);
 
 			// Create new dynamic rigid body
-			m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody);
+			m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody, itr->second->GetAssetName());
 
 			// Add to collision bodies vector with UNIQUE NAME
 			m_collisionBodies.push_back(colBody);
@@ -292,7 +297,7 @@ void GameControlEngine::InitializePhysics()
 		///			03/10/18 -- Start
 		///			09/10/18 -- Only generating box shape rigid objects, removed name specific code
 		///			20/10/18 -- CreateDynamicRigidBody() now takes the models dimensions to create a more accurate size bounding box
-		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody);
+		m_physicsWorld->CreateDynamicRigidBody(objRigidBodyPosition, itr->second->GetDimensons(), colBody, itr->second->GetAssetName());
 		m_collisionBodies.push_back(colBody);
 	}
 
@@ -302,10 +307,10 @@ void GameControlEngine::InitializePhysics()
 	affordance.InitBaseAffordances(*m_affordanceTable, m_collisionBodies);
 
 	// Parse physics data to player
-	m_player->ParsePhysics(*m_physicsWorld, m_collisionBodies);
+	m_player->ParsePhysics(*m_physicsWorld, m_collisionBodies);	
 
 	// Activate all rigid body objects
-	m_physicsWorld->ActivateAllObjects();
+	//m_physicsWorld->ActivateAllObjects();
 }
 
 void GameControlEngine::Destroy()

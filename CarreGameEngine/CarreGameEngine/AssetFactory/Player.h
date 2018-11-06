@@ -236,6 +236,10 @@ public:
 		m_collisionBodies = &collisionBodies;
 	}
 
+	int count;
+
+	glm::vec3 Normalize(glm::vec3 vec);
+
 protected:
 	std::string m_filePath;
 	std::string m_name;

@@ -1,5 +1,5 @@
 # Blender MTL File: 'LBLT_Filled.blend'
-# Material Count: 8
+# Material Count: 14
 
 newmtl Mat_0
 Ns 96.078431
@@ -67,6 +67,51 @@ d 1.000000
 illum 2
 map_Kd Rubber_s.jpeg
 
+newmtl None
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd off_white.jpg
+
+newmtl None_Dark_Metal_s.jpg.001
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd Dark_Metal_s.jpg
+
+newmtl None_Darkwood_s.jpg.001
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd Darkwood_s.jpg
+
+newmtl None_Exitsign.jpg
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd Exitsign.jpg
+
+newmtl None_LTdoor.jpg
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd LTdoor.jpg
+
 newmtl None_NONE_0
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
@@ -76,6 +121,15 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+
+newmtl None_projector_screen.jpg
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd projector_screen.jpg
 
 newmtl office_chair
 Ns 94.117647
